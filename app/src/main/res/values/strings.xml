@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Texarkana College</string>
+    <string name="some_permissions_are_required_to_do_the_task">Some permissions are required to do the task.</string>
+    <string name="need_permissions">Need permission(s)</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_into_settings_message">Go in to settings and allow storage access for this app, or erase app data and open app again to request permissions again.</string>
+    <string name="permission_not_granted">Permission not granted</string>
+    <string name="please_refresh">Please refresh and try to load again</string>
+    <string name="downloading">Downloading file…</string>
+    <string name="cant_download_permissions_not_granted">Can\'t download file, permissions not granted</string>
+    <string name="permissions_granted">Permissions Granted</string>
+    <string name="permissions_denied">Permissions Denied</string>
+    <string name="please_click_back_again">Please click BACK again to exit</string>
+</resources>

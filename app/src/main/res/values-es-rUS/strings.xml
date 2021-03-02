@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Colegio Texarkana</string>
+    <string name="permission_not_granted">Permiso no concedido</string>
+    <string name="some_permissions_are_required_to_do_the_task">Se requieren algunos permisos para realizar la tarea.</string>
+    <string name="need_permissions">Necesita permiso(s)</string>
+    <string name="ok">Okay</string>
+    <string name="cancel">Cancelar</string>
+    <string name="go_into_settings_message">Vaya a la configuración y permita el acceso al almacenamiento para esta aplicación, o borre los datos de la aplicación y vuelva a abrirla para solicitar permisos nuevamente.</string>
+    <string name="please_refresh">Actualiza e intenta cargar de nuevo.</string>
+    <string name="downloading">Descargando archivo…</string>
+    <string name="cant_download_permissions_not_granted">No se puede descargar el archivo, no se otorgan permisos</string>
+    <string name="permissions_granted">Permisos otorgados</string>
+    <string name="permissions_denied">Permisos denegados</string>
+    <string name="please_click_back_again">Haga clic en ATRÁS nuevamente para salir</string>
+</resources>

@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:foregroundGravity="bottom"
             app:adSize="BANNER"
-            app:adUnitId="add your own"
+            app:adUnitId="ca-app-pub-4546055219731501/9641132280"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

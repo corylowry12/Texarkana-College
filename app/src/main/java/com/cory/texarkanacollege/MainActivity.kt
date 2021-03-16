@@ -114,9 +114,7 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.downloading), Snackbar.LENGTH_LONG)
                     .show()
             } else {
-                Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.cant_download_permissions_not_granted), Snackbar.LENGTH_LONG)
-
-                    .show()
+               managePermissions.showAlert(this)
             }
         }
 

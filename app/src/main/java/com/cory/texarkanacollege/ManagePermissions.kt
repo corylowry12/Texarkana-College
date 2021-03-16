@@ -4,21 +4,17 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class ManagePermissions(private val activity: Activity, private val list: List<String>, private val code:Int) {
 
     // Check permissions at runtime
     fun checkPermissions(context: Context) : Boolean {
-        return if (isPermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
-            showAlert(context)
-            false
-        } else {
-            //Toast.makeText(activity, "Permission Granted", Toast.LENGTH_SHORT).show()
-            true
-        }
+        return isPermissionsGranted() == PackageManager.PERMISSION_GRANTED
     }
 
     // Check permissions status
@@ -42,32 +38,27 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
     }
 
     // Show alert dialog to request permissions
-    private fun showAlert(context: Context) {
-        val alertDialogData = AlertDialogData(context)
-        if(!alertDialogData.loadAlertState()) {
-            val builder = AlertDialog.Builder(activity, R.style.AlertDialogStyle)
-            builder.setTitle(context.getString(R.string.need_permissions))
-            builder.setMessage(context.getString(R.string.some_permissions_are_required_to_do_the_task))
-            builder.setCancelable(false)
-            builder.setPositiveButton(context.getString(R.string.ok)) { _, _ ->
-                requestPermissions(context)
-                alertDialogData.setAlertState(true)
-                }
-            builder.setNeutralButton(context.getString(R.string.cancel)) { _, _ ->
-            alertDialogData.setAlertState(true)
-                Snackbar.make(activity.findViewById(R.id.constraintLayout), context.getString(R.string.permission_not_granted), Snackbar.LENGTH_LONG)
-                    .show()}
-            val dialog = builder.create()
-            dialog.show()
+    fun showAlert(context: Context) {
+        val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+        builder.setTitle(R.string.need_permissions)
+        builder.setMessage(R.string.some_permissions_are_required_to_do_the_task)
+        builder.setCancelable(false)
+        builder.setPositiveButton(R.string.ok) { _, _ ->
+            requestPermissions(context)
         }
-    }
+        builder.setNeutralButton(R.string.cancel) { _, _ ->
+            Toast.makeText(context, context.getString(R.string.permission_not_granted), Toast.LENGTH_SHORT)
+                    .show()
+        }
+        val dialog = builder.create()
+        dialog.show()
+        }
 
     // Request the permissions at run time
     private fun requestPermissions(context: Context) {
         val permission = deniedPermission(context)
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-            Snackbar.make(activity.findViewById(R.id.constraintLayout), context.getString(R.string.go_into_settings_message), Snackbar.LENGTH_LONG)
-                .show()
+            ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
         } else {
             ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
         }

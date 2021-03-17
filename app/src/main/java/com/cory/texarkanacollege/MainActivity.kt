@@ -13,6 +13,7 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +39,18 @@ class MainActivity : AppCompatActivity() {
         mAdView.adListener = object : AdListener() {
 
         }
+
+        FirebaseMessaging.getInstance().token
+                .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("Stuff", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                    val token = task.result
+
+                    Log.d("Token: ", token)
+                })
 
         refreshLayout = findViewById(R.id.refreshLayout)
         webView = findViewById(R.id.webView)

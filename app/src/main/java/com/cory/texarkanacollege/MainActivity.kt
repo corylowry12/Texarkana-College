@@ -40,18 +40,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        FirebaseMessaging.getInstance().token
-                .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w("Stuff", "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                    val token = task.result
-
-                    Log.d("Token: ", token)
-                })
-
         refreshLayout = findViewById(R.id.refreshLayout)
         webView = findViewById(R.id.webView)
 
@@ -59,21 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         managePermissions = ManagePermissions(this, list, permissionRequestCode)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            managePermissions.checkPermissions(this)
+        managePermissions.checkPermissions(this)
 
         loadWebview()
-
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if(!task.isSuccessful) {
-                Log.w("token", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            val token = task.result
-
-            Log.d("Token", token)
-        })
 
     }
 

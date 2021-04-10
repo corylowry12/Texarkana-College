@@ -1,16 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-tasks:17.1.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d776c9c816ed4f5e9a8ab0815aa69cda/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/65cbbd464feca715ca122ef105cd6d1c/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/03f02c67bf026345929e7bc77f06f3c3/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c133f402a3dcf041215099f982063ca8/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0511ba6e19cebec8f49b9f4ea2bae3fd/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6af8fcb9c0f88ac303d78ae54a4160d8/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2f3d16849ead6fdf4ad50f78ed47c9c8/jetified-play-services-tasks-17.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9e85dea31b66f2805e436a9ef76f4255/jetified-play-services-tasks-17.1.0/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9e85dea31b66f2805e436a9ef76f4255/jetified-play-services-tasks-17.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9e85dea31b66f2805e436a9ef76f4255/jetified-play-services-tasks-17.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9e85dea31b66f2805e436a9ef76f4255/jetified-play-services-tasks-17.1.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-tasks/17.1.0/6e7f20f42567018bddbd6925bb31e339a66259ad/play-services-tasks-17.1.0-javadoc.jar!/" />

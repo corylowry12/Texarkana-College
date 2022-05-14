@@ -39,7 +39,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
 
     // Show alert dialog to request permissions
     fun showAlert(context: Context) {
-        val builder = AlertDialog.Builder(context, R.style.AlertDialogStyle)
+        val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.need_permissions)
         builder.setMessage(R.string.some_permissions_are_required_to_do_the_task)
         builder.setCancelable(false)
@@ -60,7 +60,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
             ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
         } else {
-            ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
+            Toast.makeText(context, "Go to settings and manually change the permission", Toast.LENGTH_SHORT).show()
         }
     }
 

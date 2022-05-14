@@ -12,4 +12,6 @@
     <string name="permissions_granted">Permissions Granted</string>
     <string name="permissions_denied">Permissions Denied</string>
     <string name="please_click_back_again">Please click BACK again to exit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

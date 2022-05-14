@@ -8,11 +8,16 @@ import android.os.*
 import android.util.Log
 import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.ads.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
@@ -23,11 +28,15 @@ class MainActivity : AppCompatActivity() {
     private val permissionRequestCode = 1
     private lateinit var managePermissions: ManagePermissions
 
+    val homeFragment = HomeFragment()
+    val classesFragment = ClassesFragment()
+    private lateinit var gradeFragment: GradeFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        /*// Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
         MobileAds.initialize(this)
         val adView = AdView(this)
         adView.adSize = AdSize.BANNER
@@ -49,14 +58,33 @@ class MainActivity : AppCompatActivity() {
 
         managePermissions.checkPermissions(this)
 
-        loadWebview()
+        loadWebview()*/
 
+        replaceFragment(homeFragment)
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.home -> replaceFragment(homeFragment)
+                R.id.classes -> replaceFragment(classesFragment)
+            }
+            true
+        }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.commit()
+    }
+
+    /*@SuppressLint("SetJavaScriptEnabled")
     private fun loadWebview() {
         val url = "https://my.texarkanacollege.edu/ICS/"
         webView.loadUrl(url)
+        webView.isVerticalScrollBarEnabled = true
+        webView.isHorizontalScrollBarEnabled = true
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url2 = request?.url.toString()
@@ -165,5 +193,5 @@ class MainActivity : AppCompatActivity() {
                 }, 2000)
             }
         }
-    }
+    }*/
 }

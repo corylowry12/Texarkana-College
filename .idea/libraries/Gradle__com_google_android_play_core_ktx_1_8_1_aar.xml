@@ -1,17 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.play:core-ktx:1.8.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7010dfa6bf6b0e491756385c3c9522c6/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/933fd84c2588252d7cc9751c1d146552/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e075f70170ba86d73584ac2cd453907e/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5bd373a0b1d2c5214a7a339c170c6b79/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/607905319ac809f879e3823495fd37dc/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2eeb63e6cab7382e999f270eb93c5caf/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4fda4fd7242ce69cbe69ef84617ad82d/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/295bc016ee92332bac88dcf8611c6c76/transformed/jetified-core-ktx-1.8.1/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e827060d71f392a0a3cf7941bd28ee14/transformed/jetified-core-ktx-1.8.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e827060d71f392a0a3cf7941bd28ee14/transformed/jetified-core-ktx-1.8.1/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e827060d71f392a0a3cf7941bd28ee14/transformed/jetified-core-ktx-1.8.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7b6b272c931b94adcb1a7035dc5c2358/transformed/jetified-core-ktx-1.8.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7b6b272c931b94adcb1a7035dc5c2358/transformed/jetified-core-ktx-1.8.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7b6b272c931b94adcb1a7035dc5c2358/transformed/jetified-core-ktx-1.8.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

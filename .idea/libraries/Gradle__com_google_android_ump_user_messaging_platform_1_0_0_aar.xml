@@ -1,17 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.ump:user-messaging-platform:1.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e506b19213ad0cd91fc2a77a7d650c48/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6743ed62a56603cd250f8bc731c91d55/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b32f6a23da76cf9a245f3c8123afd9d5/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2130ace6253084ae4675fc9f29fe294b/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/41c136fd3c12acb199c05f510eb34047/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/488bc621a0cda25c8cbb4700c5f4ece9/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a6fec921e93cf77f1442d86639673aec/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/13ac50ad472139c4f5d470741583e644/transformed/jetified-user-messaging-platform-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62f2ace1fdab703243867d58c41225fe/transformed/jetified-user-messaging-platform-1.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/62f2ace1fdab703243867d58c41225fe/transformed/jetified-user-messaging-platform-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62f2ace1fdab703243867d58c41225fe/transformed/jetified-user-messaging-platform-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a2a14d1deec974e581028ce079d2a792/transformed/jetified-user-messaging-platform-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a2a14d1deec974e581028ce079d2a792/transformed/jetified-user-messaging-platform-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a2a14d1deec974e581028ce079d2a792/transformed/jetified-user-messaging-platform-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.ump/user-messaging-platform/1.0.0/d735fbf1a7e252ffda813ef2622c3a1ccdd2bb3c/user-messaging-platform-1.0.0-javadoc.jar!/" />

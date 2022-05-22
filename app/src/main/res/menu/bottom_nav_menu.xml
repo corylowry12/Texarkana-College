@@ -4,12 +4,24 @@
     <item
         android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/ic_outline_home_24"
+        android:icon="@drawable/home_selector"
         />
 
     <item
         android:id="@+id/classes"
         android:title="Classes"
-        android:icon="@drawable/ic_outline_grade_24"
+        android:icon="@drawable/classes_selector"
+        />
+
+    <item
+        android:id="@+id/assignments"
+        android:title="Assignments"
+        android:icon="@drawable/assignments_selector"
+        />
+
+    <item
+        android:id="@+id/settings"
+        android:title="Settings"
+        android:icon="@drawable/settings_selector"
         />
 </menu>

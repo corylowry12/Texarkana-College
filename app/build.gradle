@@ -28,6 +28,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'com.cory.texarkanacollege'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -55,4 +59,22 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx:23.0.2'
     implementation 'com.google.android.play:core-ktx:1.8.1'
     implementation 'com.google.android.play:core:1.10.3'
+
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    implementation 'org.jsoup:jsoup:1.13.1'
+
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+
+    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
+
+    implementation 'com.github.MikeOrtiz:TouchImageView:1.4.1'
+
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+
+    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha02'
+
+    implementation 'com.github.zcweng:switch-button:0.0.3'
+
+    implementation 'com.alexvasilkov:gesture-views:2.8.3'
 }

@@ -52,18 +52,26 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.suke.widget.SwitchButton
         android:id="@+id/netClassSwitch"
-        android:layout_width="match_parent"
+        app:sb_show_indicator="false"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is a web course"
-        android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        />
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/netClassSwitch"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
+        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
+        android:text="This is a web class"
+        android:textSize="18sp"
+        android:layout_marginStart="10dp" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
@@ -82,31 +90,35 @@
         app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:selectionRequired="true"
         app:singleSelection="false"
         android:animateLayoutChanges="true">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/mon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mon"
             style="?attr/materialButtonOutlinedStyle"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/tue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tue"
             style="?attr/materialButtonOutlinedStyle"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/wed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wed"
             style="?attr/materialButtonOutlinedStyle"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/thur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Thur"
             style="?attr/materialButtonOutlinedStyle"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/fri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fri"

@@ -1,24 +1,18 @@
 package com.cory.texarkanacollege
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.Context
-import android.net.Uri
-import android.os.*
-import android.util.Log
-import android.webkit.*
+import android.content.Intent
+import android.content.res.Configuration
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.webkit.WebView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.gms.ads.*
-import com.google.android.gms.tasks.OnCompleteListener
+import com.cory.texarkanacollege.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.RuntimeException
+import com.google.android.material.navigationrail.NavigationRailView
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,11 +24,51 @@ class MainActivity : AppCompatActivity() {
 
     val homeFragment = HomeFragment()
     val classesFragment = ClassesFragment()
-    private lateinit var gradeFragment: GradeFragment
+    val settingsFragment = SettingsFragment()
+    var gradeFragment = GradeFragment()
+    val assignmentFragment = AssignmentFragment()
+    var campusNewsFragment = CampusNewsFragment()
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val extras = intent.extras
+
+        if (extras != null) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.settings).isChecked = true
+            }
+            else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.settings).isChecked = true
+            }
+
+            replaceFragment(CampusMapFragment())
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (savedInstanceState == null) {
+            replaceFragment(homeFragment)
+        }
+        val extras = intent.extras
+
+        if (extras != null) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.settings).isChecked = true
+            }
+            else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.settings).isChecked = true
+            }
+
+            replaceFragment(CampusMapFragment())
+        }
 
         /*// Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
         MobileAds.initialize(this)
@@ -60,23 +94,79 @@ class MainActivity : AppCompatActivity() {
 
         loadWebview()*/
 
-        replaceFragment(homeFragment)
+        if (resources.getBoolean(R.bool.isTablet)) {
+            val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> replaceFragment(homeFragment)
-                R.id.classes -> replaceFragment(classesFragment)
+            bottomNav.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.home -> {
+                        replaceFragment(homeFragment)
+                    }
+                    R.id.classes -> {
+                        replaceFragment(classesFragment)
+                    }
+                    R.id.assignments -> {
+                        replaceFragment(assignmentFragment)
+                    }
+                    R.id.settings -> {
+                        replaceFragment(settingsFragment)
+                    }
+                }
+                true
             }
-            true
         }
+        else {
+            val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+            bottomNav.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.home -> {
+                        replaceFragment(homeFragment)
+                    }
+                    R.id.classes -> {
+                        replaceFragment(classesFragment)
+                    }
+                    R.id.assignments -> {
+                        replaceFragment(assignmentFragment)
+                    }
+                    R.id.settings -> {
+                        replaceFragment(settingsFragment)
+                    }
+                }
+                true
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+          setContentView(R.layout.activity_main)
     }
 
     fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
         transaction.commit()
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putAll(outPersistentState)
+    }
+
+    fun textViewVisibilityClasses() {
+        classesFragment.textViewVisibility()
+    }
+
+    fun textViewVisibilityGrades() {
+        gradeFragment.textViewVisibility()
+    }
+
+    fun hideKeyboardCampusNews() {
+        campusNewsFragment.hideKeyboard()
     }
 
     /*@SuppressLint("SetJavaScriptEnabled")

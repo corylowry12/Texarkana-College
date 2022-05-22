@@ -1,14 +1,12 @@
 package com.cory.texarkanacollege
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 
 class ManagePermissions(private val activity: Activity, private val list: List<String>, private val code:Int) {
 
@@ -39,7 +37,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
 
     // Show alert dialog to request permissions
     fun showAlert(context: Context) {
-        val builder = AlertDialog.Builder(context)
+        val builder = MaterialAlertDialogBuilder(context)
         builder.setTitle(R.string.need_permissions)
         builder.setMessage(R.string.some_permissions_are_required_to_do_the_task)
         builder.setCancelable(false)
@@ -60,7 +58,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
             ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
         } else {
-            Toast.makeText(context, "Go to settings and manually change the permission", Toast.LENGTH_SHORT).show()
+            ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
         }
     }
 

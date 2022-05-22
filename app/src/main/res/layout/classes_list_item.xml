@@ -8,7 +8,7 @@
     android:id="@+id/classesRelativeLayout">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardViewHistory"
+        android:id="@+id/cardViewClassItem"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,23 +33,48 @@
 
             <TextView
                 android:id="@+id/row_class"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Class Name"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/row_class_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Class Time"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/row_class"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/row_class_average"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Class Average"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/row_class"
+                app:layout_constraintTop_toBottomOf="@id/row_class_time"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:id="@+id/chevronImage"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_baseline_chevron_right_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

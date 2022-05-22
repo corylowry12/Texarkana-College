@@ -39,7 +39,7 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/image"
+                app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_name"
-                app:layout_constraintEnd_toStartOf="@id/image"
+                app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_grade"
-                app:layout_constraintEnd_toStartOf="@id/image"
+                app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -72,17 +72,28 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_weight"
-                app:layout_constraintEnd_toStartOf="@id/image"
+                app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
                 tools:ignore="HardcodedText" />
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Elevated"
+                android:id="@+id/cardViewGradeItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_baseline_add_a_photo_24"/>
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="28dp">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_baseline_add_a_photo_24"
+                    android:scaleType="fitXY"
+                    />
+            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

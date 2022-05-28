@@ -32,6 +32,7 @@ class UpcomingAdapter(val context: Context,
 
         var title = itemView.findViewById<TextView>(R.id.row_class)!!
         var classTime = itemView.findViewById<TextView>(R.id.row_class_time)
+        var notes = itemView.findViewById<TextView>(R.id.row_class_notes)
 
         fun bind(position: Int) {
 
@@ -39,6 +40,19 @@ class UpcomingAdapter(val context: Context,
 
             title.text = "Assignment Name: " + dataItem["assignmentName"]
             classTime.text = "Due Date: " + dataItem["dueDate"]
+
+            if (dataItem["notes"] == "" || dataItem["notes"] == null) {
+                notes.visibility = View.GONE
+            }
+            else {
+                if (dataItem["notes"]!!.length < 15) {
+                    notes.text = "Notes: " + dataItem["notes"]
+                }
+                else {
+                    val notesSubstring = dataItem["notes"]!!.substring(0, 15)
+                    notes.text = "Notes: " + notesSubstring + "..."
+                }
+            }
         }
     }
 

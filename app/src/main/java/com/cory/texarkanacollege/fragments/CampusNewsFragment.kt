@@ -158,11 +158,13 @@ class CampusNewsFragment : Fragment() {
                 try {
                     if (s.toString() != "") {
                         for (i in 0 until dataList.count()) {
-                            if (dataList[i]["name"]!!.contains(s.toString())) {
+                            if (dataList[i]["name"]!!.lowercase().contains(s.toString().lowercase())) {
                                 selectedItems.add(dataList[i])
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
 
-                                campusNewsAdapter =
-                                    CampusNewsAdapter(requireContext(), selectedItems)
+                                campusNewsAdapter = CampusNewsAdapter(requireContext(), selectedItems)
 
                                 recyclerView.adapter = campusNewsAdapter
                                 recyclerView.invalidate()
@@ -186,11 +188,12 @@ class CampusNewsFragment : Fragment() {
                 try {
                     if (s.toString() != "") {
                         for (i in 0 until dataList.count()) {
-                            if (dataList[i]["name"]!!.contains(s.toString())) {
+                            if (dataList[i]["name"]!!.lowercase().contains(s.toString().lowercase())) {
                                 selectedItems.add(dataList[i])
-
-                                campusNewsAdapter =
-                                    CampusNewsAdapter(requireContext(), selectedItems)
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
+                                campusNewsAdapter = CampusNewsAdapter(requireContext(), selectedItems)
 
                                 recyclerView.adapter = campusNewsAdapter
                                 recyclerView.invalidate()
@@ -214,14 +217,15 @@ class CampusNewsFragment : Fragment() {
                 try {
                     if (s.toString() != "") {
                         for (i in 0 until dataList.count()) {
-                            if (dataList[i]["name"]!!.contains(s.toString())) {
+                            if (dataList[i]["name"]!!.lowercase().contains(s.toString().lowercase())) {
                                 selectedItems.add(dataList[i])
-
-                                campusNewsAdapter =
-                                    CampusNewsAdapter(requireContext(), selectedItems)
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
+                                campusNewsAdapter = CampusNewsAdapter(requireContext(), selectedItems)
 
                                 recyclerView.adapter = campusNewsAdapter
-
+                                recyclerView.invalidate()
                             }
                         }
                     }
@@ -230,7 +234,6 @@ class CampusNewsFragment : Fragment() {
                             CampusNewsAdapter(requireContext(), dataList)
 
                         recyclerView.adapter = campusNewsAdapter
-
                         recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
                     }
                 } catch (e: Exception) {
@@ -245,7 +248,7 @@ class CampusNewsFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             loadAllMaterialDialog = MaterialAlertDialogBuilder(
                 requireContext())
-            layout.findViewById<TextView>(R.id.body).text = "Fetching page $loadPosition of $pageNumber"
+            layout.findViewById<TextView>(R.id.body).text = "Fetching page ${loadPosition + 1} of $pageNumber"
             loadAllMaterialDialog.setCancelable(false)
 
             loadAllMaterialDialog.setView(layout)
@@ -260,7 +263,7 @@ class CampusNewsFragment : Fragment() {
 
         GlobalScope.launch(Dispatchers.IO) {
 
-            for (i in loadPosition..pageNumber) {
+            for (i in (loadPosition+1)..pageNumber) {
                 val url = "https://www.texarkanacollege.edu/news/page/${i}/"
 
                 val document = Jsoup.connect(url).get()
@@ -394,15 +397,6 @@ class CampusNewsFragment : Fragment() {
                 catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (materialDialog != null) {
-            if (materialDialog.create().isShowing) {
-                materialDialog.create().cancel()
             }
         }
     }

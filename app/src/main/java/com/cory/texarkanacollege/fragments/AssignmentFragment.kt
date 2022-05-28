@@ -154,14 +154,19 @@ class AssignmentFragment : Fragment() {
                         }
 
                         addAssignmentButton.setOnClickListener {
-                            addAssignment(
-                                assignmentName.text.toString(),
-                                classesMenu.text.toString(),
-                                date,
-                                ""
-                            )
-                            loadIntoList()
-                            dialog.dismiss()
+                            if (assignmentName.text.toString() == "") {
+                                Toast.makeText(requireContext(), "An assignment name is required", Toast.LENGTH_SHORT).show()
+                            }
+                            else {
+                                addAssignment(
+                                    assignmentName.text.toString(),
+                                    classesMenu.text.toString(),
+                                    date,
+                                    assignmentNotes.text.toString()
+                                )
+                                loadIntoList()
+                                dialog.dismiss()
+                            }
                         }
                         cancelButton.setOnClickListener {
                             dialog.dismiss()
@@ -261,6 +266,7 @@ class AssignmentFragment : Fragment() {
                     upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =
                     upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
+                map["notes"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
                 upcomingDataList.add(map)
 
                 upcomingCursor.moveToNext()
@@ -278,6 +284,7 @@ class AssignmentFragment : Fragment() {
                     pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =
                     pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
+                map["notes"] = pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
                 pastDueDataList.add(map)
 
                 pastDueCursor.moveToNext()
@@ -295,6 +302,7 @@ class AssignmentFragment : Fragment() {
                     doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =
                     doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
+                map["notes"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
                 doneDataList.add(map)
 
                 doneCursor.moveToNext()

@@ -100,6 +100,8 @@ class ClassesAdapter(val context: Context,
             dialog.setCancelable(false)
             dialog.setContentView(addGradeView)
 
+            val headingTextView = dialog.findViewById<TextView>(R.id.headingTextView)
+            headingTextView!!.text = "Options/" + dataItem["className"]
             val editButton = dialog.findViewById<Button>(R.id.editButton)
             val deleteButton = dialog.findViewById<Button>(R.id.deleteButton)
             val deleteAllButton = dialog.findViewById<Button>(R.id.deleteAllButton)

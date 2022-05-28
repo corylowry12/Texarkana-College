@@ -1,11 +1,20 @@
 package com.cory.texarkanacollege
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Bundle
-import android.os.PersistableBundle
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.*
+import android.provider.MediaStore
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -13,6 +22,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private var isLoaded: Boolean = false
     private val permissionRequestCode = 1
     private lateinit var managePermissions: ManagePermissions
+
+    var path = ""
 
     val homeFragment = HomeFragment()
     val classesFragment = ClassesFragment()
@@ -284,4 +298,103 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }*/
+
+    val showImagePicker = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            ImagePathData(this).setPath("")
+            val data = result.data
+            val selectedImage =
+                Objects.requireNonNull(data)!!.data
+            var imageStream: InputStream? = null
+            try {
+                imageStream =
+                    this.contentResolver?.openInputStream(
+                        selectedImage!!
+                    )
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            }
+            val imageBitmap = BitmapFactory.decodeStream(imageStream)
+            val stream = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            val byteArray = stream.toByteArray()
+            val selectedFile = File(getRealPathFromURI(selectedImage!!))
+            ImagePathData(this).setPath(selectedFile.toString())// To display selected image in image view
+        }
+    }
+
+    fun getRealPathFromURI(contentURI: Uri) : String {
+        var result = ""
+        val cursor = this.contentResolver?.query(contentURI, null, null, null, null)
+        if (cursor == null) {
+            result = contentURI.path.toString()
+        }
+        else {
+            cursor.moveToFirst()
+            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
+
+    val showCamera = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+            val ei = ExifInterface(currentPhotoPath)
+            val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+
+            val m = Matrix()
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                m.postRotate(90f)
+            }
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                m.postRotate(180f)
+            }
+            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                m.postRotate(270f)
+            }
+
+            val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
+                .format(System.currentTimeMillis())
+            val storageDir = File(
+                Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/");
+
+            if (!storageDir.exists()) {
+                storageDir.mkdirs()
+            }
+            val image = File.createTempFile(timeStamp, ".jpeg", storageDir)
+
+            val f = File(image.toString())
+            val fileOutputStream = FileOutputStream(f)
+            val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
+            val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            MediaScannerConnection.scanFile(this, arrayOf(image.toString()), null, null)
+
+             ImagePathData(this).setPath(image.toString())
+        }
+    }
+
+    var currentPhotoPath = ""
+
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
+        val storageDir: File = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".png", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
 }

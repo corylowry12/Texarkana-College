@@ -50,14 +50,22 @@ SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     fun update(
         id: String,
-        className: String,
+        name: String,
+        grade: String,
+        weight: String,
+        date: String,
+        image: String
     ) {
         val values = ContentValues()
-        values.put(COLUMN_GRADE, className)
+        values.put(COLUMN_NAME, name)
+        values.put(COLUMN_GRADE, grade)
+        values.put(COLUMN_WEIGHT, weight)
+        values.put(COLUMN_DATE, date)
+        values.put(COLUMN_IMAGE, image)
 
         val db = this.writableDatabase
 
-        db.update(TABLE_NAME, values, "$COLUMN_CLASS_ID=?", arrayOf(id))
+        db.update(TABLE_NAME, values, "$COLUMN_ID=?", arrayOf(id))
 
     }
 

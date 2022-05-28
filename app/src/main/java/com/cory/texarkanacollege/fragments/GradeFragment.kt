@@ -54,7 +54,7 @@ class GradeFragment : Fragment() {
 
     private val chooseImageRequestCode = 99
 
-    private lateinit var image: String
+    lateinit var image: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +77,7 @@ class GradeFragment : Fragment() {
             gridLayoutManager = GridLayoutManager(requireContext(), 1)
         }
 
-        gradesAdapter = GradesAdapter(requireContext(), dataList, imageDataList)
+        gradesAdapter = GradesAdapter(requireContext(), dataList)
 
         loadIntoList()
 
@@ -429,7 +429,7 @@ class GradeFragment : Fragment() {
         textViewVisibility()
 
         dataList.clear()
-        imageDataList.clear()
+
         val cursor = dbHandler.getGrades(ItemID(context).loadPosition().toString())
         cursor.moveToFirst()
 
@@ -441,27 +441,23 @@ class GradeFragment : Fragment() {
             map["grade"] = cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_GRADE))
             map["weight"] = cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_WEIGHT))
             map["date"] = cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_DATE))
-            dataList.add(map)
-
-            val imageMap = HashMap<String, String>()
-
             if (cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_IMAGE)) != null) {
-                imageMap["image"] =
+                map["image"] =
                     cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_IMAGE))
 
             }
             else {
-                imageMap["image"] = ""
+                map["image"] = ""
 
             }
-            imageDataList.add(imageMap)
+            dataList.add(map)
 
             cursor.moveToNext()
         }
 
         val recyclerView = activity?.findViewById<RecyclerView>(R.id.gradesRecyclerView)
         recyclerView?.layoutManager = gridLayoutManager
-        recyclerView?.adapter = GradesAdapter(context, dataList, imageDataList)
+        recyclerView?.adapter = GradesAdapter(context, dataList)
 
     }
 
@@ -476,4 +472,45 @@ class GradeFragment : Fragment() {
             noGradesStoredTextView?.visibility = View.VISIBLE
         }
     }
+
+    val takePhoto2 = registerForActivityResult(
+            StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+
+                val ei = ExifInterface(currentPhotoPath)
+                val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+
+                val m = Matrix()
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    m.postRotate(90f)
+                }
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    m.postRotate(180f)
+                }
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    m.postRotate(270f)
+                }
+
+                val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+
+                val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
+                    .format(System.currentTimeMillis())
+                val storageDir = File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/");
+
+                if (!storageDir.exists()) {
+                    storageDir.mkdirs()
+                }
+                val image = File.createTempFile(timeStamp, ".jpeg", storageDir)
+
+                val f = File(image.toString())
+                val fileOutputStream = FileOutputStream(f)
+                val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
+                val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+                MediaScannerConnection.scanFile(requireContext(), arrayOf(image.toString()), null, null)
+
+            }
+        }
+
 }

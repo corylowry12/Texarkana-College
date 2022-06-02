@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.work:work-runtime:2.8.0-alpha02@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/19facaf66c34909e07bb7a86654a6b39/transformed/work-runtime-2.8.0-alpha02/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/19facaf66c34909e07bb7a86654a6b39/transformed/work-runtime-2.8.0-alpha02/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/19facaf66c34909e07bb7a86654a6b39/transformed/work-runtime-2.8.0-alpha02/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/37c7fec945c0f1d7113fd232df737274/transformed/work-runtime-2.8.0-alpha02/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/37c7fec945c0f1d7113fd232df737274/transformed/work-runtime-2.8.0-alpha02/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/37c7fec945c0f1d7113fd232df737274/transformed/work-runtime-2.8.0-alpha02/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

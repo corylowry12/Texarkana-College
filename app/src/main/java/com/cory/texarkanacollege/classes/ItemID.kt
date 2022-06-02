@@ -1,4 +1,4 @@
-package com.cory.texarkanacollege
+package com.cory.texarkanacollege.classes
 
 import android.content.Context
 import android.content.SharedPreferences

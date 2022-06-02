@@ -1,6 +1,5 @@
 package com.cory.texarkanacollege.fragments
 
-import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -12,10 +11,9 @@ import android.webkit.*
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.cory.texarkanacollege.ManagePermissions
+import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.R
 import com.google.android.material.snackbar.Snackbar
-import java.lang.NullPointerException
 
 class HomeFragment : Fragment() {
 

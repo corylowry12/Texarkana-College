@@ -60,7 +60,7 @@ class AssignmentFragment : Fragment() {
     @SuppressLint("Range")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        classesArray.clear()
         val dbHandler = ClassesDBHelper(requireActivity().applicationContext, null)
 
         val cursor = dbHandler.getAllRow(requireContext())

@@ -1,4 +1,4 @@
-package com.cory.texarkanacollege
+package com.cory.texarkanacollege.widgets
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
-import android.widget.Toast
-import androidx.annotation.RequiresApi
+import com.cory.texarkanacollege.MainActivity
+import com.cory.texarkanacollege.R
 
 class CampusMapWidget : AppWidgetProvider() {
     override fun onUpdate(
@@ -40,7 +40,6 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val widgetText = context.getString(R.string.appwidget_text)
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.campus_map_widget)
 

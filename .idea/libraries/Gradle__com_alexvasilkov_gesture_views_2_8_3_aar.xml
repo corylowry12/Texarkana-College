@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.alexvasilkov:gesture-views:2.8.3@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8a56adb0b44ada574289ebf92b56ca2c/transformed/jetified-gesture-views-2.8.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8a56adb0b44ada574289ebf92b56ca2c/transformed/jetified-gesture-views-2.8.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8a56adb0b44ada574289ebf92b56ca2c/transformed/jetified-gesture-views-2.8.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf1de40d38ab76feaf1c5431891732aa/transformed/jetified-gesture-views-2.8.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf1de40d38ab76feaf1c5431891732aa/transformed/jetified-gesture-views-2.8.3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bf1de40d38ab76feaf1c5431891732aa/transformed/jetified-gesture-views-2.8.3/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.alexvasilkov/gesture-views/2.8.3/a11a5bbf5c4a79fe3fb3ce76a4a6ad1a9651621/gesture-views-2.8.3-javadoc.jar!/" />

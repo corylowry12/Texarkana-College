@@ -19,14 +19,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.*
 import com.cory.texarkanacollege.adapters.GradesAdapter
+import com.cory.texarkanacollege.classes.ItemID
+import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior

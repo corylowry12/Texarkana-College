@@ -1,14 +1,10 @@
 package com.cory.texarkanacollege.adapters
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +12,14 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.classes.ImagePathData
+import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.ImageViewFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -146,12 +140,14 @@ class GradesAdapter(
                 val addGradeCancelButton =
                     editGradeBottomSheetView.findViewById<Button>(R.id.cancelButton)
 
+                ImagePathData(context).setPath(dataItem["image"].toString())
+
                 addGradeButton.text = "Update Grade"
                 nameEditText.setText(dataItem["name"])
                 gradeEditText.setText(dataItem["grade"])
                 weightEditText.setText(dataItem["weight"])
 
-                if (dataItem["image"] != null) {
+                if (dataItem["image"] != "") {
                     addImageButton.setText("View Image")
                 }
 
@@ -205,6 +201,19 @@ class GradesAdapter(
                             chooseImageDialog.dismiss()
                         }
 
+                        takePhotoButton.setOnClickListener {
+
+                                    val saveState = Runnable {
+                                        (context as MainActivity).camera()
+
+                                    }
+
+                                    MainActivity().runOnUiThread(saveState)
+
+                            addImageButton.text = "View Image"
+                            chooseImageDialog.dismiss()
+                        }
+
                         cancelButtonImageDialog.setOnClickListener {
                             chooseImageDialog.dismiss()
                         }
@@ -227,12 +236,9 @@ class GradesAdapter(
                 addGradeButton.setOnClickListener {
                     val gradesDBHelper = GradesDBHelper(context, null)
                     var image = ""
-                    if (ImagePathData(context).loadPath() != "") {
+
                         image = ImagePathData(context).loadPath()
-                    }
-                    else {
-                        image = dataItem["image"].toString()
-                    }
+
                     gradesDBHelper.update(
                         dataItem["primary"].toString(),
                         nameEditText.text.toString(),
@@ -261,15 +267,9 @@ class GradesAdapter(
                         map["date"] =
                             cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_DATE))
 
-                        if (cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_IMAGE)) != null) {
                             map["image"] =
                                 cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_IMAGE))
 
-                        }
-                        else {
-                            map["image"] = ""
-
-                        }
 
                         dataList.add(map)
                         cursor.moveToNext()

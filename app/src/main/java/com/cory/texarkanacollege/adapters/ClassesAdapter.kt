@@ -9,10 +9,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.GradeFragment

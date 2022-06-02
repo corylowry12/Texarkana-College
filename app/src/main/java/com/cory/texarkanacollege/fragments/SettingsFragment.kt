@@ -24,38 +24,40 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val appearanceConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintAppearance)
+        appearanceConstraint?.setOnClickListener {
+            openFragment(AppearanceFragment())
+        }
+
         val campusNewsConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintCampusNews)
         campusNewsConstraint?.setOnClickListener {
             val campusNewsFragment = CampusNewsFragment()
             (context as MainActivity).campusNewsFragment = campusNewsFragment
-            val manager =
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            manager.replace(R.id.fragment_container, campusNewsFragment)
-                .addToBackStack(null)
-            manager.commit()
+            openFragment(campusNewsFragment)
+        }
+
+        val communityBoardConstraint = activity?.findViewById<ConstraintLayout>(R.id.communityBoardConstraint)
+        communityBoardConstraint?.setOnClickListener {
+            openFragment(CommunityBoardFragment())
         }
 
         val patchNotesConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintPatchNotes)
         patchNotesConstraint?.setOnClickListener {
-            val manager =
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            manager.replace(R.id.fragment_container, PatchNotesFragment())
-                .addToBackStack(null)
-            manager.commit()
+            openFragment(PatchNotesFragment())
         }
 
         val campusMapConstraint = view.findViewById<ConstraintLayout>(R.id.constraintCampusMap)
         campusMapConstraint.setOnClickListener {
-            val campusNewsFragment = CampusMapFragment()
-
-            val manager =
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            manager.replace(R.id.fragment_container, campusNewsFragment)
-                .addToBackStack(null)
-            manager.commit()
+            openFragment(CampusMapFragment())
         }
+    }
+
+    fun openFragment(fragment: Fragment) {
+        val manager =
+            (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+        manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        manager.replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+        manager.commit()
     }
 }

@@ -1,4 +1,4 @@
-package com.cory.texarkanacollege
+package com.cory.texarkanacollege.classes
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService

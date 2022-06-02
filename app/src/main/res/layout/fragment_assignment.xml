@@ -33,7 +33,6 @@
                 app:layout_collapseMode="pin"
                 app:title="Assignments"
                 app:titleCentered="true"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
                 app:menu="@menu/classes_menu"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

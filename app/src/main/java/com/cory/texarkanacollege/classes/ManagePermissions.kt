@@ -1,4 +1,4 @@
-package com.cory.texarkanacollege
+package com.cory.texarkanacollege.classes
 
 import android.app.Activity
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.cory.texarkanacollege.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ManagePermissions(private val activity: Activity, private val list: List<String>, private val code:Int) {

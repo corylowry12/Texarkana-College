@@ -16,9 +16,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.cory.texarkanacollege.classes.CurrentPhotoPathData
+import com.cory.texarkanacollege.classes.ImagePathData
+import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
@@ -345,7 +349,7 @@ class MainActivity : AppCompatActivity() {
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
 
-            val ei = ExifInterface(currentPhotoPath)
+            val ei = ExifInterface(CurrentPhotoPathData(this).loadPhotoPath())
             val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
 
             val m = Matrix()
@@ -359,8 +363,8 @@ class MainActivity : AppCompatActivity() {
                 m.postRotate(270f)
             }
 
-            val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
-
+            val originalBitmap = BitmapFactory.decodeFile(CurrentPhotoPathData(this@MainActivity).loadPhotoPath())
+            Toast.makeText(this, CurrentPhotoPathData(this@MainActivity).loadPhotoPath(), Toast.LENGTH_SHORT).show()
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                 .format(System.currentTimeMillis())
             val storageDir = File(
@@ -382,9 +386,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    var currentPhotoPath = ""
-
-    private fun createImageFile(): File {
+    fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
         val storageDir: File = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
@@ -394,7 +396,27 @@ class MainActivity : AppCompatActivity() {
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
+            CurrentPhotoPathData(this@MainActivity).setPhotoPath(absolutePath)
+        }
+    }
+
+    fun camera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(this.packageManager) != null) {
+            var photFile : File? = null
+
+            try {
+                photFile = createImageFile()
+            }
+            catch (e : IOException) {
+                e.printStackTrace()
+            }
+
+            if (photFile != null) {
+                val photoUri = FileProvider.getUriForFile(this.applicationContext, "com.cory.texarkanacollege.FileProvider", photFile)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                showCamera.launch(intent)
+            }
         }
     }
 }

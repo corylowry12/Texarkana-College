@@ -351,23 +351,6 @@ class GradeFragment : Fragment() {
 
             val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
 
-            /*var scaleFactor = max(originalBitmap.width / (requireActivity().windowManager.defaultDisplay.width / 1.5)
-                , originalBitmap.height/ (requireActivity().windowManager.defaultDisplay.width / 1.5))
-
-            Toast.makeText(requireContext(), scaleFactor.toString(), Toast.LENGTH_SHORT).show()
-
-            if (scaleFactor < 1) {
-                scaleFactor = 1.0
-            }
-
-            val scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.width/scaleFactor.toInt(), originalBitmap.height/scaleFactor.toInt(), true)
-
-            val rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.width, scaledBitmap.height, m, true)
-            val stream = ByteArrayOutputStream()
-            rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
-            image = byteArray*/
-
            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                .format(System.currentTimeMillis())
             val storageDir = File(Environment
@@ -415,7 +398,7 @@ class GradeFragment : Fragment() {
 
         val sdf = SimpleDateFormat("MMM/dd/yyyy hh:mm:ss", Locale.ENGLISH)
         val currentDate = sdf.format(Date())
-        Toast.makeText(requireContext(), "Image path is " + image.toString(), Toast.LENGTH_SHORT).show()
+
         dbHandler.insertRow(ItemID(requireContext()).loadPosition().toString(), name, grade, weight, currentDate.toString(), image)
         loadIntoList()
         this.image = ""

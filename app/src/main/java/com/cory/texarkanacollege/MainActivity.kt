@@ -344,6 +344,10 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
+    fun deleteAll() {
+        classesFragment.deleteAll()
+    }
+
     val showCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->

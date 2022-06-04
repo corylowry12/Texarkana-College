@@ -49,6 +49,64 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         db.close()
     }
 
+    fun updateOnClassChange(
+        oldClassName : String,
+        className: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_CLASS_NAME, className)
+
+        val db = this.writableDatabase
+
+        db.update(TABLE_NAME, values, "$COLUMN_CLASS_NAME=?", arrayOf(oldClassName))
+    }
+
+    fun upcomingMarkAsDone(
+        doneStatus: String,
+        id: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_STATUS, doneStatus)
+
+        val db = this.writableDatabase
+        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val dateFormatted = formatter.format(Date())
+        db.update(TABLE_NAME, values, "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID =?", arrayOf(id))
+    }
+
+    fun pastDueMarkAsDone(
+        doneStatus: String,
+        id: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_STATUS, doneStatus)
+
+        val db = this.writableDatabase
+        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val dateFormatted = formatter.format(Date())
+        db.update(TABLE_NAME, values, "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID =?", arrayOf(id))
+    }
+
+    fun doneMarkAsUndone(
+        doneStatus: String,
+        id: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_STATUS, doneStatus)
+
+        val db = this.writableDatabase
+
+        db.update(TABLE_NAME, values, "$COLUMN_STATUS == 'done' AND $COLUMN_ID =?", arrayOf(id))
+    }
+
+    fun deleteOnClassDeletion(
+        className: String
+    ) {
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, "$COLUMN_CLASS_NAME = ?", arrayOf(className))
+        db.close()
+    }
+
     fun update(
         id: String,
         className: String,
@@ -89,9 +147,33 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_NOTES,
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
-                COLUMN_ASSIGNMENT_NAME
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done'",
+            null,
+            null,
+            null,
+            null
+        )
+    }
+
+    fun getUpcomingSingleRow(id: String): Cursor {
+
+        val db = this.writableDatabase
+        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val dateFormatted = formatter.format(Date())
+        return db.query(
+            TABLE_NAME,
+            arrayOf(
+                COLUMN_ID,
+                COLUMN_NOTES,
+                COLUMN_STATUS,
+                COLUMN_ASSIGNMENT_DUE_DATE,
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
+            ),
+            "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID == $id",
             null,
             null,
             null,
@@ -111,9 +193,34 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_NOTES,
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
-                COLUMN_ASSIGNMENT_NAME
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done'",
+            null,
+            null,
+            null,
+            null
+        )
+
+    }
+
+    fun getPastDueSingleRow(id: String): Cursor {
+
+        val db = this.writableDatabase
+        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val dateFormatted = formatter.format(Date())
+        return db.query(
+            TABLE_NAME,
+            arrayOf(
+                COLUMN_ID,
+                COLUMN_NOTES,
+                COLUMN_STATUS,
+                COLUMN_ASSIGNMENT_DUE_DATE,
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
+            ),
+            "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID == $id",
             null,
             null,
             null,
@@ -133,9 +240,33 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_NOTES,
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
-                COLUMN_ASSIGNMENT_NAME
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
             ),
             "$COLUMN_STATUS == 'done'",
+            null,
+            null,
+            null,
+            "$COLUMN_ASSIGNMENT_DUE_DATE desc"
+        )
+
+    }
+
+    fun getDoneSingleRow(id : String): Cursor {
+
+        val db = this.writableDatabase
+
+        return db.query(
+            TABLE_NAME,
+            arrayOf(
+                COLUMN_ID,
+                COLUMN_NOTES,
+                COLUMN_STATUS,
+                COLUMN_ASSIGNMENT_DUE_DATE,
+                COLUMN_ASSIGNMENT_NAME,
+                COLUMN_CLASS_NAME
+            ),
+            "$COLUMN_STATUS == 'done' AND $COLUMN_ID == $id",
             null,
             null,
             null,

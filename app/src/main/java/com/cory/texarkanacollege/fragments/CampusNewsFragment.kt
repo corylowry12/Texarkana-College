@@ -244,6 +244,7 @@ class CampusNewsFragment : Fragment() {
     }
 
     private fun loadAll() {
+        var stop = false
         val layout = layoutInflater.inflate(R.layout.fetching_all_dialog_layout, null)
         GlobalScope.launch(Dispatchers.Main) {
             loadAllMaterialDialog = MaterialAlertDialogBuilder(
@@ -254,7 +255,7 @@ class CampusNewsFragment : Fragment() {
             loadAllMaterialDialog.setView(layout)
             loadAllMaterialDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
                 d.dismiss()
-                activity?.supportFragmentManager?.popBackStack()
+                stop = true
             }
             loadAllD = loadAllMaterialDialog.create()
             loadAllD.show()
@@ -264,6 +265,10 @@ class CampusNewsFragment : Fragment() {
         GlobalScope.launch(Dispatchers.IO) {
 
             for (i in (loadPosition+1)..pageNumber) {
+                if (stop) {
+                    loadPosition = i
+                    break
+                }
                 val url = "https://www.texarkanacollege.edu/news/page/${i}/"
 
                 val document = Jsoup.connect(url).get()
@@ -293,9 +298,9 @@ class CampusNewsFragment : Fragment() {
                     recyclerView?.adapter = campusNewsAdapter
                     layout.findViewById<TextView>(R.id.body).text = "Fetching page ${i+1} of $pageNumber"
                 }
+                loadPosition = pageNumber
             }
             loadAllD.dismiss()
-            loadPosition = pageNumber
             search()
         }
     }

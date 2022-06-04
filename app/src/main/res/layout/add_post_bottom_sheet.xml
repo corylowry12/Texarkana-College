@@ -46,9 +46,9 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your Name"
+            android:hint="Email Address"
             android:maxLines="1"
-            android:inputType="text|textCapWords" />
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Post Title"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:inputType="text|textCapWords"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +96,8 @@
             android:id="@+id/weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Post" />
+            android:hint="Post"
+            android:inputType="text|textCapSentences"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,7 +111,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:text="Add Image"
+        android:text="Add An Image"
         style="@style/Widget.Material3.Button"/>
 
     <com.suke.widget.SwitchButton

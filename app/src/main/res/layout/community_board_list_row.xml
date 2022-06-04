@@ -30,6 +30,25 @@
             android:paddingEnd="20dp"
             android:paddingBottom="20dp">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:src="@drawable/ic_baseline_settings_24"
+                app:civ_border_color="#3f51b5"
+                app:civ_border_width="4dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:layout_marginBottom="5dp"/>
+
+
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Assist"
                 app:chipIcon="@drawable/ic_baseline_push_pin_24"
@@ -49,11 +68,22 @@
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/pinnedChip"
                 tools:ignore="HardcodedText"
                 android:paddingTop="20dp"/>
+
+            <TextView
+                android:id="@+id/row_contact_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
+                app:layout_constraintTop_toBottomOf="@id/row_contact_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/row_content"
@@ -61,9 +91,9 @@
                 android:layout_height="wrap_content"
                 android:text="Grade"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/row_contact_name"
-                app:layout_constraintEnd_toStartOf="@id/pinnedChip"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
+                app:layout_constraintTop_toBottomOf="@id/row_contact_email"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -72,9 +102,9 @@
                 android:layout_height="wrap_content"
                 android:text="Grade"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_content"
-                app:layout_constraintEnd_toStartOf="@id/pinnedChip"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -83,9 +113,9 @@
                 android:layout_height="wrap_content"
                 android:text="Weight"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_title"
-                app:layout_constraintEnd_toStartOf="@id/pinnedChip"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -95,7 +125,7 @@
                 android:text="Click to view image"
                 android:textStyle="italic"
                 app:layout_constraintTop_toBottomOf="@id/row_date"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/profilePic" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

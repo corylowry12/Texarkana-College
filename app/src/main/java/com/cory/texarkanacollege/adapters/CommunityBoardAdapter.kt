@@ -12,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.fragments.ViewCommunityBoardPostFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
+import de.hdodenhof.circleimageview.CircleImageView
 
 class CommunityBoardAdapter(val context: Context,
                             private val dataList:  ArrayList<HashMap<String, String>>
@@ -30,8 +32,11 @@ class CommunityBoardAdapter(val context: Context,
         var title = itemView.findViewById<TextView>(R.id.row_title)
         var date = itemView.findViewById<TextView>(R.id.row_date)
         val content = itemView.findViewById<TextView>(R.id.row_content)
+        val email = itemView.findViewById<TextView>(R.id.row_contact_email)
         val pinnedChip = itemView.findViewById<Chip>(R.id.pinnedChip)
         val imageTextView = itemView.findViewById<TextView>(R.id.imageTextView)
+        val profileImage = itemView.findViewById<CircleImageView>(R.id.profilePic)
+
 
         fun bind(position: Int) {
 
@@ -42,13 +47,25 @@ class CommunityBoardAdapter(val context: Context,
             date.text = "Date: " + dataItem["date"]
             content.text = "Content: " + dataItem["content"]
 
+            if (dataItem["email"] == "") {
+                email.visibility = View.GONE
+            }
+            else {
+                email.text = "Email: " + dataItem["email"]
+            }
+
             if (dataItem["pinned"].toString() != "true") {
                 pinnedChip.visibility = View.GONE
             }
 
-            if (dataItem["imageURL"] == "") {
+            if (dataItem["imageURL"] == "" || dataItem["imageURL"] == null) {
                 imageTextView.visibility = View.GONE
             }
+
+            Glide.with(context)
+                .load(dataItem["profilePicURL"])
+                .centerCrop()
+                .into(profileImage)
 
         }
     }
@@ -60,6 +77,7 @@ class CommunityBoardAdapter(val context: Context,
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val dataItem = dataList[position]
+
         if (dataItem["urgent"] == "true") {
             holder.itemView.findViewById<MaterialCardView>(R.id.cardViewCampusBoard).setCardBackgroundColor(ContextCompat.getColor(context, R.color.urgentPostRed))
         }
@@ -97,5 +115,13 @@ class CommunityBoardAdapter(val context: Context,
 
     override fun getItemCount(): Int {
         return dataList.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun setHasStableIds(hasStableIds: Boolean) {
+        super.setHasStableIds(true)
     }
 }

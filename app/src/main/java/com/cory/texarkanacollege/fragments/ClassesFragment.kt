@@ -3,9 +3,12 @@ package com.cory.texarkanacollege.fragments
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
@@ -19,6 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.suke.widget.SwitchButton
 
@@ -289,6 +293,18 @@ class ClassesFragment: Fragment() {
             val dbHandler = ClassesDBHelper(requireContext(), null)
 
             dbHandler.insertRow(className, classTime)
+    }
+
+    fun deleteAll() {
+        val animation = AlphaAnimation(1f, 0f)
+        animation.duration = 500
+        val listView = view?.findViewById<RecyclerView>(R.id.classesRecyclerView)
+
+        listView?.startAnimation(animation)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            loadIntoList()
+        }, 500)
     }
 
     @SuppressLint("Range")

@@ -1,11 +1,14 @@
 package com.cory.texarkanacollege.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +26,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ViewCommunityBoardPostFragment : Fragment() {
 
@@ -30,6 +37,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
     private lateinit var viewCommunityBoardPostCommentsAdapter: ViewCommunityBoardPostCommentsAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
+    private val sortedData = ArrayList<HashMap<String, String>>()
 
     private lateinit var database: DatabaseReference
     private lateinit var gridLayoutManager: GridLayoutManager
@@ -62,7 +70,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
         val imageView = activity?.findViewById<ImageView>(R.id.imageView)
 
-        if (imageURL == "") {
+        if (imageURL == "" || imageURL == null) {
             imageView!!.setImageDrawable(ContextCompat.getDrawable(requireContext(),
                 R.drawable.ic_baseline_hide_image_24
             ))
@@ -71,6 +79,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
         else {
             Glide.with(requireContext())
                 .load(imageURL)
+                .error(R.drawable.ic_baseline_broken_image_24)
                 .centerCrop()
                 .into(imageView!!)
         }
@@ -86,19 +95,60 @@ class ViewCommunityBoardPostFragment : Fragment() {
         loadIntoList(childPosition.toString())
 
         val commentTextInputEditText = activity?.findViewById<TextInputEditText>(R.id.commentTextInputEditText)
-        commentTextInputEditText!!.setOnEditorActionListener { view, i, keyEvent ->
+        val submitButton = activity?.findViewById<Button>(R.id.submitButton)
+        submitButton?.setOnClickListener {
+            hideKeyboard(commentTextInputEditText!!)
+            database.child("posts").child((childPosition).toString())
+                .child("comments").child((childrenCount+1).toString()).child("title").setValue(commentTextInputEditText.text.toString())
+            database.child("posts").child((childPosition).toString())
+                .child("comments").child((childrenCount+1).toString()).child("name").setValue(firebaseAuth.currentUser!!.displayName.toString())
+            database.child("posts").child((childPosition).toString())
+                .child("comments").child((childrenCount+1).toString()).child("profile_pic").setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+            val formatter =
+                SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
+            val dateFormatted = formatter.format(Date())
+            database.child("posts").child((childPosition).toString())
+                .child("comments").child((childrenCount+1).toString()).child("date").setValue(dateFormatted)
+
+            loadIntoList(childPosition.toString())
+            commentTextInputEditText.setText("")
+        }
+        commentTextInputEditText!!.setOnEditorActionListener { _, i, _ ->
+            hideKeyboard(commentTextInputEditText)
             if (i == EditorInfo.IME_ACTION_DONE) {
-                Toast.makeText(requireContext(), "Done clicked", Toast.LENGTH_SHORT).show()
                 database.child("posts").child((childPosition).toString())
                     .child("comments").child((childrenCount+1).toString()).child("title").setValue(commentTextInputEditText.text.toString())
                 database.child("posts").child((childPosition).toString())
                     .child("comments").child((childrenCount+1).toString()).child("name").setValue(firebaseAuth.currentUser!!.displayName.toString())
+                database.child("posts").child((childPosition).toString())
+                    .child("comments").child((childrenCount+1).toString()).child("profile_pic").setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                val formatter =
+                    SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
+                val dateFormatted = formatter.format(Date())
+                database.child("posts").child((childPosition).toString())
+                    .child("comments").child((childrenCount+1).toString()).child("date").setValue(dateFormatted)
 
                 loadIntoList(childPosition.toString())
                 return@setOnEditorActionListener true
             }
-            Toast.makeText(requireContext(), i.toString(), Toast.LENGTH_SHORT).show()
+            commentTextInputEditText.setText("")
             return@setOnEditorActionListener false
+        }
+    }
+
+    private fun hideKeyboard(commentEditText: TextInputEditText) {
+        val inputManager: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val focusedView = activity?.currentFocus
+
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(
+                focusedView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+            if (commentEditText.hasFocus()) {
+                commentEditText.clearFocus()
+            }
         }
     }
 
@@ -125,26 +175,28 @@ class ViewCommunityBoardPostFragment : Fragment() {
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 dataList.clear()
-                //sortedData.clear()
+                sortedData.clear()
 
                 for (i in snapshot.children) {
                     println("children " + i.toString())
                     val map = java.util.HashMap<String, String>()
                     map["title"] = snapshot.child(i.key.toString()).child("title").value.toString()
                     map["name"] = snapshot.child(i.key.toString()).child("name").value.toString()
+                    map["profilePicURL"] = snapshot.child(i.key.toString()).child("profile_pic").value.toString()
+                    map["date"] = snapshot.child(i.key.toString()).child("date").value.toString()
                     dataList.add(map)
 
                     viewCommunityBoardPostCommentsAdapter = ViewCommunityBoardPostCommentsAdapter(requireContext(), dataList)
 
                 }
 
-                //val sortedDataList = dataList.sortedWith(compareBy ({ it["pinned"] }, {it["date"]})).reversed()
+                val sortedDataList = dataList.sortedWith(compareBy { it["date"] }).reversed()
 
-               // println("sorted data List " + sortedDataList)
+                println("sorted data List " + sortedDataList)
 
-                /*for (i in sortedDataList) {
+                for (i in sortedDataList) {
                     sortedData.add(i)
-                }*/
+                }
 
                 val communityBoardPostViewRecyclerView =
                     activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)

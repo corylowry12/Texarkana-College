@@ -27,6 +27,9 @@ import com.cory.texarkanacollege.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.api.ResourceProto.resource
 import com.ortiz.touchview.TouchImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ImageViewFragment : Fragment() {
 
@@ -47,11 +50,13 @@ class ImageViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val viewImageMaterialToolbar = requireActivity().findViewById<MaterialToolbar>(R.id.viewImageToolBar)
+        viewImageMaterialToolbar.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
+
         val args = arguments?.getInt("image")
         val id = arguments?.getInt("id")
-        /*val imageView = activity?.findViewById<ImageView>(R.id.imageView)
-        val bitmap = BitmapFactory.decodeByteArray(args, 0, args!!.size)
-        imageView?.setImageBitmap(bitmap)*/
 
         val dbHandler = GradesDBHelper(requireContext(), null)
 
@@ -65,62 +70,61 @@ class ImageViewFragment : Fragment() {
 
                 val imageView = view.findViewById<TouchImageView>(R.id.imageView)
 
-           // val bitmap = BitmapFactory.decodeFile(imageMap["image"].toString())
-            //imageView.setImageBitmap(bitmap)
-
         val circularProgressDrawable = CircularProgressDrawable(requireContext())
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
 
-        Glide.with(requireContext())
-            .load(imageMap["image"].toString())
-            .centerCrop()
-            .placeholder(circularProgressDrawable)
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT)
-                        .show()
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-
-                    Palette.Builder(resource!!.toBitmap(1920, 1080)).generate { palette ->
-                        val vSwatch = palette?.dominantSwatch?.rgb
-                        val color =
-                            Color.rgb(
-                                vSwatch!!.red,
-                                vSwatch.green,
-                                vSwatch.blue
-                            )
-                        try {
-
-                            val imageViewConstraint =
-                                requireActivity().findViewById<ConstraintLayout>(R.id.imageViewConstraint)
-                            imageViewConstraint.setBackgroundColor(color)
-
-                        } catch (e: NullPointerException) {
-                            e.printStackTrace()
-                        }
+        GlobalScope.launch(Dispatchers.Main) {
+            Glide.with(requireContext())
+                .load(imageMap["image"].toString())
+                .centerCrop()
+                .placeholder(circularProgressDrawable)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT)
+                            .show()
+                        return false
                     }
 
-                    return false
-                }
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
 
-            })
-            .into(imageView)
+                        Palette.Builder(resource!!.toBitmap(1920, 1080)).generate { palette ->
+                            val vSwatch = palette?.dominantSwatch?.rgb
+                            val color =
+                                Color.rgb(
+                                    vSwatch!!.red,
+                                    vSwatch.green,
+                                    vSwatch.blue
+                                )
+                            try {
+
+                                val imageViewConstraint =
+                                    requireActivity().findViewById<ConstraintLayout>(R.id.imageViewConstraint)
+                                imageViewConstraint.setBackgroundColor(color)
+
+                            } catch (e: NullPointerException) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        return false
+                    }
+
+                })
+                .into(imageView)
+        }
 
         imageView.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()

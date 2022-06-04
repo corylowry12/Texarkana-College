@@ -94,7 +94,7 @@ class GradesAdapter(
             viewImageFragment.arguments = args
 
             val manager = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             manager.replace(R.id.fragment_container, viewImageFragment).addToBackStack(null)
             manager.commit()
 

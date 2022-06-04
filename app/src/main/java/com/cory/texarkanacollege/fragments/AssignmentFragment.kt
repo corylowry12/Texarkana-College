@@ -128,7 +128,7 @@ class AssignmentFragment : Fragment() {
                                 requireContext()
                             )
                             datePicker.setCancelable(false)
-                            datePicker.datePicker.minDate = System.currentTimeMillis()
+                            //datePicker.datePicker.minDate = System.currentTimeMillis()
 
                             datePicker.show()
 
@@ -262,6 +262,7 @@ class AssignmentFragment : Fragment() {
             while (!upcomingCursor.isAfterLast) {
                 val map = HashMap<String, String>()
                 map["id"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ID))
+                map["className"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CLASS_NAME))
                 map["assignmentName"] =
                     upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =

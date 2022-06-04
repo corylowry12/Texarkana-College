@@ -103,7 +103,7 @@ class CampusNewsInfoFragment : Fragment() {
                                     requireActivity().findViewById<MaterialToolbar>(R.id.materialToolBarCampusNewsInfo)
                                 topAppBar.setNavigationIconTint(color)
 
-                            } catch (e: NullPointerException) {
+                            } catch (e: Exception) {
                                 e.printStackTrace()
                             }
                         }

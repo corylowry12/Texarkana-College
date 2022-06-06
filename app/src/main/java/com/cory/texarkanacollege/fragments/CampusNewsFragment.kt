@@ -3,12 +3,15 @@ package com.cory.texarkanacollege.fragments
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -92,16 +95,21 @@ class CampusNewsFragment : Fragment() {
 
         val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridLayoutManager = GridLayoutManager(requireContext(), 2)
-        }
-        else {
-            gridLayoutManager = GridLayoutManager(requireContext(), 1)
+        gridLayoutManager = if (resources.getBoolean(R.bool.isTablet)) {
+            GridLayoutManager(requireContext(), 2)
+        } else {
+            GridLayoutManager(requireContext(), 1)
         }
 
         campusNewsAdapter = CampusNewsAdapter(requireContext(), dataList)
 
-        loadIntoList()
+        if (isOnline(requireContext())) {
+            loadIntoList()
+        }
+        else {
+            Toast.makeText(requireContext(), getString(R.string.there_was_an_error_check_connection), Toast.LENGTH_SHORT).show()
+            activity?.supportFragmentManager?.popBackStack()
+        }
 
         search()
 
@@ -248,7 +256,7 @@ class CampusNewsFragment : Fragment() {
         val layout = layoutInflater.inflate(R.layout.fetching_all_dialog_layout, null)
         GlobalScope.launch(Dispatchers.Main) {
             loadAllMaterialDialog = MaterialAlertDialogBuilder(
-                requireContext())
+                requireContext(), R.style.AlertDialogStyle)
             layout.findViewById<TextView>(R.id.body).text = "Fetching page ${loadPosition + 1} of $pageNumber"
             loadAllMaterialDialog.setCancelable(false)
 
@@ -349,22 +357,45 @@ class CampusNewsFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     private fun loadIntoList() {
 
         GlobalScope.launch(Dispatchers.Main) {
             materialDialog = MaterialAlertDialogBuilder(
-                requireContext())
+                requireContext(), R.style.AlertDialogStyle)
             val layout = layoutInflater.inflate(R.layout.fetching_dialog_layout, null)
             materialDialog.setCancelable(false)
-
             materialDialog.setView(layout)
             materialDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
                 d.dismiss()
                 activity?.supportFragmentManager?.popBackStack()
             }
             d = materialDialog.create()
-            d.show()
-
+            if (activity != null && !requireActivity().isFinishing) {
+                d.show()
+            }
         }
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -403,21 +434,6 @@ class CampusNewsFragment : Fragment() {
                     e.printStackTrace()
                 }
             }
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val recyclerView = activity?.findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridLayoutManager = GridLayoutManager(requireContext(), 2)
-            recyclerView?.layoutManager = gridLayoutManager
-            recyclerView?.invalidate()
-        }
-        else {
-            gridLayoutManager = GridLayoutManager(requireContext(), 1)
-            recyclerView?.layoutManager = gridLayoutManager
-            recyclerView?.invalidate()
         }
     }
 

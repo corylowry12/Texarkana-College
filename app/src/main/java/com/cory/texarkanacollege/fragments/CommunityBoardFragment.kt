@@ -11,13 +11,13 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -28,14 +28,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -45,19 +44,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.suke.widget.SwitchButton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
-import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.Exception
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class CommunityBoardFragment : Fragment() {
 
@@ -76,7 +68,7 @@ class CommunityBoardFragment : Fragment() {
     var childrenCount = 0L
 
     var imagePath = ""
-    lateinit var image : Uri
+    lateinit var image: Uri
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,21 +83,26 @@ class CommunityBoardFragment : Fragment() {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
 
-                Toast.makeText(requireContext(), "Sucessfull", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Google sign in failed:(", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "You have successfully been logged in", Toast.LENGTH_SHORT).show()
+                activity?.findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)?.menu?.findItem(R.id.signOut)?.title = "Sign Out"
+            } else if (it.exception is FirebaseAuthInvalidUserException) {
+                Toast.makeText(requireContext(), "Sorry, you have been banned", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    val getSignInData = registerForActivityResult(
+    private val getSignInData = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val task: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(result.data)
 
             val account = task.getResult(ApiException::class.java)
             firebaseAuthWithGoogle(account)
+        } catch (e: ApiException) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Error: " + e.statusCode.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -136,13 +133,12 @@ class CommunityBoardFragment : Fragment() {
         }
     }
 
-    private fun getRealPathFromURI(contentURI: Uri) : String {
+    private fun getRealPathFromURI(contentURI: Uri): String {
         var result = ""
         val cursor = requireActivity().contentResolver?.query(contentURI, null, null, null, null)
         if (cursor == null) {
             result = contentURI.path.toString()
-        }
-        else {
+        } else {
             cursor.moveToFirst()
             val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
             result = cursor.getString(idx)
@@ -165,24 +161,35 @@ class CommunityBoardFragment : Fragment() {
 
         loadIntoList()
 
-        val swipeRefreshLayout = requireView().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
+        val swipeRefreshLayout =
+            requireView().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
         swipeRefreshLayout.setOnRefreshListener {
             loadIntoList()
             swipeRefreshLayout.isRefreshing = false
         }
 
-        val toolBar = requireView().findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)
+        val toolBar =
+            requireView().findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)
 
         toolBar.setNavigationOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
+        }
+
+        if (firebaseAuth.currentUser != null) {
+            toolBar.menu.findItem(R.id.signOut).title = "Sign Out"
+        }
+        else {
+            toolBar.menu.findItem(R.id.signOut).title = "Sign In"
         }
 
         toolBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.termsOfService -> {
                     val dialog = BottomSheetDialog(requireContext())
-                    val addGradeView = layoutInflater.inflate(R.layout.about_community_board_bottom_sheet, null)
-                    val closeImageButton = addGradeView.findViewById<ImageButton>(R.id.closeImageButton)
+                    val addGradeView =
+                        layoutInflater.inflate(R.layout.about_community_board_bottom_sheet, null)
+                    val closeImageButton =
+                        addGradeView.findViewById<ImageButton>(R.id.closeImageButton)
                     dialog.setCancelable(true)
                     dialog.setContentView(addGradeView)
 
@@ -193,7 +200,8 @@ class CommunityBoardFragment : Fragment() {
                     return@setOnMenuItemClickListener true
                 }
                 R.id.addClass -> {
-                    val user = FirebaseAuth.getInstance().currentUser
+                    firebaseAuth.currentUser?.reload()
+                    val user = firebaseAuth.currentUser
                     if (user == null) {
                         mGoogleSignInOptions =
                             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -227,25 +235,42 @@ class CommunityBoardFragment : Fragment() {
                         }
 
                         addGradeButton?.setOnClickListener {
-                            if (!nameEditText!!.text.toString().isEmailValid() && nameEditText.text.toString() != "") {
-                                Toast.makeText(requireContext(), "Please Enter a valid email", Toast.LENGTH_SHORT).show()
-                            }
-                            else if (titleEditText!!.text.toString() == "") {
-                                Toast.makeText(requireContext(), "Please enter a title for your post", Toast.LENGTH_SHORT).show()
-                            }
-                            else if (postEditText!!.text.toString() == "") {
-                                Toast.makeText(requireContext(), "Please enter content for your post", Toast.LENGTH_SHORT).show()
-                            }
-                            else if (titleEditText.text.toString() != "" && postEditText.text.toString() != "") {
+                            if (!nameEditText!!.text.toString()
+                                    .isEmailValid() && nameEditText.text.toString() != ""
+                            ) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please Enter a valid email",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (titleEditText!!.text.toString() == "") {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please enter a title for your post",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (postEditText!!.text.toString() == "") {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please enter content for your post",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (titleEditText.text.toString() != "" && postEditText.text.toString() != "") {
                                 if (this::image.isInitialized) {
                                     val ref = storage.reference.child("images/$imagePath")
                                     val uploadTask = ref.putFile(image)
-                                    val layout = layoutInflater.inflate(R.layout.uploading_image_dialog, null)
-                                        val uploadingImageDialog = MaterialAlertDialogBuilder(
-                                            requireContext())
+                                    val layout = layoutInflater.inflate(
+                                        R.layout.uploading_image_dialog,
+                                        null
+                                    )
+                                    val uploadingImageDialog = MaterialAlertDialogBuilder(
+                                        requireContext(), R.style.AlertDialogStyle
+                                    )
                                     uploadingImageDialog.setCancelable(false)
-                                    val progressBar = layout.findViewById<ProgressBar>(R.id.uploadingImageProgressBar)
-                                    val uploadProgressTextView = layout.findViewById<TextView>(R.id.currentProgress)
+                                    val progressBar =
+                                        layout.findViewById<ProgressBar>(R.id.uploadingImageProgressBar)
+                                    val uploadProgressTextView =
+                                        layout.findViewById<TextView>(R.id.currentProgress)
                                     progressBar.max = 100
                                     uploadingImageDialog.setView(layout)
                                     uploadingImageDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
@@ -253,12 +278,14 @@ class CommunityBoardFragment : Fragment() {
                                         d.dismiss()
                                     }
                                     val uploadingD = uploadingImageDialog.create()
-                                       uploadingD.show()
+                                    uploadingD.show()
 
                                     uploadTask.addOnProgressListener { totalProgress ->
-                                        val currentProgress = (100.0 * totalProgress.bytesTransferred) / totalProgress.totalByteCount
+                                        val currentProgress =
+                                            (100.0 * totalProgress.bytesTransferred) / totalProgress.totalByteCount
                                         progressBar.progress = currentProgress.toInt()
-                                        uploadProgressTextView.text = "Upload Progress: ${currentProgress.toInt()}%"
+                                        uploadProgressTextView.text =
+                                            "Upload Progress: ${currentProgress.toInt()}%"
                                         println("progress is: $currentProgress")
                                     }
                                     uploadTask.addOnSuccessListener {
@@ -290,7 +317,10 @@ class CommunityBoardFragment : Fragment() {
                                                 .setValue(postEditText.text.toString())
 
                                             val formatter =
-                                                SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
+                                                SimpleDateFormat(
+                                                    "MMM/dd/yyyy HH:mm aa",
+                                                    Locale.ENGLISH
+                                                )
                                             val dateFormatted = formatter.format(Date())
 
                                             database.child("posts")
@@ -315,11 +345,13 @@ class CommunityBoardFragment : Fragment() {
                                     }
                                 } else {
                                     database.child("posts").child((childrenCount + 1).toString())
-                                        .child("profile_photo").setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                                        .child("profile_photo")
+                                        .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
                                     database.child("posts").child((childrenCount + 1).toString())
                                         .child("title").setValue(titleEditText.text.toString())
                                     database.child("posts").child((childrenCount + 1).toString())
-                                        .child("name").setValue(firebaseAuth.currentUser!!.displayName.toString())
+                                        .child("name")
+                                        .setValue(firebaseAuth.currentUser!!.displayName.toString())
                                     database.child("posts").child((childrenCount + 1).toString())
                                         .child("content").setValue(postEditText.text.toString())
 
@@ -356,8 +388,27 @@ class CommunityBoardFragment : Fragment() {
 
                         dialog.show()
                     }
-                        true
+                    true
+                }
+                R.id.signOut -> {
+                    if (firebaseAuth.currentUser != null) {
+                        firebaseAuth.signOut()
+                        Toast.makeText(requireContext(), "You are now signed out", Toast.LENGTH_SHORT).show()
+                        toolBar.menu.findItem(R.id.signOut).title = "Sign In"
                     }
+                    else {
+                        mGoogleSignInOptions =
+                            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(getString(R.string.app_client_id))
+                                .requestEmail()
+                                .build()
+                        mGoogleSignInClient =
+                            GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
+                        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+                        getSignInData.launch(signInIntent)
+                    }
+                    true
+                }
                 else -> false
             }
         }
@@ -368,7 +419,7 @@ class CommunityBoardFragment : Fragment() {
             dataList.clear()
             sortedData.clear()
             val loadAllMaterialDialog = MaterialAlertDialogBuilder(
-                requireContext()
+                requireContext(), R.style.AlertDialogStyle
             )
             loadAllMaterialDialog.setCancelable(false)
             val layout = layoutInflater.inflate(R.layout.fetching_community_board_dialog, null)
@@ -541,14 +592,15 @@ class CommunityBoardFragment : Fragment() {
                         TODO("Not yet implemented")
                     }
                 })
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
             activity?.supportFragmentManager?.popBackStack()
         }
     }
+
     fun String.isEmailValid(): Boolean {
-        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
+            .matches()
     }
 }

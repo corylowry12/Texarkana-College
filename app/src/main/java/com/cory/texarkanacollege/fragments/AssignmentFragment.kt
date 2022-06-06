@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -252,8 +253,12 @@ class AssignmentFragment : Fragment() {
     }
 
     @SuppressLint("Range")
-    private fun loadIntoList() {
+    fun loadIntoList() {
         val dbHandler = AssignmentsDBHelper(requireActivity().applicationContext, null)
+
+        val upcomingChevron =
+            requireView().findViewById<ImageView>(R.id.upcomingChevronImage)
+        val upcomingRecyclerView = requireView().findViewById<RecyclerView>(R.id.upcomingRecyclerView)
 
         upcomingDataList.clear()
         val upcomingCursor = dbHandler.getUpcoming()
@@ -274,6 +279,15 @@ class AssignmentFragment : Fragment() {
 
             }
 
+        if (upcomingDataList.isEmpty()) {
+            upcomingChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            upcomingRecyclerView.visibility = View.GONE
+        }
+
+        val pastDueChevron =
+            requireView().findViewById<ImageView>(R.id.pastDueChevronImage)
+        val pastDueRecyclerView = requireView().findViewById<RecyclerView>(R.id.pastDueRecyclerView)
+
         pastDueDataList.clear()
         val pastDueCursor = dbHandler.getPastDue()
         pastDueCursor.moveToFirst()
@@ -281,6 +295,7 @@ class AssignmentFragment : Fragment() {
             while (!pastDueCursor.isAfterLast) {
                 val map = HashMap<String, String>()
                 map["id"] = pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ID))
+                map["className"] = pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CLASS_NAME))
                 map["assignmentName"] =
                     pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =
@@ -292,6 +307,15 @@ class AssignmentFragment : Fragment() {
 
             }
 
+        if (pastDueDataList.isEmpty()) {
+            pastDueChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            pastDueRecyclerView.visibility = View.GONE
+        }
+
+        val doneChevron =
+            requireView().findViewById<ImageView>(R.id.doneChevronImage)
+        val doneRecyclerView = requireView().findViewById<RecyclerView>(R.id.doneRecyclerView)
+
         doneDataList.clear()
         val doneCursor = dbHandler.getDone()
         doneCursor.moveToFirst()
@@ -299,6 +323,7 @@ class AssignmentFragment : Fragment() {
             while (!doneCursor.isAfterLast) {
                 val map = HashMap<String, String>()
                 map["id"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ID))
+                map["className"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CLASS_NAME))
                 map["assignmentName"] =
                     doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME))
                 map["dueDate"] =
@@ -310,15 +335,17 @@ class AssignmentFragment : Fragment() {
 
             }
 
-        val upcomingRecyclerView = activity?.findViewById<RecyclerView>(R.id.upcomingRecyclerView)
+        if (doneDataList.isEmpty()) {
+            doneChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            doneRecyclerView.visibility = View.GONE
+        }
+
         upcomingRecyclerView?.layoutManager = upcomingGridLayoutManager
         upcomingRecyclerView?.adapter = upcomingAdapter
 
-        val pastDueRecyclerView = activity?.findViewById<RecyclerView>(R.id.pastDueRecyclerView)
         pastDueRecyclerView?.layoutManager = pastDueGridLayoutManager
         pastDueRecyclerView?.adapter = pastDueAdapter
 
-        val doneRecyclerView = activity?.findViewById<RecyclerView>(R.id.doneRecyclerView)
         doneRecyclerView?.layoutManager = doneGridLayoutManager
         doneRecyclerView?.adapter = doneAdapter
 

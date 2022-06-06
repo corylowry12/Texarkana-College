@@ -2,6 +2,7 @@ package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,13 +12,15 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.adapters.ClassesAdapter
-import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -45,11 +48,10 @@ class ClassesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (resources.getBoolean(R.bool.isTablet)) {
-            gridLayoutManager = GridLayoutManager(requireContext(), 2)
-        }
-        else {
-            gridLayoutManager = GridLayoutManager(requireContext(), 1)
+        gridLayoutManager = if (resources.getBoolean(R.bool.isTablet)) {
+            GridLayoutManager(requireContext(), 2)
+        } else {
+            GridLayoutManager(requireContext(), 1)
         }
 
         classesAdapter = ClassesAdapter(requireContext(), dataList)
@@ -61,32 +63,6 @@ class ClassesFragment: Fragment() {
         topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.addClass -> {
-                   /* val input = TextInputEditText(requireContext())
-                    input.setHint("Class Name")
-                    input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
-                    val frameLayout = FrameLayout(requireContext())
-                    val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    params.topMargin = 30
-                    params.bottomMargin = 30
-                    params.leftMargin = 10
-                    params.rightMargin = 10
-                    input.layoutParams = params
-                    frameLayout.addView(input)
-                    val dialog = MaterialAlertDialogBuilder(requireContext())
-                    dialog.setView(frameLayout)
-                    dialog.setPositiveButton("Add") { _, _ ->
-                        val text = input.text
-                        val textString = text.toString()
-                        if (input.text != null && textString != "") {
-                            addClass(input.text.toString())
-                            loadIntoList()
-                        }
-                        else {
-                            Toast.makeText(requireContext(), "Class Name is required", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    dialog.setNegativeButton("Cancel", null)
-                    dialog.show()*/
 
                     val daysArray :MutableList<Int> = ArrayList()
 
@@ -99,21 +75,11 @@ class ClassesFragment: Fragment() {
                     val addClassButton = dialog.findViewById<Button>(R.id.addClassButton)
                     dialog.show()
                     val netClassSwitch = dialog.findViewById<SwitchButton>(R.id.netClassSwitch)
+                    val netClassSwitchConstraint = dialog.findViewById<ConstraintLayout>(R.id.switchConstraintLayout)
 
                     val toggleGroup = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleGroup)
 
-                    /*toggleGroup?.clearChecked()
-                    toggleGroup?.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                        daysArray.clear()
-                        for (i in 0 until toggleGroup.childCount) {
-                            val child = toggleGroup.getChildAt(i) as MaterialButton
 
-                            if (child.isChecked) {
-                                daysArray.add(child.id)
-                                Toast.makeText(requireContext(), checkedId.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }*/
 
                     val mon = dialog.findViewById<MaterialButton>(R.id.mon)
                     val tue = dialog.findViewById<MaterialButton>(R.id.tue)
@@ -124,55 +90,60 @@ class ClassesFragment: Fragment() {
                     mon?.setOnClickListener {
                         if (mon.isChecked) {
                             daysArray.add(1)
+                            mon.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
                         }
                         else {
                             daysArray.sort()
-                            daysArray.removeAt(0)
-
+                            daysArray.remove(1)
+                            mon.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
                         }
                     }
 
                     tue?.setOnClickListener {
                         if (tue.isChecked) {
                             daysArray.add(2)
+                            tue.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
                         }
                         else {
                             daysArray.sort()
-                            daysArray.removeAt(1)
-
+                            daysArray.remove(2)
+                            tue.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
                         }
                     }
 
                     wed?.setOnClickListener {
                         if (wed.isChecked) {
                             daysArray.add(3)
+                            wed.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
                         }
                         else {
                             daysArray.sort()
-                            daysArray.removeAt(2)
-
+                            daysArray.remove(3)
+                            wed.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
                         }
                     }
 
                     thur?.setOnClickListener {
                         if (thur.isChecked) {
                             daysArray.add(4)
+                            thur.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
                         }
                         else {
                             daysArray.sort()
-                            daysArray.removeAt(3)
-
+                            daysArray.remove(4)
+                            thur.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
                         }
                     }
 
                     fri?.setOnClickListener {
                         if (fri.isChecked) {
                             daysArray.add(5)
+                            fri.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
                         }
                         else {
                             daysArray.sort()
-                            daysArray.removeAt(4)
-
+                            daysArray.remove(5)
+                            fri.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
                         }
                     }
 
@@ -184,12 +155,21 @@ class ClassesFragment: Fragment() {
                             toggleGroup?.visibility = View.VISIBLE
                         }
                     }
+                    netClassSwitchConstraint?.setOnClickListener {
+                        netClassSwitch?.isChecked = !netClassSwitch!!.isChecked
+                        if (netClassSwitch.isChecked) {
+                            toggleGroup?.visibility = View.GONE
+                        }
+                        else {
+                            toggleGroup?.visibility = View.VISIBLE
+                        }
+                    }
 
                     addClassButton?.setOnClickListener {
                         daysArray.sort()
                         val text = nameEditText?.text
                         val textString = text.toString()
-                        if (nameEditText?.text == null && textString == "") {
+                        if (nameEditText?.text == null || textString == "") {
                             Toast.makeText(
                                 requireContext(),
                                 "Class Name is required",
@@ -205,6 +185,7 @@ class ClassesFragment: Fragment() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else if (!netClassSwitch.isChecked && daysArray.count() != 0){
+                                daysArray.sort()
                                 for (i in 0 until daysArray.count()) {
                                     if (daysArray[i] == 1) {
                                         days += "Mon"
@@ -243,24 +224,22 @@ class ClassesFragment: Fragment() {
                                         }
                                     }
                                     if (daysArray[i] == 5) {
-                                        if (i == daysArray.count() - 1) {
+                                        if (daysArray.count() == 2) {
                                             days += " and Fri"
                                         }
-                                        else if (i == 0) {
-                                            days += "Fri"
-                                        }
                                         else {
-                                            days += ", Fri"
+                                            if (i == 0) {
+                                                days += "Fri"
+                                            } else {
+                                                days += ", and Fri"
+                                            }
                                         }
                                     }
                                 }
                             }
 
-                            if (daysArray.isEmpty() && !netClassSwitch.isChecked) {
-                                Toast.makeText(requireContext(), "Must enter days or if its a web course", Toast.LENGTH_SHORT).show()
-                            }
-                            else {
-                                addClass(nameEditText!!.text.toString().trim(), days.toString())
+                            if (textString != "" && (daysArray.isNotEmpty() || netClassSwitch.isChecked)) {
+                                addClass(nameEditText.text.toString().trim(), days)
                                 loadIntoList()
                                 dialog.dismiss()
                                 days = ""

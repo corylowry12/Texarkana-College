@@ -84,7 +84,7 @@ class CommunityBoardAdapter(val context: Context,
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        if (dataItem["uid"] == firebaseAuth.currentUser!!.uid.toString()) {
+        if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
             holder.itemView.setOnLongClickListener {
                 Toast.makeText(context, "This is your post", Toast.LENGTH_SHORT).show()
                 return@setOnLongClickListener true

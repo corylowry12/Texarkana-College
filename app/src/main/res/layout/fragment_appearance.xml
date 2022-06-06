@@ -7,7 +7,7 @@
     tools:context=".fragments.AppearanceFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayoutGrades"
+        android:id="@+id/appBarLayoutAppearance"
         android:layout_width="match_parent"
         android:layout_height="128dp"
         android:fitsSystemWindows="true"
@@ -23,7 +23,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/materialToolBarGrades"
+                android:id="@+id/materialToolBarAppearance"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"

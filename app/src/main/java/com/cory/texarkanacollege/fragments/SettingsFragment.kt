@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
+import com.google.android.material.card.MaterialCardView
 
 class SettingsFragment : Fragment() {
 
@@ -37,7 +40,13 @@ class SettingsFragment : Fragment() {
         }
 
         val communityBoardConstraint = activity?.findViewById<ConstraintLayout>(R.id.communityBoardConstraint)
-        communityBoardConstraint?.setOnClickListener {
+        val communityBoardCardView = activity?.findViewById<MaterialCardView>(R.id.communityBoardCardView)
+
+        if (!CommunityBoardVisibileData(requireContext()).loadCommunityBoardVisible()) {
+            communityBoardCardView!!.visibility = View.GONE
+        }
+
+        communityBoardConstraint!!.setOnClickListener {
             openFragment(CommunityBoardFragment())
         }
 

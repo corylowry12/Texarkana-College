@@ -15,11 +15,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "541700732898-uvds3s5qqapq4uiob0dofiivmq3pr2u1.apps.googleusercontent.com",
+          "client_id": "541700732898-5qebu3cs9q5ekob21ggaklbdbnplo8ck.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cory.texarkanacollege",
+            "certificate_hash": "e48e6871f6adab7129c736586b0541bf20f0ef17"
+          }
+        },
+        {
+          "client_id": "541700732898-k6ag9snka03i7b1o5v8gep5diprme1kp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cory.texarkanacollege",
             "certificate_hash": "7266016f1b05260d4785acaec4e485f9f6fef862"
+          }
+        },
+        {
+          "client_id": "541700732898-lvt3i0rg3mjplscsskrodgf9d00vtmt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cory.texarkanacollege",
+            "certificate_hash": "4e071d095f09cef8afaf8616e570e37d72d5f432"
           }
         },
         {

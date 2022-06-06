@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -12,10 +13,15 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
 
     override fun onCreate(db: SQLiteDatabase) {
 
-        db.execSQL(
-            "CREATE TABLE $TABLE_NAME " +
-                    "($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_CLASS_NAME TEXT, $COLUMN_CLASS_TIME TEXT)"
-        )
+        try {
+            db.execSQL(
+                "CREATE TABLE $TABLE_NAME " +
+                        "($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_CLASS_NAME TEXT, $COLUMN_CLASS_TIME TEXT)"
+            )
+        }
+        catch (e: SQLException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -78,7 +84,7 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     fun getAllRow(context: Context): Cursor? {
-        val db = this.writableDatabase
+        val db = this.readableDatabase
 
         return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_CLASS_NAME asc", null)
     }
@@ -91,7 +97,7 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     companion object {
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "classes.db"
         const val TABLE_NAME = "classes"
 

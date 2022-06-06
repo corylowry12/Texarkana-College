@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="10dp"
@@ -46,38 +47,47 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="Class Name"
             android:maxLines="1"
             android:inputType="text|textCapWords" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/switchConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
+        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
+        android:foreground="?attr/selectableItemBackground"
+        tools:ignore="UnusedAttribute">
     <com.suke.widget.SwitchButton
         android:id="@+id/netClassSwitch"
         app:sb_show_indicator="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:sb_checked_color="@color/blue"/>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/netClassSwitch"
-        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
-        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="This is a web class"
         android:textSize="18sp"
-        android:layout_marginStart="10dp" />
-
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/netClassSwitch"
+        app:layout_constraintTop_toBottomOf="@id/switchConstraintLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingStart="10dp"
@@ -98,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mon"
-            style="?attr/materialButtonOutlinedStyle"/>
+            style="?attr/materialButtonOutlinedStyle" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tue"
             android:layout_width="wrap_content"

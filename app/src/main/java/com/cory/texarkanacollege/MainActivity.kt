@@ -11,21 +11,35 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.view.Gravity
 import android.webkit.WebView
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
 import com.cory.texarkanacollege.classes.CurrentPhotoPathData
 import com.cory.texarkanacollege.classes.ImagePathData
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.fragments.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -70,6 +84,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 1
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.fetchAndActivate().addOnCompleteListener {
+            val communityBoard = remoteConfig.getBoolean("community_board")
+            CommunityBoardVisibileData(this).setCommunityBoardVisible(communityBoard)
+        }
+
         if (savedInstanceState == null) {
             replaceFragment(homeFragment)
         }
@@ -88,20 +112,16 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(CampusMapFragment())
         }
 
-        /*// Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
         MobileAds.initialize(this)
         val adView = AdView(this)
-        adView.adSize = AdSize.BANNER
         adView.adUnitId = "ca-app-pub-4546055219731501/9641132280"
         val mAdView = findViewById<AdView>(R.id.adView)
         val adRequest = AdRequest.Builder()
             .build()
         mAdView.loadAd(adRequest)
-        mAdView.adListener = object : AdListener() {
 
-        }
-
-        refreshLayout = findViewById(R.id.refreshLayout)
+        /*refreshLayout = findViewById(R.id.refreshLayout)
         webView = findViewById(R.id.webView)
 
         val list = listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -114,7 +134,8 @@ class MainActivity : AppCompatActivity() {
 
         if (resources.getBoolean(R.bool.isTablet)) {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
-
+            bottomNav.itemActiveIndicatorColor =
+                ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
@@ -135,7 +156,8 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-
+            bottomNav.itemActiveIndicatorColor =
+                ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
@@ -348,6 +370,10 @@ class MainActivity : AppCompatActivity() {
         classesFragment.deleteAll()
     }
 
+    fun assignmentLoadIntoList() {
+        assignmentFragment.loadIntoList()
+    }
+
     val showCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
@@ -368,7 +394,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val originalBitmap = BitmapFactory.decodeFile(CurrentPhotoPathData(this@MainActivity).loadPhotoPath())
-            Toast.makeText(this, CurrentPhotoPathData(this@MainActivity).loadPhotoPath(), Toast.LENGTH_SHORT).show()
+
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                 .format(System.currentTimeMillis())
             val storageDir = File(

@@ -14,6 +14,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.GradeFragment
@@ -32,14 +33,16 @@ class DoneAdapter(val context: Context,
 
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var title = itemView.findViewById<TextView>(R.id.row_class)!!
-        var classTime = itemView.findViewById<TextView>(R.id.row_class_time)
-        var notes = itemView.findViewById<TextView>(R.id.row_class_notes)
+        var className = itemView.findViewById<TextView>(R.id.className)!!
+        var title = itemView.findViewById<TextView>(R.id.assignmentName)!!
+        var classTime = itemView.findViewById<TextView>(R.id.dueDate)
+        var notes = itemView.findViewById<TextView>(R.id.notes)
 
         fun bind(position: Int) {
 
             val dataItem = dataList[position]
 
+            className.text = "Class Name: " + dataItem["className"]
             title.text = "Assignment Name: " + dataItem["assignmentName"]
             classTime.text = "Due Date: " + dataItem["dueDate"]
 
@@ -89,11 +92,30 @@ class DoneAdapter(val context: Context,
             val editButton = assignmentOptionsView.findViewById<Button>(R.id.editButton)
             val deleteButton = assignmentOptionsView.findViewById<Button>(R.id.deleteButton)
             val cancelButton = assignmentOptionsView.findViewById<Button>(R.id.cancelButton)
+            val markAsDoneButton = assignmentOptionsView.findViewById<Button>(R.id.doneButton)
+            markAsDoneButton.text = context.getString(R.string.mark_as_not_done)
 
             editButton.setOnClickListener {
                 dialog.dismiss()
             }
+            markAsDoneButton.setOnClickListener {
+                AssignmentsDBHelper(context, null).doneMarkAsUndone("", dataItem["id"].toString())
+                val runnable = Runnable {
+                    (context as MainActivity).assignmentLoadIntoList()
+                }
+                MainActivity().runOnUiThread(runnable)
+                dialog.dismiss()
+
+            }
             deleteButton.setOnClickListener {
+                AssignmentsDBHelper(context, null).deleteRow(dataItem["id"].toString())
+                dataList.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
+                Toast.makeText(context, context.getString(R.string.assignment_deleted), Toast.LENGTH_SHORT).show()
+                val runnable = Runnable {
+                    (context as MainActivity).assignmentLoadIntoList()
+                }
+                MainActivity().runOnUiThread(runnable)
                 dialog.dismiss()
             }
             cancelButton.setOnClickListener {

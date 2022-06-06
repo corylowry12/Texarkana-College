@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:tag="settings">
+    android:tag="settings"
+    android:id="@+id/coordinatorLayoutSettings">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutGrades"
@@ -57,7 +58,8 @@
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="28dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintAppearance"
@@ -123,10 +125,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
         app:cardCornerRadius="28dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/cardViewLightBlue">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintCampusNews"
@@ -187,15 +189,17 @@
     </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/communityBoardCardView"
             style="?attr/materialCardViewElevatedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/communityBoardConstraint"
@@ -262,9 +266,11 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         app:cardCornerRadius="28dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/cardViewLightBlue">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintPatchNotes"
@@ -333,7 +339,8 @@
             android:layout_marginBottom="5dp"
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintReasons"
@@ -402,7 +409,8 @@
             android:layout_marginBottom="5dp"
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintCampusMap"
@@ -471,7 +479,8 @@
             android:layout_marginBottom="5dp"
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintAppNews"
@@ -540,13 +549,16 @@
             android:layout_marginBottom="5dp"
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
+            app:cardUseCompatPadding="true"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintVersionInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground">
+                android:foreground="?attr/selectableItemBackground"
+                tools:targetApi="m"
+                tools:ignore="UnusedAttribute">
 
                 <ImageView
                     android:id="@+id/versioninfoImage"

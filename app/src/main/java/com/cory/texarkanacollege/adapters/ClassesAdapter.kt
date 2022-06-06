@@ -13,6 +13,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.MainActivity
@@ -166,6 +168,7 @@ class ClassesAdapter(
                     bottomSheetDialog.findViewById<Button>(R.id.addClassButton)
                 val netClassSwitchAddClass =
                     bottomSheetDialog.findViewById<SwitchButton>(R.id.netClassSwitch)
+                val netClassSwitchConstraint = bottomSheetDialog.findViewById<ConstraintLayout>(R.id.switchConstraintLayout)
                 val toggleGroupAddClass = bottomSheetDialog.findViewById<MaterialButtonToggleGroup>(
                     R.id.toggleGroup
                 )
@@ -208,50 +211,60 @@ class ClassesAdapter(
                 mon?.setOnClickListener {
                     if (mon.isChecked) {
                         daysArray.add(1)
-                    } else {
+                        mon.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
+                    }
+                    else {
                         daysArray.sort()
-                        daysArray.removeAt(0)
-
+                        daysArray.remove(1)
+                        mon.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
                     }
                 }
 
                 tue?.setOnClickListener {
                     if (tue.isChecked) {
                         daysArray.add(2)
-                    } else {
+                        tue.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
+                    }
+                    else {
                         daysArray.sort()
-                        daysArray.removeAt(1)
-
+                        daysArray.remove(2)
+                        tue.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
                     }
                 }
 
                 wed?.setOnClickListener {
                     if (wed.isChecked) {
                         daysArray.add(3)
-                    } else {
+                        wed.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
+                    }
+                    else {
                         daysArray.sort()
-                        daysArray.removeAt(2)
-
+                        daysArray.remove(3)
+                        wed.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
                     }
                 }
 
                 thur?.setOnClickListener {
                     if (thur.isChecked) {
                         daysArray.add(4)
-                    } else {
+                        thur.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
+                    }
+                    else {
                         daysArray.sort()
-                        daysArray.removeAt(3)
-
+                        daysArray.remove(4)
+                        thur.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
                     }
                 }
 
                 fri?.setOnClickListener {
                     if (fri.isChecked) {
                         daysArray.add(5)
-                    } else {
+                        fri.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
+                    }
+                    else {
                         daysArray.sort()
-                        daysArray.removeAt(4)
-
+                        daysArray.remove(5)
+                        fri.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
                     }
                 }
 
@@ -262,12 +275,23 @@ class ClassesAdapter(
                         toggleGroupAddClass?.visibility = View.VISIBLE
                     }
                 }
+
+                netClassSwitchConstraint?.setOnClickListener {
+                    netClassSwitchAddClass?.isChecked = !netClassSwitchAddClass!!.isChecked
+                    if (netClassSwitchAddClass.isChecked) {
+                        toggleGroupAddClass?.visibility = View.GONE
+                    }
+                    else {
+                        toggleGroupAddClass?.visibility = View.VISIBLE
+                    }
+                }
+
                 var days = ""
                 addClassButtonAddClass?.setOnClickListener {
                     daysArray.sort()
                     val text = nameEditTextAddClass?.text
                     val textString = text.toString()
-                    if (nameEditTextAddClass?.text == null && textString == "") {
+                    if (nameEditTextAddClass?.text == null || textString == "") {
                         Toast.makeText(
                             context,
                             "Class Name is required",
@@ -315,22 +339,25 @@ class ClassesAdapter(
                                     }
                                 }
                                 if (daysArray[i] == 5) {
-                                    if (i == daysArray.count() - 1) {
+                                    if (daysArray.count() == 2) {
                                         days += " and Fri"
-                                    } else if (i == 0) {
-                                        days += "Fri"
-                                    } else {
-                                        days += ", Fri"
+                                    }
+                                    else {
+                                        if (i == 0) {
+                                            days += "Fri"
+                                        } else {
+                                            days += " and Fri"
+                                        }
                                     }
                                 }
                             }
                         }
 
-                        if (daysArray.isNotEmpty() || netClassSwitchAddClass.isChecked) {
+                        if (textString != "" && (daysArray.isNotEmpty() || netClassSwitchAddClass.isChecked)) {
                             val classDBHelper = ClassesDBHelper(context, null)
                             classDBHelper.update(
                                 dataItemAddClass["id"].toString(),
-                                nameEditTextAddClass!!.text.toString(),
+                                nameEditTextAddClass.text.toString(),
                                 days
                             )
                             AssignmentsDBHelper(
@@ -373,7 +400,7 @@ class ClassesAdapter(
             }
 
             deleteButton?.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context)
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
                 materialAlertDialogBuilder.setTitle("Warning")
                 materialAlertDialogBuilder.setMessage("You are fixing to delete a class, this will delete the class and all grades for this class, this can not be undone. Would you like to continue?")
                 materialAlertDialogBuilder.setCancelable(false)

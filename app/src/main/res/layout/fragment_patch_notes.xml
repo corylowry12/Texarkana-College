@@ -60,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                
+                app:cardBackgroundColor="@color/cardViewLightBlue"
                 app:cardCornerRadius="28dp"
                 android:animateLayoutChanges="true"
                 app:cardPreventCornerOverlap="false"
@@ -133,7 +133,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                
+                app:cardBackgroundColor="@color/cardViewLightBlue"
                 app:cardCornerRadius="28dp"
                 android:layout_marginTop="10dp"
                 android:animateLayoutChanges="true"
@@ -208,7 +208,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                
+                app:cardBackgroundColor="@color/cardViewLightBlue"
                 app:cardCornerRadius="28dp"
                 android:animateLayoutChanges="true"
                 app:cardPreventCornerOverlap="false"

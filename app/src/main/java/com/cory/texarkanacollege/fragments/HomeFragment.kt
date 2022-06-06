@@ -1,5 +1,6 @@
 package com.cory.texarkanacollege.fragments
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -9,11 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.R
 import com.google.android.material.snackbar.Snackbar
+import java.lang.IllegalStateException
 
 class HomeFragment : Fragment() {
 
@@ -49,7 +56,10 @@ class HomeFragment : Fragment() {
 
         managePermissions = ManagePermissions(requireActivity(), list, permissionRequestCode)
 
-        managePermissions.checkPermissions(requireContext())
+        if (!managePermissions.checkPermissions(requireContext())) {
+            managePermissions.showAlert(requireContext())
+        }
+
 
 
         val url = "https://my.texarkanacollege.edu/ICS/"
@@ -93,10 +103,6 @@ class HomeFragment : Fragment() {
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 isLoaded = false
-                Snackbar.make(requireView().findViewById(R.id.constraintLayout), requireContext().getString(
-                    R.string.please_refresh
-                ), Snackbar.LENGTH_LONG)
-                    .show()
                 super.onReceivedError(view, request, error)
             }
         }
@@ -131,28 +137,6 @@ class HomeFragment : Fragment() {
 
         refreshLayout.setOnRefreshListener { webView.reload() }
 
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-            permissionRequestCode -> {
-                val isPermissionGranted = managePermissions.processPermissionsResult(requestCode, permissions, grantResults)
-                if(isPermissionGranted) {
-                    Snackbar.make(requireView().findViewById(R.id.constraintLayout), requireContext().getString(
-                        R.string.permissions_granted
-                    ), Snackbar.LENGTH_LONG)
-                        .show()
-                }
-                else {
-                    Snackbar.make(requireView().findViewById(R.id.constraintLayout), requireContext().getString(
-                        R.string.permissions_denied
-                    ), Snackbar.LENGTH_LONG)
-                        .show()
-                }
-                return
-            }
-        }
     }
 
     override fun onPause() {

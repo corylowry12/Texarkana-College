@@ -4,21 +4,15 @@
     <string name="need_permissions">Need permission(s)</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="go_into_settings_message">Go in to settings and allow storage access for this app, or erase app data and open app again to request permissions again.</string>
-    <string name="permission_not_granted">Permission not granted</string>
-    <string name="please_refresh">Please refresh and try to load again</string>
+    <string name="permission_not_granted">Permissions not granted</string>
     <string name="downloading">Downloading file…</string>
-    <string name="cant_download_permissions_not_granted">Can\'t download file, permissions not granted</string>
     <string name="permissions_granted">Permissions Granted</string>
     <string name="permissions_denied">Permissions Denied</string>
-    <string name="please_click_back_again">Please click BACK again to exit</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
 
     <string name="app_client_id">541700732898-vc0jvlunp5g84brohnsq8nd4io50t2ht.apps.googleusercontent.com</string>
 
     <string name="communityBoardTOS">\u2022 No harassment\n\u2022 No bullying\n\u2022 No Gore\n\u2022 No NSFW Content</string>
+    <string name="assignment_deleted">Assignment Deleted</string>
+    <string name="mark_as_not_done">Mark as not Done</string>
+    <string name="there_was_an_error_check_connection">There was an error, check data connection</string>
 </resources>

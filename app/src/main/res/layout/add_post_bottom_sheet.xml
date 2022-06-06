@@ -123,7 +123,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/pinnedTextView"
@@ -135,7 +136,8 @@
         app:layout_constraintBottom_toBottomOf="@id/pinnedSwitch"
         android:text="This is a pinned post"
         android:textSize="18sp"
-        android:layout_marginStart="10dp" />
+        android:layout_marginStart="10dp"
+        android:visibility="gone"/>
 
     <com.suke.widget.SwitchButton
         android:id="@+id/urgenSwitch"

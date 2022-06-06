@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.google.android.material.appbar.MaterialToolbar
@@ -45,6 +47,10 @@ class ViewAssignmentFragment : Fragment() {
         val materialToolBar = requireActivity().findViewById<MaterialToolbar>(R.id.materialToolBarViewAssignments)
 
         materialToolBar.setNavigationOnClickListener {
+            val loadIntoList = Runnable {
+                (context as MainActivity).assignmentLoadIntoList()
+            }
+            activity?.runOnUiThread(loadIntoList)
             activity?.supportFragmentManager?.popBackStack()
         }
         materialToolBar.setOnMenuItemClickListener { item ->
@@ -200,5 +206,17 @@ class ViewAssignmentFragment : Fragment() {
                 doneCursor.moveToNext()
             }
         }
+
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val loadIntoList = Runnable {
+                        (context as MainActivity).assignmentLoadIntoList()
+                    }
+                    activity?.runOnUiThread(loadIntoList)
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+            })
     }
 }

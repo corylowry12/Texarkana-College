@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.ViewCommunityBoardPostCommentsAdapter
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -54,6 +55,11 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val materialToolbar = activity?.findViewById<MaterialToolbar>(R.id.viewPostToolbar)
+        materialToolbar?.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
 
         firebaseAuth = FirebaseAuth.getInstance()
 

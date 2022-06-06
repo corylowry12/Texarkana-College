@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue">#013b63</color>
-    <color name="black">#FF000000</color>
+    <color name="dialogLightBlue">#CAE9FF</color>
+    <color name="cardViewLightBlue">#CAE9FF</color>
+    <color name="cardViewLightBackgroundColor">#D8EFFF</color>
+    <color name="toggleButtonCheckedBackground">#CAE9FF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ic_launcher_background">#FFFFFF</color>
-    <color name="snackbarBackground">#013b63</color>
-    <color name="light_blue_50">#FFE1F5FE</color>
-    <color name="light_blue_200">#FF81D4FA</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-
+    <color name="itemIndicatorColor">#519ACC</color>
     <color name="patchNotesBadgeColor">#807F7F</color>
 
     <color name="urgentPostRed">#E36161</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

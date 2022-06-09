@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.adapters.ClassesAdapter
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.database.ClassesDBHelper
+import com.cory.texarkanacollege.database.GradesDBHelper
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
@@ -300,24 +302,20 @@ class ClassesFragment: Fragment() {
         }
 
         dataList.clear()
-        val cursor = dbHandler.getAllRow(requireContext())
-        cursor!!.moveToFirst()
 
-        if (dbHandler.getCount() > 0) {
-            while (!cursor.isAfterLast) {
+            val cursor = dbHandler.getAllRow(requireContext())
+            cursor?.moveToFirst()
+
+            while (!cursor!!.isAfterLast) {
                 val map = HashMap<String, String>()
                 map["id"] = cursor.getString(cursor.getColumnIndex(ClassesDBHelper.COLUMN_ID))
                 map["className"] =
                     cursor.getString(cursor.getColumnIndex(ClassesDBHelper.COLUMN_CLASS_NAME))
-                map["classTime"] =
-                    cursor.getString(cursor.getColumnIndex(ClassesDBHelper.COLUMN_CLASS_TIME))
+                map["classTime"] = cursor.getString(cursor.getColumnIndex(ClassesDBHelper.COLUMN_CLASS_TIME))
                 dataList.add(map)
 
                 cursor.moveToNext()
-
             }
-        }
-
         val recyclerView = activity?.findViewById<RecyclerView>(R.id.classesRecyclerView)
         recyclerView?.layoutManager = gridLayoutManager
         recyclerView?.adapter = classesAdapter

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.fragments.ViewCommunityBoardPostFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CommunityBoardAdapter(val context: Context,
@@ -45,7 +50,14 @@ class CommunityBoardAdapter(val context: Context,
             contactName.text = "Name: " + dataItem["name"]
             title.text = "Title: " + dataItem["title"]
             date.text = "Date: " + dataItem["date"]
-            content.text = "Content: " + dataItem["content"]
+
+            if (dataItem["content"]!!.length < 30) {
+                content.text = "Content: " + dataItem["content"]
+            }
+            else {
+                val contentSubstring = dataItem["content"]!!.substring(0, 30)
+                content.text = "Content: " + contentSubstring + "..."
+            }
 
             if (dataItem["email"] == "") {
                 email.visibility = View.GONE
@@ -86,7 +98,35 @@ class CommunityBoardAdapter(val context: Context,
 
         if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
             holder.itemView.setOnLongClickListener {
-                Toast.makeText(context, "This is your post", Toast.LENGTH_SHORT).show()
+                val dialog = BottomSheetDialog(context)
+                val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
+                dialog.setCancelable(false)
+                dialog.setContentView(postOptionsLayout)
+                val editPostEditButton = dialog.findViewById<Button>(R.id.editPostEditButton)
+                val editPostDeleteButton = dialog.findViewById<Button>(R.id.editPostDeleteButton)
+                val editPostCancelButton = dialog.findViewById<Button>(R.id.editPostCancelButton)
+
+                editPostDeleteButton?.setOnClickListener {
+                    val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
+                    materialAlertDialogBuilder.setTitle("Delete Post?")
+                    materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
+                    materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                        FirebaseDatabase.getInstance().getReference("posts")
+                            .child(dataItem["childPosition"].toString()).removeValue()
+                        dataList.removeAt(holder.adapterPosition)
+                        notifyItemRemoved(holder.adapterPosition)
+                        Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                    materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
+                        dialog.dismiss()
+                    }
+                    materialAlertDialogBuilder.show()
+                }
+                editPostCancelButton?.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
                 return@setOnLongClickListener true
             }
         }

@@ -12,16 +12,11 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-
-        try {
-            db.execSQL(
-                "CREATE TABLE $TABLE_NAME " +
-                        "($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_CLASS_NAME TEXT, $COLUMN_CLASS_TIME TEXT)"
-            )
-        }
-        catch (e: SQLException) {
-            e.printStackTrace()
-        }
+        db.execSQL(
+            "CREATE TABLE " + TABLE_NAME + " ("
+                    + COLUMN_ID + " INTEGER PRIMARY KEY, "
+                    + COLUMN_CLASS_NAME + " TEXT, "
+                    + COLUMN_CLASS_TIME + " TEXT );");
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -30,7 +25,7 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS ${GradesDBHelper.TABLE_NAME}")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
@@ -84,9 +79,23 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     fun getAllRow(context: Context): Cursor? {
-        val db = this.readableDatabase
+        val db = this.writableDatabase
 
-        return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_CLASS_NAME asc", null)
+       // return db.rawQuery("SELECT $COLUMN_ID, $COLUMN_CLASS_NAME, $COLUMN_CLASS_TIME FROM $TABLE_NAME ORDER BY $COLUMN_CLASS_NAME asc", null)
+
+        return db.query(
+            TABLE_NAME,
+            arrayOf(
+                COLUMN_ID,
+                COLUMN_CLASS_NAME,
+                COLUMN_CLASS_TIME
+            ),
+            null,
+            null,
+            null,
+            null,
+            COLUMN_CLASS_NAME
+        )
     }
 
     fun deleteAll() {
@@ -97,7 +106,7 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     companion object {
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 1
         const val DATABASE_NAME = "classes.db"
         const val TABLE_NAME = "classes"
 

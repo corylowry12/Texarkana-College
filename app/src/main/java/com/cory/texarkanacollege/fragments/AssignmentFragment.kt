@@ -126,7 +126,7 @@ class AssignmentFragment : Fragment() {
 
                         dueDateChip.setOnClickListener {
                             val datePicker = DatePickerDialog(
-                                requireContext()
+                                requireContext(), R.style.datePickerLight
                             )
                             datePicker.setCancelable(false)
                             //datePicker.datePicker.minDate = System.currentTimeMillis()

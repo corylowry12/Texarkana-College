@@ -83,6 +83,11 @@ class GradeFragment : Fragment() {
 
         val topAppBar = view.findViewById<MaterialToolbar>(R.id.materialToolBarGrades)
 
+        val args = arguments
+        val className = args?.getString("className", "")
+
+        topAppBar.title = "Grades/$className"
+
         topAppBar.setNavigationOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
@@ -354,7 +359,7 @@ class GradeFragment : Fragment() {
            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                .format(System.currentTimeMillis())
             val storageDir = File(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/");
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/")
 
             if (!storageDir.exists()) {
                 storageDir.mkdirs()
@@ -480,7 +485,7 @@ class GradeFragment : Fragment() {
                 val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                     .format(System.currentTimeMillis())
                 val storageDir = File(Environment
-                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/");
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/")
 
                 if (!storageDir.exists()) {
                     storageDir.mkdirs()

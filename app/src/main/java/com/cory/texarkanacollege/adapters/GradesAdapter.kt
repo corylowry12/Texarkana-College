@@ -148,11 +148,11 @@ class GradesAdapter(
                 weightEditText.setText(dataItem["weight"])
 
                 if (dataItem["image"] != "") {
-                    addImageButton.setText("View Image")
+                    addImageButton.text = "View Image"
                 }
 
                 addImageButton.setOnLongClickListener {
-                    addImageButton.setText("Add Image")
+                    addImageButton.text = "Add Image"
                     ImagePathData(context).setPath("")
                     Toast.makeText(context, "Image Removed", Toast.LENGTH_SHORT).show()
                     return@setOnLongClickListener true

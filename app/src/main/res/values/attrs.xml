@@ -5,5 +5,7 @@
         <attr name="appWidgetRadius" format="dimension" />
     </declare-styleable>
 
+    <attr name="backgroundColorDialog" format="color" />
+
     <bool name="isTablet">false</bool>
 </resources>

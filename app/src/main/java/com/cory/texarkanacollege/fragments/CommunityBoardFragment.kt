@@ -11,12 +11,16 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toFile
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -128,8 +132,9 @@ class CommunityBoardFragment : Fragment() {
             val stream = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             val byteArray = stream.toByteArray()
-            val selectedFile = File(getRealPathFromURI(selectedImage!!))
+            val selectedFile = File(getRealPathFromURI(selectedImage))
             this.imagePath = Date().toString()
+            Toast.makeText(requireContext(), "Image Added", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -214,18 +219,31 @@ class CommunityBoardFragment : Fragment() {
                         getSignInData.launch(signInIntent)
                     } else {
                         val dialog = BottomSheetDialog(requireContext())
+
                         val addGradeView =
                             layoutInflater.inflate(R.layout.add_post_bottom_sheet, null)
                         dialog.setCancelable(false)
                         dialog.setContentView(addGradeView)
                         val addGradeButton = dialog.findViewById<Button>(R.id.addGradeButton)
                         val cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
-                        val nameEditText = dialog.findViewById<TextInputEditText>(R.id.name)
                         val titleEditText = dialog.findViewById<TextInputEditText>(R.id.grade)
                         val postEditText = dialog.findViewById<TextInputEditText>(R.id.weight)
                         val pinnedSwitch = dialog.findViewById<SwitchButton>(R.id.pinnedSwitch)
                         val urgentSwitch = dialog.findViewById<SwitchButton>(R.id.urgenSwitch)
                         val addImageButton = dialog.findViewById<Button>(R.id.addImage)
+                        val urgentSwitchConstraintLayout = dialog.findViewById<ConstraintLayout>(R.id.urgentSwitchConstraintLayout)
+
+                        urgentSwitchConstraintLayout?.setOnClickListener {
+                            urgentSwitch?.isChecked = !urgentSwitch!!.isChecked
+                        }
+
+                        addImageButton?.setOnLongClickListener {
+                            if (this::image.isInitialized && image != Uri.EMPTY) {
+                                image = Uri.EMPTY
+                                 return@setOnLongClickListener true
+                            }
+                            return@setOnLongClickListener false
+                        }
 
                         addImageButton?.setOnClickListener {
                             val pickerIntent = Intent(Intent.ACTION_PICK)
@@ -235,15 +253,7 @@ class CommunityBoardFragment : Fragment() {
                         }
 
                         addGradeButton?.setOnClickListener {
-                            if (!nameEditText!!.text.toString()
-                                    .isEmailValid() && nameEditText.text.toString() != ""
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Please Enter a valid email",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (titleEditText!!.text.toString() == "") {
+                         if (titleEditText!!.text.toString() == "") {
                                 Toast.makeText(
                                     requireContext(),
                                     "Please enter a title for your post",
@@ -256,7 +266,7 @@ class CommunityBoardFragment : Fragment() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else if (titleEditText.text.toString() != "" && postEditText.text.toString() != "") {
-                                if (this::image.isInitialized) {
+                                if (this::image.isInitialized && image != Uri.EMPTY) {
                                     val ref = storage.reference.child("images/$imagePath")
                                     val uploadTask = ref.putFile(image)
                                     val layout = layoutInflater.inflate(
@@ -298,7 +308,7 @@ class CommunityBoardFragment : Fragment() {
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
                                                 .child("email")
-                                                .setValue(nameEditText.text.toString())
+                                                .setValue(firebaseAuth.currentUser!!.email)
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
                                                 .child("profile_photo")
@@ -358,7 +368,7 @@ class CommunityBoardFragment : Fragment() {
                                     database.child("posts")
                                         .child((childrenCount + 1).toString())
                                         .child("email")
-                                        .setValue(nameEditText.text.toString())
+                                        .setValue(firebaseAuth.currentUser!!.email)
 
                                     val formatter =
                                         SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)

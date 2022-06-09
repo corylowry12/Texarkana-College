@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +32,11 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.suke.widget.SwitchButton
+import de.hdodenhof.circleimageview.CircleImageView
 import java.math.RoundingMode
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ClassesAdapter(
     val context: Context,
@@ -41,13 +47,100 @@ class ClassesAdapter(
 
         var title = itemView.findViewById<TextView>(R.id.row_class)!!
         var classTime = itemView.findViewById<TextView>(R.id.row_class_time)
+        val classesIconImageView = itemView.findViewById<ImageView>(R.id.classesIconImageView)
+        val classesIconTextView = itemView.findViewById<TextView>(R.id.classesTitleImageViewText)
 
         fun bind(position: Int) {
 
             val dataItem = dataList[position]
 
+            val firstLetter = dataItem["className"].toString()[0].toString().uppercase()
+            if (firstLetter == "A") {
+                classesIconImageView.setBackgroundColor(ContextCompat.getColor(context, R.color.blue))
+            }
+            else if (firstLetter == "B") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#228C22"))
+            }
+            else if (firstLetter == "C") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#80604D"))
+            }
+            else if (firstLetter == "D") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#77C3EC"))
+            }
+            else if (firstLetter == "E") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#808080"))
+            }
+            else if (firstLetter == "F") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#00FFFF"))
+            }
+            else if (firstLetter == "G") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FFC0CB"))
+            }
+            else if (firstLetter == "H") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FF0000"))
+            }
+            else if (firstLetter == "I") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FF4500"))
+            }
+            else if (firstLetter == "J") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FFD700"))
+            }
+            else if (firstLetter == "K") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FF8C00"))
+            }
+            else if (firstLetter == "L") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FF6347"))
+            }
+            else if (firstLetter == "M") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#FF00FF"))
+            }
+            else if (firstLetter == "N") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#800080"))
+            }
+            else if (firstLetter == "O") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#4B0082"))
+            }
+            else if (firstLetter == "P") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#8A2BE2"))
+            }
+            else if (firstLetter == "Q") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#8FBC8F"))
+            }
+            else if (firstLetter == "R") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#7CF00"))
+            }
+            else if (firstLetter == "S") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#2E8B57"))
+            }
+            else if (firstLetter == "T") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#6B8E23"))
+            }
+            else if (firstLetter == "U") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#20B2AA"))
+            }
+            else if (firstLetter == "V") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#2093C3"))
+            }
+            else if (firstLetter == "W") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#336296"))
+            }
+            else if (firstLetter == "X") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#7179BA"))
+            }
+            else if (firstLetter == "Y") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#65C9D4"))
+            }
+            else if (firstLetter == "Z") {
+                classesIconImageView.setBackgroundColor(Color.parseColor("#000000"))
+            }
+            else {
+                classesIconImageView.setBackgroundColor(ContextCompat.getColor(context, R.color.blue))
+            }
+
             title.text = "Class Name: " + dataItem["className"]
             classTime.text = "Class Time: " + dataItem["classTime"]
+
+            classesIconTextView.text = firstLetter
         }
     }
 
@@ -68,7 +161,7 @@ class ClassesAdapter(
         val dataItem = dataList[holder.adapterPosition]
 
         var cursor = GradesDBHelper(context, null).getGrades(dataItem["id"].toString())
-        cursor!!.moveToFirst()
+        cursor.moveToFirst()
 
         while (!cursor.isAfterLast) {
             val map = HashMap<String, String>()
@@ -128,7 +221,9 @@ class ClassesAdapter(
             itemPositionData.setPosition(dataItem["id"]!!.toInt())
             val gradeFragment = GradeFragment()
             (context as MainActivity).gradeFragment = gradeFragment
-
+            val args = Bundle()
+            args.putString("className", dataItem["className"])
+            gradeFragment.arguments = args
             val manager =
                 (context as AppCompatActivity).supportFragmentManager.beginTransaction()
             manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

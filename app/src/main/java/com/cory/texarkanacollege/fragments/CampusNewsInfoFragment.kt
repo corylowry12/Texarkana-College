@@ -1,7 +1,9 @@
 package com.cory.texarkanacollege.fragments
 
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.green
@@ -62,6 +65,7 @@ class CampusNewsInfoFragment : Fragment() {
             val circularProgressDrawable = CircularProgressDrawable(requireContext())
             circularProgressDrawable.strokeWidth = 5f
             circularProgressDrawable.centerRadius = 30f
+            circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
             circularProgressDrawable.start()
 
             val imageView = requireActivity().findViewById<ImageView>(R.id.imageView)

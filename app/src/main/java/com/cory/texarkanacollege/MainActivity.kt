@@ -9,48 +9,33 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.*
+import android.os.Bundle
+import android.os.Environment
+import android.os.PersistableBundle
 import android.provider.MediaStore
-import android.view.Gravity
-import android.webkit.WebView
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
 import com.cory.texarkanacollege.classes.CurrentPhotoPathData
 import com.cory.texarkanacollege.classes.ImagePathData
-import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var webView: WebView
-    private lateinit var refreshLayout: SwipeRefreshLayout
-    private var isLoaded: Boolean = false
-    private val permissionRequestCode = 1
-    private lateinit var managePermissions: ManagePermissions
 
     var path = ""
 
@@ -70,8 +55,7 @@ class MainActivity : AppCompatActivity() {
             if (resources.getBoolean(R.bool.isTablet)) {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
                 bottomNav.menu.findItem(R.id.settings).isChecked = true
-            }
-            else {
+            } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
                 bottomNav.menu.findItem(R.id.settings).isChecked = true
             }
@@ -91,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.fetchAndActivate().addOnCompleteListener {
             val communityBoard = remoteConfig.getBoolean("community_board")
-            CommunityBoardVisibileData(this).setCommunityBoardVisible(communityBoard)
+            CommunityBoardVisibileData(this).setCommunityBoardVisible(true)
         }
 
         if (savedInstanceState == null) {
@@ -103,8 +87,7 @@ class MainActivity : AppCompatActivity() {
             if (resources.getBoolean(R.bool.isTablet)) {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
                 bottomNav.menu.findItem(R.id.settings).isChecked = true
-            }
-            else {
+            } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
                 bottomNav.menu.findItem(R.id.settings).isChecked = true
             }
@@ -112,7 +95,6 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(CampusMapFragment())
         }
 
-        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
         MobileAds.initialize(this)
         val adView = AdView(this)
         adView.adUnitId = "ca-app-pub-4546055219731501/9641132280"
@@ -120,17 +102,6 @@ class MainActivity : AppCompatActivity() {
         val adRequest = AdRequest.Builder()
             .build()
         mAdView.loadAd(adRequest)
-
-        /*refreshLayout = findViewById(R.id.refreshLayout)
-        webView = findViewById(R.id.webView)
-
-        val list = listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        managePermissions = ManagePermissions(this, list, permissionRequestCode)
-
-        managePermissions.checkPermissions(this)
-
-        loadWebview()*/
 
         if (resources.getBoolean(R.bool.isTablet)) {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
@@ -153,8 +124,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-        }
-        else {
+        } else {
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
             bottomNav.itemActiveIndicatorColor =
                 ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
@@ -181,10 +151,10 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-          setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
@@ -208,122 +178,6 @@ class MainActivity : AppCompatActivity() {
     fun hideKeyboardCampusNews() {
         campusNewsFragment.hideKeyboard()
     }
-
-    /*@SuppressLint("SetJavaScriptEnabled")
-    private fun loadWebview() {
-        val url = "https://my.texarkanacollege.edu/ICS/"
-        webView.loadUrl(url)
-        webView.isVerticalScrollBarEnabled = true
-        webView.isHorizontalScrollBarEnabled = true
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                val url2 = request?.url.toString()
-                if(url2.contains("LearningToolsPortlet")) {
-                    view?.loadUrl("javascript:$url2")
-                    return true
-                }
-                else {
-                    view?.loadUrl(url2)
-                }
-                return super.shouldOverrideUrlLoading(view, request)
-            }
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                isLoaded = true
-                if (refreshLayout.isRefreshing) {
-                    refreshLayout.isRefreshing = false
-                }
-                super.onPageFinished(view, url)
-            }
-
-            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                isLoaded = false
-                Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.please_refresh), Snackbar.LENGTH_LONG)
-                    .show()
-                super.onReceivedError(view, request, error)
-            }
-        }
-
-        webView.setDownloadListener { url1, userAgent, contentDisposition, mimeType, _ ->
-            if (managePermissions.checkPermissions(this)) {
-                val request = DownloadManager.Request(Uri.parse(url1))
-                request.setMimeType(mimeType)
-                val cookies = CookieManager.getInstance().getCookie(url1)
-                request.addRequestHeader("cookie", cookies)
-                request.addRequestHeader("User-Agent", userAgent)
-                request.setDescription("Downloading file...")
-                request.setTitle(URLUtil.guessFileName(url, contentDisposition, mimeType))
-                //request.allowScanningByMediaScanner()
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimeType))
-                val downloadManager : DownloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                downloadManager.enqueue(request)
-                Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.downloading), Snackbar.LENGTH_LONG)
-                    .show()
-            } else {
-               managePermissions.showAlert(this)
-            }
-        }
-
-        val settings = webView.settings
-        settings.domStorageEnabled = true
-        settings.javaScriptEnabled = true
-        settings.javaScriptCanOpenWindowsAutomatically = true
-
-        refreshLayout.setOnRefreshListener { webView.reload() }
-
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-            permissionRequestCode -> {
-                val isPermissionGranted = managePermissions.processPermissionsResult(requestCode, permissions, grantResults)
-                if(isPermissionGranted) {
-                    Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.permissions_granted), Snackbar.LENGTH_LONG)
-                        .show()
-                }
-                else {
-                    Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.permissions_denied), Snackbar.LENGTH_LONG)
-                        .show()
-                }
-                return
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        webView.saveState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        webView.restoreState(savedInstanceState)
-    }
-
-    private var doubleBackToExitPressedOnce = false
-
-    override fun onBackPressed() {
-        if(webView.canGoBack()) {
-            webView.goBack()
-        }
-        else {
-            if(doubleBackToExitPressedOnce) {
-                super.onBackPressed()
-                return
-            }
-           this.doubleBackToExitPressedOnce = true
-            Snackbar.make(findViewById(R.id.constraintLayout), applicationContext.getString(R.string.please_click_back_again), Snackbar.LENGTH_LONG)
-                .show()
-
-            Looper.myLooper()?.let {
-                Handler(it).postDelayed({
-                    doubleBackToExitPressedOnce = false
-                }, 2000)
-            }
-        }
-    }*/
 
     val showImagePicker = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -351,13 +205,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getRealPathFromURI(contentURI: Uri) : String {
+    fun getRealPathFromURI(contentURI: Uri): String {
         var result = ""
         val cursor = this.contentResolver?.query(contentURI, null, null, null, null)
         if (cursor == null) {
             result = contentURI.path.toString()
-        }
-        else {
+        } else {
             cursor.moveToFirst()
             val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
             result = cursor.getString(idx)
@@ -374,32 +227,36 @@ class MainActivity : AppCompatActivity() {
         assignmentFragment.loadIntoList()
     }
 
-    val showCamera = registerForActivityResult(
+    private val showCamera = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
 
             val ei = ExifInterface(CurrentPhotoPathData(this).loadPhotoPath())
-            val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            val orientation = ei.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )
 
             val m = Matrix()
             if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
                 m.postRotate(90f)
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
                 m.postRotate(180f)
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
                 m.postRotate(270f)
             }
 
-            val originalBitmap = BitmapFactory.decodeFile(CurrentPhotoPathData(this@MainActivity).loadPhotoPath())
+            val originalBitmap =
+                BitmapFactory.decodeFile(CurrentPhotoPathData(this@MainActivity).loadPhotoPath())
 
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                 .format(System.currentTimeMillis())
             val storageDir = File(
                 Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/");
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .toString() + "/TexarkanaCollege/"
+            )
 
             if (!storageDir.exists()) {
                 storageDir.mkdirs()
@@ -408,15 +265,23 @@ class MainActivity : AppCompatActivity() {
 
             val f = File(image.toString())
             val fileOutputStream = FileOutputStream(f)
-            val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
+            val rotatedBitmap = Bitmap.createBitmap(
+                originalBitmap,
+                0,
+                0,
+                originalBitmap.width,
+                originalBitmap.height,
+                m,
+                true
+            )
             val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
             MediaScannerConnection.scanFile(this, arrayOf(image.toString()), null, null)
 
-             ImagePathData(this).setPath(image.toString())
+            ImagePathData(this).setPath(image.toString())
         }
     }
 
-    fun createImageFile(): File {
+    private fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
         val storageDir: File = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
@@ -433,17 +298,20 @@ class MainActivity : AppCompatActivity() {
     fun camera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(this.packageManager) != null) {
-            var photFile : File? = null
+            var photFile: File? = null
 
             try {
                 photFile = createImageFile()
-            }
-            catch (e : IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
 
             if (photFile != null) {
-                val photoUri = FileProvider.getUriForFile(this.applicationContext, "com.cory.texarkanacollege.FileProvider", photFile)
+                val photoUri = FileProvider.getUriForFile(
+                    this.applicationContext,
+                    "com.cory.texarkanacollege.FileProvider",
+                    photFile
+                )
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                 showCamera.launch(intent)
             }

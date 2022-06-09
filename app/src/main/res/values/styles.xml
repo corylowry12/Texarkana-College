@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.MyApplication" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
+        <item name="colorAccent">@color/blue</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="colorControlActivated">@color/blue</item>
@@ -44,6 +45,13 @@
     <style name="Widget.TexarkanaCollege.AppWidget.Container" parent="android:Widget">
         <item name="android:id">@android:id/background</item>
         <item name="android:background">?android:attr/colorBackground</item>
+    </style>
+
+    <style name="datePickerLight" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="backgroundColorDialog">@color/white</item>
+        <item name="android:windowBackground">@drawable/date_picker</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.70</item>
     </style>
 
 </resources>

@@ -1,9 +1,21 @@
 package com.cory.texarkanacollege.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginBottom
@@ -13,6 +25,10 @@ import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
 import com.google.android.material.card.MaterialCardView
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SettingsFragment : Fragment() {
 
@@ -55,9 +71,23 @@ class SettingsFragment : Fragment() {
             openFragment(PatchNotesFragment())
         }
 
+        val whyChooseTCConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintWhyChooseTC)
+        whyChooseTCConstraint?.setOnClickListener {
+            openFragment(WhyChoooseTCFragment())
+        }
+
         val campusMapConstraint = view.findViewById<ConstraintLayout>(R.id.constraintCampusMap)
         campusMapConstraint.setOnClickListener {
             openFragment(CampusMapFragment())
+        }
+
+        val manageLinksConstraint = view.findViewById<ConstraintLayout>(R.id.constraintManageLinks)
+        manageLinksConstraint.setOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.addCategory(Intent.CATEGORY_DEFAULT)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.data = Uri.parse("package:" + requireContext().packageName)
+            startActivity(intent)
         }
     }
 
@@ -68,5 +98,11 @@ class SettingsFragment : Fragment() {
         manager.replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
         manager.commit()
+    }
+
+    val openDefaultSettings = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+
     }
 }

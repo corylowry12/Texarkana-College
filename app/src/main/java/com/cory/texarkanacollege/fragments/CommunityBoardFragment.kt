@@ -23,6 +23,7 @@ import androidx.core.net.toFile
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.R
@@ -48,10 +49,16 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.suke.widget.SwitchButton
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.InputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -152,6 +159,56 @@ class CommunityBoardFragment : Fragment() {
         return result
     }
 
+    private fun runFAQ() {
+        val request = Request.Builder()
+            .url("https://raw.githubusercontent.com/corylowry12/faq_json/main/faq.json")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    val alert = MaterialAlertDialogBuilder(
+                        requireContext(),
+                        AccentColor(requireContext()).alertTheme()
+                    )
+                    alert.setTitle("Error")
+                    alert.setMessage("There was an error fetching Frequently Asked Questions. Check your data connection.")
+                    alert.setPositiveButton("OK") { _, _ ->
+                        activity?.supportFragmentManager?.popBackStack()
+                    }
+                    alert.show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+
+                val strResponse = response.body()!!.string()
+
+                val jsonContact = JSONObject(strResponse)
+                //creating json array
+                val jsonArrayInfo: JSONArray = jsonContact.getJSONArray("faq")
+
+                val size:Int = jsonArrayInfo.length()
+
+                for (i in 0 until size) {
+                    val jsonObjectDetail: JSONObject =jsonArrayInfo.getJSONObject(i)
+
+                    val arrayListDetails = HashMap<String, String>()
+                    arrayListDetails["question"] = (jsonObjectDetail.get("question").toString())
+                    arrayListDetails["answer"] = (jsonObjectDetail.get("answer").toString())
+                    dataList.add(arrayListDetails)
+
+                }
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.adapter = faqCustomAdapter
+
+                }
+            }
+        })
+    }
+
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -240,6 +297,7 @@ class CommunityBoardFragment : Fragment() {
                         addImageButton?.setOnLongClickListener {
                             if (this::image.isInitialized && image != Uri.EMPTY) {
                                 image = Uri.EMPTY
+                                Toast.makeText(requireContext(), "Image Removed", Toast.LENGTH_SHORT).show()
                                  return@setOnLongClickListener true
                             }
                             return@setOnLongClickListener false

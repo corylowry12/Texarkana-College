@@ -37,8 +37,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        style="@style/Widget.Material3.Button"
-        android:visibility="gone"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/doneButton"

@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -27,6 +28,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
@@ -104,7 +106,8 @@ class AssignmentFragment : Fragment() {
                         dialog.setCancelable(false)
                         dialog.setContentView(addAssignmentView)
                         val classesMenu =
-                            addAssignmentView.findViewById<AutoCompleteTextView>(R.id.classesAutoComplete)
+                            addAssignmentView.findViewById<MaterialAutoCompleteTextView>(R.id.classesAutoComplete)
+
                         val addAssignmentButton =
                             addAssignmentView.findViewById<Button>(R.id.addAssignmentButton)
                         val assignmentName =
@@ -129,7 +132,7 @@ class AssignmentFragment : Fragment() {
                                 requireContext(), R.style.datePickerLight
                             )
                             datePicker.setCancelable(false)
-                            //datePicker.datePicker.minDate = System.currentTimeMillis()
+                           // datePicker.datePicker.minDate = System.currentTimeMillis()
 
                             datePicker.show()
 

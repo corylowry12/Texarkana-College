@@ -95,9 +95,8 @@ class DoneAdapter(val context: Context,
             val markAsDoneButton = assignmentOptionsView.findViewById<Button>(R.id.doneButton)
             markAsDoneButton.text = context.getString(R.string.mark_as_not_done)
 
-            editButton.setOnClickListener {
-                dialog.dismiss()
-            }
+            editButton.visibility = View.GONE
+
             markAsDoneButton.setOnClickListener {
                 AssignmentsDBHelper(context, null).doneMarkAsUndone("", dataItem["id"].toString())
                 val runnable = Runnable {
@@ -108,15 +107,30 @@ class DoneAdapter(val context: Context,
 
             }
             deleteButton.setOnClickListener {
-                AssignmentsDBHelper(context, null).deleteRow(dataItem["id"].toString())
-                dataList.removeAt(holder.adapterPosition)
-                notifyItemRemoved(holder.adapterPosition)
-                Toast.makeText(context, context.getString(R.string.assignment_deleted), Toast.LENGTH_SHORT).show()
-                val runnable = Runnable {
-                    (context as MainActivity).assignmentLoadIntoList()
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("You are fixing to delete an assignment, this can not be undone, would you like to continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { materialDialog, _ ->
+                    AssignmentsDBHelper(context, null).deleteRow(dataItem["id"].toString())
+                    dataList.removeAt(holder.adapterPosition)
+                    notifyItemRemoved(holder.adapterPosition)
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.assignment_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val runnable = Runnable {
+                        (context as MainActivity).assignmentLoadIntoList()
+                    }
+                    MainActivity().runOnUiThread(runnable)
+                    dialog.dismiss()
+                    materialDialog.dismiss()
                 }
-                MainActivity().runOnUiThread(runnable)
-                dialog.dismiss()
+                materialAlertDialogBuilder.setNegativeButton("No") { materialDialog, _ ->
+                    materialDialog.dismiss()
+                    dialog.dismiss()
+                }
+                materialAlertDialogBuilder.show()
             }
             cancelButton.setOnClickListener {
                 dialog.dismiss()

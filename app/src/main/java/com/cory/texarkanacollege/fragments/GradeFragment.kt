@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.*
 import com.cory.texarkanacollege.adapters.GradesAdapter
 import com.cory.texarkanacollege.classes.ItemID
@@ -158,13 +159,17 @@ class GradeFragment : Fragment() {
                             addImage.setOnLongClickListener {
                                 addImage.text = "Add Image"
                                 Toast.makeText(requireContext(), "Image Removed", Toast.LENGTH_SHORT).show()
+                                image = ""
                                 return@setOnLongClickListener true
                             }
                             val viewImageDialog = MaterialAlertDialogBuilder(requireContext())
                             val layout = layoutInflater.inflate(R.layout.view_image_layout, null)
                             val imageView = layout.findViewById<ImageView>(R.id.viewImageImageView)
-                            val bitmap = BitmapFactory.decodeFile(image)
-                            imageView.setImageBitmap(bitmap)
+                            Glide.with(requireContext())
+                                .load(image)
+                                .centerCrop()
+                                .into(imageView)
+
                             viewImageDialog.setPositiveButton("OK", null)
 
                             viewImageDialog.setView(layout)
@@ -179,6 +184,7 @@ class GradeFragment : Fragment() {
                                         "Image Removed",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    image = ""
                                     return@setOnLongClickListener true
                                 }
                             } else {
@@ -344,14 +350,16 @@ class GradeFragment : Fragment() {
             val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
 
             val m = Matrix()
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                m.postRotate(90f)
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                m.postRotate(180f)
-            }
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                m.postRotate(270f)
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> {
+                    m.postRotate(90f)
+                }
+                ExifInterface.ORIENTATION_ROTATE_180 -> {
+                    m.postRotate(180f)
+                }
+                ExifInterface.ORIENTATION_ROTATE_270 -> {
+                    m.postRotate(270f)
+                }
             }
 
             val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)

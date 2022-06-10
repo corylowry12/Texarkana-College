@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
@@ -60,9 +61,12 @@ class HomeFragment : Fragment() {
             managePermissions.showAlert(requireContext())
         }
 
+        var url = "https://my.texarkanacollege.edu/ICS/"
 
-
-        val url = "https://my.texarkanacollege.edu/ICS/"
+        val deepLink = arguments?.getString("deepLink", "")
+        if (deepLink != "" && deepLink != null) {
+            url = deepLink.toString()
+        }
 
         if (webViewState.isEmpty) {
             webView.loadUrl(url)
@@ -80,7 +84,7 @@ class HomeFragment : Fragment() {
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url2 = request?.url.toString()
-
+                progressBar.visibility = View.VISIBLE
                 if(url2.contains("LearningToolsPortlet")) {
                     view?.loadUrl("javascript:$url2")
                     return true
@@ -130,12 +134,43 @@ class HomeFragment : Fragment() {
             }
         }
 
+
+
         val settings = webView.settings
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
 
         refreshLayout.setOnRefreshListener { webView.reload() }
+
+        var doubleBackToExitPressedOnce = false
+
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (webView.canGoBack()) {
+                        webView.goBack()
+                    }
+                    else {
+                        if (doubleBackToExitPressedOnce) {
+                            activity?.finishAffinity()
+                        } else {
+                            doubleBackToExitPressedOnce = true
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Press BACK again to exit",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                doubleBackToExitPressedOnce = false
+                            }, 2000)
+                        }
+                    }
+                }
+            })
 
     }
 
@@ -150,6 +185,10 @@ class HomeFragment : Fragment() {
         super.onResume()
         if (!webViewState.isEmpty) {
             webView.restoreState(webViewState)
+        }
+        val deepLink = arguments?.getString("deepLink", "")
+        if (deepLink != "" && deepLink != null) {
+            webView.loadUrl(deepLink.toString())
         }
     }
 

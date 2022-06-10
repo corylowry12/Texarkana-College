@@ -106,6 +106,8 @@ class CommunityBoardAdapter(val context: Context,
                 val editPostDeleteButton = dialog.findViewById<Button>(R.id.editPostDeleteButton)
                 val editPostCancelButton = dialog.findViewById<Button>(R.id.editPostCancelButton)
 
+                editPostEditButton?.visibility = View.GONE
+
                 editPostDeleteButton?.setOnClickListener {
                     val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
                     materialAlertDialogBuilder.setTitle("Delete Post?")
@@ -141,6 +143,9 @@ class CommunityBoardAdapter(val context: Context,
             args.putString("content", dataItem["content"])
             args.putString("imageURL", dataItem["imageURL"])
             args.putString("childPosition", dataItem["childPosition"])
+            args.putString("date", dataItem["date"])
+            args.putString("profilePicURL", dataItem["profilePicURL"])
+            args.putString("email", dataItem["email"])
             fragment.arguments = args
 
             val manager =

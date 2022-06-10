@@ -57,21 +57,21 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Classes"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName"
-        android:layout_marginTop="20dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName">
 
         <AutoCompleteTextView
             android:id="@+id/classesAutoComplete"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            />
-
+            android:layout_height="match_parent"
+            android:hint="Select Class"
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -109,7 +109,7 @@
         app:chipBackgroundColor="?attr/colorPrimary"
         app:chipCornerRadius="28dp"
         app:chipStrokeWidth="@null"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldNotes"
         app:layout_constraintStart_toStartOf="parent"/>

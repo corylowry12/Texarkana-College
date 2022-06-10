@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.PersistableBundle
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -54,13 +56,31 @@ class MainActivity : AppCompatActivity() {
         if (extras != null) {
             if (resources.getBoolean(R.bool.isTablet)) {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
-                bottomNav.menu.findItem(R.id.settings).isChecked = true
+                if (extras.getString("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+                else {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                }
             } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-                bottomNav.menu.findItem(R.id.settings).isChecked = true
+                if (extras.getString("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+                else {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                }
             }
 
-            replaceFragment(CampusMapFragment())
+            if (extras.getString("widget") == "Widget") {
+                replaceFragment(CampusMapFragment())
+            }
+            else if (intent.action == Intent.ACTION_VIEW) {
+                val args = Bundle()
+                args.putString("deepLink", intent.dataString)
+                homeFragment.arguments = args
+                replaceFragment(homeFragment)
+            }
         }
     }
 
@@ -86,13 +106,31 @@ class MainActivity : AppCompatActivity() {
         if (extras != null) {
             if (resources.getBoolean(R.bool.isTablet)) {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
-                bottomNav.menu.findItem(R.id.settings).isChecked = true
+                if (extras.getString("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+                else {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                }
             } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-                bottomNav.menu.findItem(R.id.settings).isChecked = true
+                if (extras.getString("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+                else {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                }
             }
 
-            replaceFragment(CampusMapFragment())
+            if (extras.getString("widget") == "Widget") {
+                replaceFragment(CampusMapFragment())
+            }
+            else if (intent.action == Intent.ACTION_VIEW) {
+                val args = Bundle()
+                args.putString("deepLink", intent.dataString)
+                homeFragment.arguments = args
+                replaceFragment(homeFragment)
+            }
         }
 
         MobileAds.initialize(this)

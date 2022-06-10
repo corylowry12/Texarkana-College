@@ -15,10 +15,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.ViewCommunityBoardPostCommentsAdapter
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -27,6 +29,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -73,6 +76,26 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val content = args?.getString("content", "")
         val imageURL = args?.getString("imageURL", "")
         val childPosition = args?.getString("childPosition", "")
+        val date = args?.getString("date", "")
+        val profilePicURL = args?.getString("profilePicURL", "")
+        val email = args?.getString("email", "")
+
+        val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
+        dateChip?.text = date
+
+        Toast.makeText(requireContext(), profilePicURL.toString(), Toast.LENGTH_SHORT).show()
+
+        val circularProgressDrawable = CircularProgressDrawable(requireContext())
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
+        val profileImageView = requireActivity().findViewById<CircleImageView>(R.id.profilePicViewPost)
+        Glide.with(requireContext())
+            .load(profilePicURL)
+            .error(R.drawable.ic_baseline_broken_image_24)
+            .placeholder(circularProgressDrawable)
+            .into(profileImageView!!)
 
         val imageView = activity?.findViewById<ImageView>(R.id.imageView)
 
@@ -93,10 +116,12 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val nameTextView = activity?.findViewById<TextView>(R.id.nameTextView)
         val titleTextView = activity?.findViewById<TextView>(R.id.postTitleTextView)
         val contentTextView = activity?.findViewById<TextView>(R.id.postContentTextView)
+        val emailTextView = activity?.findViewById<TextView>(R.id.emailTextView)
 
-        nameTextView!!.text = "Name: " + name
+        nameTextView!!.text = name
         titleTextView!!.text = "Title: " + title
-        contentTextView!!.text = "Content: " + content
+        contentTextView!!.text = content
+        emailTextView!!.text = email
 
         loadIntoList(childPosition.toString())
 

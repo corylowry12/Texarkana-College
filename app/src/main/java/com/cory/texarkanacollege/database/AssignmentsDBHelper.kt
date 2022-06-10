@@ -109,12 +109,16 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
 
     fun update(
         id: String,
+        assignmentName: String,
         className: String,
-        classTime: String
+        classTime: String,
+        notes: String
     ) {
         val values = ContentValues()
-        values.put(COLUMN_ASSIGNMENT_NAME, className)
+        values.put(COLUMN_ASSIGNMENT_NAME, assignmentName)
+        values.put(COLUMN_CLASS_NAME, className)
         values.put(COLUMN_ASSIGNMENT_DUE_DATE, classTime)
+        values.put(COLUMN_NOTES, notes)
 
         val db = this.writableDatabase
 

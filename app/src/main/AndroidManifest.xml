@@ -60,7 +60,19 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
+
+            <intent-filter android:label="Deep Link Texarkana College">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="www.texarkanacollege.edu" />
+                <data android:scheme="http" android:host="www.texarkanacollege.edu" />
+                <data android:scheme="https" android:host="my.texarkanacollege.edu" />
+                <data android:scheme="http" android:host="my.texarkanacollege.edu" />
+            </intent-filter>
+
         </activity>
 
         <meta-data

@@ -15,4 +15,6 @@
     <string name="assignment_deleted">Assignment Deleted</string>
     <string name="mark_as_not_done">Mark as not Done</string>
     <string name="there_was_an_error_check_connection">There was an error, check data connection</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

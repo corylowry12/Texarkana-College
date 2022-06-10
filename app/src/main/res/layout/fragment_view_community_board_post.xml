@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorViewCommunityPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ViewCommunityBoardPostFragment"
     android:background="@color/white"
-    android:id="@+id/coordinatorViewCommunityPost">
+    tools:context=".fragments.ViewCommunityBoardPostFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/viewPostToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="View Post"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/blue"
+        android:title="View Post"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+        app:navigationIconTint="@color/white"
         app:title="View Post"
         app:titleCentered="true"
-        app:titleTextColor="@color/white"
-        app:navigationIconTint="@color/white"
-        app:navigationIcon="@drawable/ic_baseline_arrow_back_24" />
+        app:titleTextColor="@color/white" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/viewPostToolbar"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        app:layout_constraintTop_toBottomOf="@id/viewPostToolbar">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,14 +42,15 @@
                 style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="50dp"
+                app:cardCornerRadius="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_gravity="center"
-                android:layout_marginEnd="50dp"
-                android:layout_marginStart="50dp"
-                app:cardCornerRadius="28dp"
-                android:layout_marginTop="2dp">
+                app:layout_constraintTop_toTopOf="parent">
+
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
@@ -60,100 +62,145 @@
                 style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_gravity="center"
-                app:cardCornerRadius="28dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 app:cardBackgroundColor="@color/cardViewLightBlue"
-                android:layout_marginTop="4dp">
-                <LinearLayout
+                app:cardCornerRadius="28dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="Name"
-            android:layout_marginStart="10dp"/>
+                    android:padding="10dp">
 
-        <TextView
-            android:id="@+id/postTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="Title"
-            android:layout_marginStart="10dp"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profilePicViewPost"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        tools:src="@drawable/ic_baseline_close_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/postContentTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="Content"
-            android:layout_marginStart="10dp"/>
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/dateChip"
+                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Name" />
+
+                    <TextView
+                        android:id="@+id/postTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="18sp"
+                        android:layout_marginTop="10dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
+                        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+                        tools:text="Title" />
+
+                    <TextView
+                        android:id="@+id/emailTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="16sp"
+                        android:textStyle="italic"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
+                        app:layout_constraintTop_toBottomOf="@id/postTitleTextView"
+                        tools:text="Email"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:id="@+id/postContentTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
+                        app:layout_constraintTop_toBottomOf="@id/emailTextView"
+                        tools:text="Content"
+                        android:layout_marginTop="5dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/dateChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="DATE"
+                        android:textSize="12sp"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commentRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingBottom="100dp"/>
+                android:paddingBottom="100dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E6FFFFFF">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/outlinedTextFieldComment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        app:endIconMode="clear_text"
-        android:textColorHint="#939090"
-        app:boxCornerRadiusBottomEnd="14dp"
-        app:boxCornerRadiusBottomStart="14dp"
-        app:boxCornerRadiusTopEnd="14dp"
-        app:boxCornerRadiusTopStart="14dp"
+        android:background="#E6FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/submitButton"
-        app:layout_constraintStart_toStartOf="parent"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/commentTextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Type Your Comment..."
-            android:maxLines="1"
-            android:imeOptions="actionDone"
-            android:inputType="text|textCapWords" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@id/outlinedTextFieldComment"
-        android:layout_marginEnd="4dp"
-        android:text="Submit"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextFieldComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:textColorHint="#939090"
+            app:boxCornerRadiusBottomEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusTopStart="14dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/submitButton"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Type Your Comment..."
+                android:imeOptions="actionDone"
+                android:inputType="text|textCapWords"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="Submit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/outlinedTextFieldComment" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

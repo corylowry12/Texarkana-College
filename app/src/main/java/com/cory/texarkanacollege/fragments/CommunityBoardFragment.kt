@@ -52,10 +52,7 @@ import com.suke.widget.SwitchButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
@@ -63,6 +60,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CommunityBoardFragment : Fragment() {
+
+    private val client = OkHttpClient()
 
     private lateinit var communityBoardAdapter: CommunityBoardAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
@@ -159,56 +158,6 @@ class CommunityBoardFragment : Fragment() {
         return result
     }
 
-    private fun runFAQ() {
-        val request = Request.Builder()
-            .url("https://raw.githubusercontent.com/corylowry12/faq_json/main/faq.json")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    val alert = MaterialAlertDialogBuilder(
-                        requireContext(),
-                        AccentColor(requireContext()).alertTheme()
-                    )
-                    alert.setTitle("Error")
-                    alert.setMessage("There was an error fetching Frequently Asked Questions. Check your data connection.")
-                    alert.setPositiveButton("OK") { _, _ ->
-                        activity?.supportFragmentManager?.popBackStack()
-                    }
-                    alert.show()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-
-                val strResponse = response.body()!!.string()
-
-                val jsonContact = JSONObject(strResponse)
-                //creating json array
-                val jsonArrayInfo: JSONArray = jsonContact.getJSONArray("faq")
-
-                val size:Int = jsonArrayInfo.length()
-
-                for (i in 0 until size) {
-                    val jsonObjectDetail: JSONObject =jsonArrayInfo.getJSONObject(i)
-
-                    val arrayListDetails = HashMap<String, String>()
-                    arrayListDetails["question"] = (jsonObjectDetail.get("question").toString())
-                    arrayListDetails["answer"] = (jsonObjectDetail.get("answer").toString())
-                    dataList.add(arrayListDetails)
-
-                }
-
-                GlobalScope.launch(Dispatchers.Main) {
-                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                    recyclerView.adapter = faqCustomAdapter
-
-                }
-            }
-        })
-    }
-
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -254,6 +203,41 @@ class CommunityBoardFragment : Fragment() {
                         addGradeView.findViewById<ImageButton>(R.id.closeImageButton)
                     dialog.setCancelable(true)
                     dialog.setContentView(addGradeView)
+                    val textView = addGradeView.findViewById<TextView>(R.id.tos)
+
+                    val request = Request.Builder()
+                        .url("https://raw.githubusercontent.com/corylowry12/Texarkana-College/main/community_board_tos.json?token=GHSAT0AAAAAABVEKCBISUETJWZNLLUFY4CGYVDTYSA")
+                        .build()
+
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                val alert = MaterialAlertDialogBuilder(
+                                    requireContext()
+                                )
+                                alert.setTitle("Error")
+                                alert.setMessage("There was an error fetching Frequently Asked Questions. Check your data connection.")
+                                alert.setPositiveButton("OK") { _, _ ->
+                                    activity?.supportFragmentManager?.popBackStack()
+                                }
+                                alert.show()
+                            }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+
+                            val strResponse = response.body()!!.string()
+
+                            val jsonContact = JSONObject(strResponse)
+                            //creating json array
+
+                            val jsonObjectDetail = jsonContact.getString("title")
+
+                            GlobalScope.launch(Dispatchers.Main) {
+                                textView.text = jsonObjectDetail
+                            }
+                        }
+                    })
 
                     closeImageButton.setOnClickListener {
                         dialog.dismiss()

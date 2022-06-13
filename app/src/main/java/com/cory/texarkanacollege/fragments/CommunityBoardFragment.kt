@@ -204,9 +204,10 @@ class CommunityBoardFragment : Fragment() {
                     dialog.setCancelable(true)
                     dialog.setContentView(addGradeView)
                     val textView = addGradeView.findViewById<TextView>(R.id.tos)
+                    val progressBar = addGradeView.findViewById<ProgressBar>(R.id.tosProgressBar)
 
                     val request = Request.Builder()
-                        .url("https://raw.githubusercontent.com/corylowry12/Texarkana-College/main/community_board_tos.json?token=GHSAT0AAAAAABVEKCBISUETJWZNLLUFY4CGYVDTYSA")
+                        .url("https://raw.githubusercontent.com/corylowry12/Texarkana-College/main/community_board_tos.json")
                         .build()
 
                     client.newCall(request).enqueue(object : Callback {
@@ -229,12 +230,15 @@ class CommunityBoardFragment : Fragment() {
                             val strResponse = response.body()!!.string()
 
                             val jsonContact = JSONObject(strResponse)
-                            //creating json array
 
                             val jsonObjectDetail = jsonContact.getString("title")
+                            val title = jsonObjectDetail.replace("\n", "\\\n")
+                            val text = title.replace("\u2022", "\\\u2022")
+                            val final = text.replace("\\", "")
 
                             GlobalScope.launch(Dispatchers.Main) {
-                                textView.text = jsonObjectDetail
+                                progressBar.visibility = View.GONE
+                                textView.text = final
                             }
                         }
                     })
@@ -370,7 +374,7 @@ class CommunityBoardFragment : Fragment() {
 
                                             val formatter =
                                                 SimpleDateFormat(
-                                                    "MMM/dd/yyyy HH:mm aa",
+                                                    "MMM/dd/yyyy hh:mm aa",
                                                     Locale.ENGLISH
                                                 )
                                             val dateFormatted = formatter.format(Date())
@@ -393,6 +397,8 @@ class CommunityBoardFragment : Fragment() {
                                             dialog.dismiss()
                                             loadIntoList()
                                             uploadingD.dismiss()
+
+                                            image = Uri.EMPTY
                                         }
                                     }
                                 } else {
@@ -413,7 +419,7 @@ class CommunityBoardFragment : Fragment() {
                                         .setValue(firebaseAuth.currentUser!!.email)
 
                                     val formatter =
-                                        SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
+                                        SimpleDateFormat("MMM/dd/yyyy hh:mm aa", Locale.ENGLISH)
                                     val dateFormatted = formatter.format(Date())
 
                                     database.child("posts").child((childrenCount + 1).toString())
@@ -427,6 +433,8 @@ class CommunityBoardFragment : Fragment() {
                                     database.child("posts")
                                         .child((childrenCount + 1).toString())
                                         .child("images").setValue("")
+
+                                    image = Uri.EMPTY
 
                                     dialog.dismiss()
                                     loadIntoList()
@@ -528,6 +536,7 @@ class CommunityBoardFragment : Fragment() {
                                 }.addOnCompleteListener {
                                     println("task completed")
                                     val map = java.util.HashMap<String, String>()
+                                    map["images"] = snapshot.child(i.key.toString()).child("images").value.toString()
                                     map["profilePicURL"] = snapshot.child(i.key.toString())
                                         .child("profile_photo").value.toString()
                                     map["email"] =
@@ -583,6 +592,7 @@ class CommunityBoardFragment : Fragment() {
 
                             } catch (e: IllegalArgumentException) {
                                 val map = java.util.HashMap<String, String>()
+                                map["images"] = snapshot.child(i.key.toString()).child("images").value.toString()
                                 map["profilePicURL"] = snapshot.child(i.key.toString())
                                     .child("profile_photo").value.toString()
                                 map["email"] =

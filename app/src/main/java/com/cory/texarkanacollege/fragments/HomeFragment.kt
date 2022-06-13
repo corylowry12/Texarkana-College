@@ -125,10 +125,13 @@ class HomeFragment : Fragment() {
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimeType))
                 val downloadManager : DownloadManager = requireActivity().baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.enqueue(request)
-                Snackbar.make(requireView().findViewById(R.id.constraintLayout), requireContext().getString(
+                val snackBar = Snackbar.make(requireView().findViewById(R.id.constraintLayout), requireContext().getString(
                     R.string.downloading
                 ), Snackbar.LENGTH_LONG)
-                    .show()
+                snackBar.apply {
+                    snackBar.view.background = ResourcesCompat.getDrawable(context.resources, R.drawable.snackbar_corners, context.theme)
+                }
+                    snackBar.show()
             } else {
                 managePermissions.showAlert(requireContext())
             }
@@ -140,6 +143,7 @@ class HomeFragment : Fragment() {
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
         refreshLayout.setOnRefreshListener { webView.reload() }
 

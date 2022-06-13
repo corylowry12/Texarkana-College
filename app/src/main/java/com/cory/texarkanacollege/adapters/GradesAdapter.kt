@@ -151,21 +151,27 @@ class GradesAdapter(
                     addImageButton.text = "View Image"
                 }
 
-                addImageButton.setOnLongClickListener {
-                    addImageButton.text = "Add Image"
-                    ImagePathData(context).setPath("")
-                    Toast.makeText(context, "Image Removed", Toast.LENGTH_SHORT).show()
-                    return@setOnLongClickListener true
+                addImageButton.setOnLongClickListener LongClickListener@{
+                        if (ImagePathData(context).loadPath() != "") {
+                            addImageButton.text = "Add Image"
+                            ImagePathData(context).setPath("")
+                            Toast.makeText(context, "Image Removed", Toast.LENGTH_SHORT).show()
+                            return@LongClickListener true
+                        }
+                    false
                 }
 
                 addImageButton.setOnClickListener {
                     if (dataItem["image"] != null && addImageButton.text == "View Image" && ImagePathData(context).loadPath() == "") {
 
-                        val viewImageDialog = MaterialAlertDialogBuilder(context)
+                        val viewImageDialog = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
                         val layout = LayoutInflater.from(context).inflate(R.layout.view_image_layout, null)
                         val imageView = layout.findViewById<ImageView>(R.id.viewImageImageView)
                         val bitmap = BitmapFactory.decodeFile(dataItem["image"])
-                        imageView.setImageBitmap(bitmap)
+                        Glide.with(context)
+                            .load(bitmap)
+                            .centerCrop()
+                            .into(imageView)
                         viewImageDialog.setPositiveButton("OK", null)
 
                         viewImageDialog.setView(layout)
@@ -173,7 +179,7 @@ class GradesAdapter(
                     }
                     else if (ImagePathData(context).loadPath() == "" && addImageButton.text == "Add Image") {
                         val chooseImageDialog =
-                            MaterialAlertDialogBuilder(context).create()
+                            MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle).create()
                         val layout =
                             LayoutInflater.from(context).inflate(R.layout.choose_image_dialog, null)
                         chooseImageDialog.setView(layout)
@@ -221,11 +227,14 @@ class GradesAdapter(
                         chooseImageDialog.show()
                     }
                     else {
-                        val viewImageDialog = MaterialAlertDialogBuilder(context)
+                        val viewImageDialog = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
                         val layout = LayoutInflater.from(context).inflate(R.layout.view_image_layout, null)
                         val imageView = layout.findViewById<ImageView>(R.id.viewImageImageView)
                         val bitmap = BitmapFactory.decodeFile(ImagePathData(context).loadPath())
-                        imageView.setImageBitmap(bitmap)
+                        Glide.with(context)
+                            .load(bitmap)
+                            .centerCrop()
+                            .into(imageView)
                         viewImageDialog.setPositiveButton("OK", null)
 
                         viewImageDialog.setView(layout)
@@ -274,14 +283,6 @@ class GradesAdapter(
                         dataList.add(map)
                         cursor.moveToNext()
                     }
-
-                   /* val map = HashMap<String, String>()
-                    map["primary"] = dataItem["primary"].toString()
-                    map["name"] = nameEditText.text.toString()
-                    map["grade"] = gradeEditText.text.toString()
-                    map["weight"] = weightEditText.text.toString()
-                    map["date"] = dataItem["date"].toString()
-                    map["image"] = image*/
 
                     notifyItemRangeChanged(0, dataList.count())
                     bottomSheetDialog.dismiss()

@@ -18,6 +18,7 @@ import com.cory.hourcalculator.adapters.PatchNotesEnhancementsAdapter
 import com.cory.hourcalculator.adapters.PatchNotesNewFeaturesAdapter
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.Version
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -112,6 +113,13 @@ class PatchNotesFragment : Fragment() {
                 enhancementsChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
         }
+
+        Version(requireContext()).setVersion(getString(R.string.versionNumber))
+
+        val runnable = Runnable {
+            (context as MainActivity).setSmallSettingsBadge()
+        }
+        MainActivity().runOnUiThread(runnable)
 
     }
 }

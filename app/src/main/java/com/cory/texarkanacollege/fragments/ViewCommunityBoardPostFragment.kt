@@ -83,8 +83,6 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
         dateChip?.text = date
 
-        Toast.makeText(requireContext(), profilePicURL.toString(), Toast.LENGTH_SHORT).show()
-
         val circularProgressDrawable = CircularProgressDrawable(requireContext())
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f

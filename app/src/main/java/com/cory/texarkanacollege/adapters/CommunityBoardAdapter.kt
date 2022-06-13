@@ -23,6 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CommunityBoardAdapter(val context: Context,
@@ -113,12 +114,28 @@ class CommunityBoardAdapter(val context: Context,
                     materialAlertDialogBuilder.setTitle("Delete Post?")
                     materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
                     materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
-                        FirebaseDatabase.getInstance().getReference("posts")
-                            .child(dataItem["childPosition"].toString()).removeValue()
-                        dataList.removeAt(holder.adapterPosition)
-                        notifyItemRemoved(holder.adapterPosition)
-                        Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
+                        if (dataItem["imageURL"] != "" && dataItem["imageURL"] != null) {
+                            FirebaseStorage.getInstance()
+                                .getReference(dataItem["images"].toString()).delete()
+                                .addOnSuccessListener {
+                                    FirebaseDatabase.getInstance().getReference("posts")
+                                        .child(dataItem["childPosition"].toString()).removeValue()
+                                    dataList.removeAt(holder.adapterPosition)
+                                    notifyItemRemoved(holder.adapterPosition)
+                                    Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
+                                        .show()
+                                    dialog.dismiss()
+                                }
+                        }
+                        else {
+                            FirebaseDatabase.getInstance().getReference("posts")
+                                .child(dataItem["childPosition"].toString()).removeValue()
+                            dataList.removeAt(holder.adapterPosition)
+                            notifyItemRemoved(holder.adapterPosition)
+                            Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                        }
                     }
                     materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
                         dialog.dismiss()

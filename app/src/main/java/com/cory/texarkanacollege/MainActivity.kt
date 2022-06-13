@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.PersistableBundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,9 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
-import com.cory.texarkanacollege.classes.CurrentPhotoPathData
-import com.cory.texarkanacollege.classes.ImagePathData
+import com.cory.texarkanacollege.classes.*
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -33,11 +32,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.*
+import org.json.JSONObject
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val client = OkHttpClient()
 
     var path = ""
 
@@ -87,6 +93,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSmallSettingsBadge()
 
         val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = remoteConfigSettings {
@@ -354,5 +362,44 @@ class MainActivity : AppCompatActivity() {
                 showCamera.launch(intent)
             }
         }
+    }
+
+    fun setSmallSettingsBadge() {
+        val badge =
+            findViewById<BottomNavigationView>(R.id.bottomNav).getOrCreateBadge(R.id.settings)
+        if (Version(this).loadVersion() != getString(R.string.versionNumber)) {
+            badge.isVisible = true
+
+            badge.backgroundColor = ContextCompat.getColor(this, R.color.redBadgeColor)
+        } else {
+            badge.isVisible = false
+        }
+    }
+
+    fun fetchTOSJsonBadget() {
+        val request = Request.Builder()
+            .url("https://raw.githubusercontent.com/corylowry12/Texarkana-College/main/community_board_tos.json")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("failed fetching json")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+
+                val strResponse = response.body()!!.string()
+
+                val jsonContact = JSONObject(strResponse)
+
+                val jsonObjectDetail = jsonContact.getString("version")
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    if (TOSJsonVersion(this@MainActivity).loadVersion() != jsonObjectDetail) {
+
+                    }
+                }
+            }
+        })
     }
 }

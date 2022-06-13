@@ -14,16 +14,19 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
+import com.cory.texarkanacollege.classes.Version
 import com.google.android.material.card.MaterialCardView
 import java.io.File
 import java.io.FileOutputStream
@@ -67,8 +70,19 @@ class SettingsFragment : Fragment() {
         }
 
         val patchNotesConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintPatchNotes)
+        val patchNotesChevron = activity?.findViewById<ImageView>(R.id.patchNotesChevron)
         patchNotesConstraint?.setOnClickListener {
             openFragment(PatchNotesFragment())
+        }
+
+        if (Version(requireContext()).loadVersion() != getString(R.string.versionNumber)) {
+            patchNotesChevron?.setImageResource(R.drawable.redcircle)
+            patchNotesChevron?.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.redAccent
+                )
+            )
         }
 
         val whyChooseTCConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintWhyChooseTC)

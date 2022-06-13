@@ -13,4 +13,6 @@
     <color name="urgentPostRed">#E36161</color>
 
     <color name="transparent">#00000000</color>
+    <color name="redBadgeColor">#D36C6C</color>
+    <color name="redAccent">#E53935</color>
 </resources>

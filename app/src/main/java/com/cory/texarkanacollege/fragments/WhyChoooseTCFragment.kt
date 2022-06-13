@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.activity.OnBackPressedCallback
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 
 class WhyChoooseTCFragment : Fragment() {
@@ -25,5 +27,18 @@ class WhyChoooseTCFragment : Fragment() {
         val webView = requireActivity().findViewById<WebView>(R.id.webViewWhyChooseTC)
 
         webView!!.loadUrl("https://www.texarkanacollege.edu/about/why/")
+
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (webView.canGoBack()) {
+                        webView.goBack()
+                    }
+                    else {
+                        activity?.supportFragmentManager?.popBackStack()
+                    }
+                }
+            })
     }
 }

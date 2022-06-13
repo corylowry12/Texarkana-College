@@ -105,11 +105,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:textSize="18sp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
-                        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+                        app:layout_constraintTop_toBottomOf="@id/dateChip"
                         tools:text="Title" />
 
                     <TextView
@@ -144,7 +144,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:text="DATE"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"
+                        android:paddingBottom="5dp"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 

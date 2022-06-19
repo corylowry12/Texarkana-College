@@ -18,6 +18,7 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.CampusNewsVisibleData
 import com.cory.texarkanacollege.classes.CommunityBoardVisibileData
 import com.cory.texarkanacollege.classes.Version
 import com.google.android.material.card.MaterialCardView
@@ -52,6 +54,11 @@ class SettingsFragment : Fragment() {
         }
 
         val campusNewsConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintCampusNews)
+        val campusNewsCardView = activity?.findViewById<CardView>(R.id.cardViewCampusNews)
+
+        if (!CampusNewsVisibleData(requireContext()).loadCampusNewsVisible()) {
+            campusNewsCardView!!.visibility = View.GONE
+        }
         campusNewsConstraint?.setOnClickListener {
             val campusNewsFragment = CampusNewsFragment()
             (context as MainActivity).campusNewsFragment = campusNewsFragment

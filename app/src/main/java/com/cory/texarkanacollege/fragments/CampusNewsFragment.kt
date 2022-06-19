@@ -85,7 +85,7 @@ class CampusNewsFragment : Fragment() {
                         loadAll()
                     }
                     else {
-                        Toast.makeText(requireContext(), "Everything is already loaded", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.everything_is_already_loaded), Toast.LENGTH_SHORT).show()
                     }
                     true
                 }
@@ -104,7 +104,13 @@ class CampusNewsFragment : Fragment() {
         campusNewsAdapter = CampusNewsAdapter(requireContext(), dataList)
 
         if (isOnline(requireContext())) {
-            loadIntoList()
+            try {
+                loadIntoList()
+            }
+            catch (e: Exception) {
+                Toast.makeText(requireContext(), getString(R.string.some_error_was_encountered), Toast.LENGTH_SHORT).show()
+                activity?.supportFragmentManager?.popBackStack()
+            }
         }
         else {
             Toast.makeText(requireContext(), getString(R.string.there_was_an_error_check_connection), Toast.LENGTH_SHORT).show()
@@ -127,7 +133,7 @@ class CampusNewsFragment : Fragment() {
                     } else {
                         Toast.makeText(
                             requireContext(),
-                            "There is no more news",
+                            getString(R.string.there_is_no_more_news),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -135,14 +141,14 @@ class CampusNewsFragment : Fragment() {
                 }
                 else {
                     if (!recyclerView.canScrollVertically(1)) {
-                        Toast.makeText(requireContext(), "Cant load more while searching", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.cant_load_more_while_searching), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
     }
 
-    fun search() {
+    private fun search() {
         val search = requireView().findViewById<TextInputEditText>(R.id.search)
         val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
 
@@ -284,7 +290,6 @@ class CampusNewsFragment : Fragment() {
                 val linkClass = document.select("div.flex-1")
                 val link = linkClass.select("a.block.mt-2")
                 val img = document.select("img")
-                var imgLink = img.attr("src")
                 val hidden = document.select("div.hidden")
                 pageNumber = hidden.select("a.-mt-px").last().text().trim().toInt()
 
@@ -330,7 +335,6 @@ class CampusNewsFragment : Fragment() {
             val linkClass = document.select("div.flex-1")
             val link = linkClass.select("a.block.mt-2")
             val img = document.select("img")
-            var imgLink = img.attr("src")
             val hidden = document.select("div.hidden")
             pageNumber = hidden.select("a.-mt-px").last().text().trim().toInt()
 
@@ -361,7 +365,6 @@ class CampusNewsFragment : Fragment() {
     fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
             val capabilities =
                 connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
@@ -375,7 +378,6 @@ class CampusNewsFragment : Fragment() {
                     Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
                     return true
                 }
-            }
         }
         return false
     }
@@ -407,7 +409,6 @@ class CampusNewsFragment : Fragment() {
             val linkClass = document.select("div.flex-1")
             val link = linkClass.select("a.block.mt-2")
             val img = document.select("img")
-            var imgLink = img.attr("src")
             val hidden = document.select("div.hidden")
             pageNumber = hidden.select("a.-mt-px").last().text().trim().toInt()
 

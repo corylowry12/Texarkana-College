@@ -297,38 +297,45 @@ class GradesAdapter(
             }
 
             deleteButton?.setOnClickListener {
-                val datalist = dataList[holder.adapterPosition]
-                val id = datalist["primary"]
 
-                val cursor = GradesDBHelper(context, null).getSingleGrade(id.toString())
-                cursor.moveToFirst()
-                val map = HashMap<String, String>()
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Delete Grade")
+                materialAlertDialogBuilder.setMessage("You are fixing to delete a grade, this can not be undone, would you like to continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    val datalist = dataList[holder.adapterPosition]
+                    val id = datalist["primary"]
 
-                while (!cursor.isAfterLast) {
+                    val cursor = GradesDBHelper(context, null).getSingleGrade(id.toString())
+                    cursor.moveToFirst()
+                    val map = HashMap<String, String>()
 
-                    map["primary"] =
-                        cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_ID))
-                    map["id"] =
-                        cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_CLASS_ID))
-                    map["grade"] =
-                        cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_GRADE))
+                    while (!cursor.isAfterLast) {
 
-                    GradesDBHelper(context, null).deleteSingleRow(map["primary"].toString())
+                        map["primary"] =
+                            cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_ID))
+                        map["id"] =
+                            cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_CLASS_ID))
+                        map["grade"] =
+                            cursor.getString(cursor.getColumnIndex(GradesDBHelper.COLUMN_GRADE))
 
-                    cursor.moveToNext()
+                        GradesDBHelper(context, null).deleteSingleRow(map["primary"].toString())
+
+                        cursor.moveToNext()
+                    }
+
+                    dataList.removeAt(holder.adapterPosition)
+                    notifyItemRemoved(holder.adapterPosition)
+                    dialog.dismiss()
+
+                    val saveState = Runnable {
+                        (context as MainActivity).textViewVisibilityGrades()
+
+                    }
+
+                    MainActivity().runOnUiThread(saveState)
                 }
-
-                dataList.removeAt(holder.adapterPosition)
-                notifyItemRemoved(holder.adapterPosition)
-                dialog.dismiss()
-
-                val saveState = Runnable {
-                    (context as MainActivity).textViewVisibilityGrades()
-
-                }
-
-                MainActivity().runOnUiThread(saveState)
-
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
             }
 
             deleteAllButton?.setOnClickListener {

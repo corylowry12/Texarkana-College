@@ -24,16 +24,14 @@ import com.google.android.material.appbar.MaterialToolbar
 
 class PatchNotesFragment : Fragment() {
 
-    private var bugFixesArray = arrayOf("Fixed some issues dealing with permissions")
+    private var bugFixesArray = arrayOf("Fixed an issue with permissions dialog not matching the theme", "Fixed an issue with the choose an image dialog when adding a grade not matching the theme of the rest of the dialogs",
+                                        "Fixed issue with there being no loading circle when loading images in the community board")
 
-    private var newFeaturesArray = arrayOf("Added the ability to store classes", "Added the ability to store grades", "Added the ability to add an image for each grade", "Added the ability to have the app calculate a weighted average for the grades",
-                                            "Added the ability to change the theme from light to dark mode", "Added the ability to store assignments", "Added the ability to add a Campus Map widget to your home screen", "Added the ability to open the campus map view by tapping on the widget",
-                                            "Added the ability to view campus news directly from the website from the app", "Added the ability to select what day of the week your classes are on", "Added the ability to view the image for each grade by clicking on it",
-                                            "Added the ability to edit each Grade or Class by long pressing on it. The options include \'Edit\', \'Delete\', \'Delete All\' and \'Cancel\'")
+    private var newFeaturesArray = arrayOf("Tons of tweaks to the community board before I start the roll out on 06/20/2022", "Tons more features coming in the near future")
 
-    private var enhancementsArray = arrayOf("Redesigned the entire app", "Added a loading animation when loading the web view on the home tab", "Performance improvements to the webview on the home screen")
-
-    var themeSelection = false
+    private var enhancementsArray = arrayOf("The post content text box will now expand based on how much text you enter", "Redesigned the view post screen", "Image view in the view post screen will now not show up if there is no image for that post",
+                                            "Tweaked the design of the community board layout", "Added a border around the profile images in the view post layout", "Redesigned the comments in the view post layout", "Added the ability to swipe and refresh comments in the view post screen",
+                                            "Improved loading times in the community board", "There is now a text view that will show up when no comments are stored", "App will no longer cache images to save storage space")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

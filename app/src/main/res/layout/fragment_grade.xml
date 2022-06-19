@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="grades"
+    android:background="@color/white"
     android:id="@+id/coordinatorLayoutGrades">
 
     <com.google.android.material.appbar.AppBarLayout

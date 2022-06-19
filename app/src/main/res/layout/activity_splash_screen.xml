@@ -6,34 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".SplashScreenActivity">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompoundDrawables">
         <ImageView
             android:id="@+id/SplashScreenImage"
             android:layout_width="180dp"
             android:layout_height="180dp"
             android:contentDescription="Splash Screen Image"
             app:srcCompat="@drawable/texarkanacollegelogo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/hour_calculator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Texarkana College"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/SplashScreenImage" />
-
+        app:layout_constraintTop_toBottomOf="@id/SplashScreenImage"
+        android:layout_gravity="center"
+        />
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Created By: Cory Lowry"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="#8A8A8A"
         android:textSize="14sp"
         android:textStyle="italic|bold"
         app:layout_constraintBottom_toBottomOf="parent"

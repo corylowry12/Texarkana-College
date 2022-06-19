@@ -12,13 +12,18 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ViewCommunityBoardPostCommentsAdapter(val context: Context,
@@ -38,7 +43,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
             val dataItem = dataList[position]
 
-            name.text = "Name: " + dataItem["name"]
+            name.text = dataItem["name"]
             title.text = dataItem["title"]
             dateChip.text = dataItem["date"]
 
@@ -56,6 +61,47 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val dataItem = dataList[position]
+
+        holder.itemView.setOnLongClickListener {
+            if (dataItem["uid"] == FirebaseAuth.getInstance().currentUser!!.uid.toString()) {
+                val dialog = BottomSheetDialog(context)
+                val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
+                dialog.setCancelable(false)
+                dialog.setContentView(postOptionsLayout)
+                val editPostEditButton = dialog.findViewById<Button>(R.id.editPostEditButton)
+                val editPostDeleteButton = dialog.findViewById<Button>(R.id.editPostDeleteButton)
+                val editPostCancelButton = dialog.findViewById<Button>(R.id.editPostCancelButton)
+
+                editPostEditButton?.visibility = View.GONE
+
+                editPostDeleteButton?.setOnClickListener {
+                    val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
+                    materialAlertDialogBuilder.setTitle("Delete Post?")
+                    materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
+                    materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                            FirebaseDatabase.getInstance().getReference("posts")
+                                .child(dataItem["childPosition"].toString()).child("comments").child(dataItem["commentPosition"].toString()).removeValue()
+                            dataList.removeAt(holder.adapterPosition)
+                            notifyItemRemoved(holder.adapterPosition)
+                            Toast.makeText(context, "Comment Deleted", Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                    }
+                    materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
+                        dialog.dismiss()
+                    }
+                    materialAlertDialogBuilder.show()
+                }
+                editPostCancelButton?.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
+                return@setOnLongClickListener true
+            }
+            false
+        }
 
         (holder as ViewHolder).bind(position)
     }

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:tag="settings"
+    android:background="@color/white"
     android:id="@+id/coordinatorLayoutSettings">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -120,6 +121,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewCampusNews"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

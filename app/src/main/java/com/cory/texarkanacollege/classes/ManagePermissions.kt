@@ -38,7 +38,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
 
     // Show alert dialog to request permissions
     fun showAlert(context: Context) {
-        val builder = MaterialAlertDialogBuilder(context)
+        val builder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
         builder.setTitle(R.string.need_permissions)
         builder.setMessage(R.string.some_permissions_are_required_to_do_the_task)
         builder.setCancelable(false)

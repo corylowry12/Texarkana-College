@@ -102,8 +102,10 @@ class MainActivity : AppCompatActivity() {
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.fetchAndActivate().addOnCompleteListener {
-            val communityBoard = remoteConfig.getBoolean("community_board")
+            val communityBoard = remoteConfig.getBoolean("community_board_302")
             CommunityBoardVisibileData(this).setCommunityBoardVisible(true)
+            val campusNews = remoteConfig.getBoolean("campus_news")
+            CampusNewsVisibleData(this).setCampusNewsVisible(campusNews)
         }
 
         if (savedInstanceState == null) {
@@ -203,7 +205,8 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
+
+            transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
         transaction.commit()
 
     }

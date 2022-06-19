@@ -2,7 +2,10 @@ package com.cory.texarkanacollege.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,11 +56,11 @@ class CommunityBoardAdapter(val context: Context,
             date.text = "Date: " + dataItem["date"]
 
             if (dataItem["content"]!!.length < 30) {
-                content.text = "Content: " + dataItem["content"]
+                content.text = "Content: " + dataItem["content"]!!.trim()
             }
             else {
                 val contentSubstring = dataItem["content"]!!.substring(0, 30)
-                content.text = "Content: " + contentSubstring + "..."
+                content.text = "Content: " + contentSubstring.trim() + "..."
             }
 
             if (dataItem["email"] == "") {
@@ -115,17 +118,33 @@ class CommunityBoardAdapter(val context: Context,
                     materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
                     materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
                         if (dataItem["imageURL"] != "" && dataItem["imageURL"] != null) {
-                            FirebaseStorage.getInstance()
-                                .getReference(dataItem["images"].toString()).delete()
-                                .addOnSuccessListener {
-                                    FirebaseDatabase.getInstance().getReference("posts")
-                                        .child(dataItem["childPosition"].toString()).removeValue()
-                                    dataList.removeAt(holder.adapterPosition)
-                                    notifyItemRemoved(holder.adapterPosition)
-                                    Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
-                                        .show()
-                                    dialog.dismiss()
-                                }
+                            if (isOnline(context)) {
+                                FirebaseStorage.getInstance()
+                                    .getReference(dataItem["images"].toString()).delete()
+                                    .addOnSuccessListener {
+                                        FirebaseDatabase.getInstance().getReference("posts")
+                                            .child(dataItem["childPosition"].toString())
+                                            .removeValue()
+                                        dataList.removeAt(holder.adapterPosition)
+                                        notifyItemRemoved(holder.adapterPosition)
+                                        Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
+                                            .show()
+                                        dialog.dismiss()
+                                    }
+                                    .addOnFailureListener {
+                                        FirebaseDatabase.getInstance().getReference("posts")
+                                            .child(dataItem["childPosition"].toString())
+                                            .removeValue()
+                                        dataList.removeAt(holder.adapterPosition)
+                                        notifyItemRemoved(holder.adapterPosition)
+                                        Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
+                                            .show()
+                                        dialog.dismiss()
+                                    }
+                            }
+                            else {
+                                Toast.makeText(context, "Check your data connection", Toast.LENGTH_SHORT).show()
+                            }
                         }
                         else {
                             FirebaseDatabase.getInstance().getReference("posts")
@@ -185,5 +204,25 @@ class CommunityBoardAdapter(val context: Context,
 
     override fun setHasStableIds(hasStableIds: Boolean) {
         super.setHasStableIds(true)
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+        return false
     }
 }

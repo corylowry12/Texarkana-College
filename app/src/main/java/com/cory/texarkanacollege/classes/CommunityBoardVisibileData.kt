@@ -14,7 +14,7 @@ class CommunityBoardVisibileData(context: Context) {
     }
 
     fun loadCommunityBoardVisible(): Boolean {
-        val state = sharedPreferences.getBoolean("community_board_visible", true)
+        val state = sharedPreferences.getBoolean("community_board_visible", false)
         return (state)
     }
 }

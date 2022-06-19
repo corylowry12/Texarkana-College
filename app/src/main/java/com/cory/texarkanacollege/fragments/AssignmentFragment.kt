@@ -132,7 +132,7 @@ class AssignmentFragment : Fragment() {
                                 requireContext(), R.style.datePickerLight
                             )
                             datePicker.setCancelable(false)
-                           // datePicker.datePicker.minDate = System.currentTimeMillis()
+                            datePicker.datePicker.minDate = System.currentTimeMillis()
 
                             datePicker.show()
 

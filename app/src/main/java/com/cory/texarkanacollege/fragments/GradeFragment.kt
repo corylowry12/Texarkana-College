@@ -200,7 +200,7 @@ class GradeFragment : Fragment() {
                                 if (managePermissions.checkPermissions(requireContext())) {
 
                                     val chooseImageDialog =
-                                        MaterialAlertDialogBuilder(requireContext()).create()
+                                        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle).create()
                                     val layout =
                                         layoutInflater.inflate(R.layout.choose_image_dialog, null)
                                     chooseImageDialog.setView(layout)

@@ -1,6 +1,7 @@
 package com.cory.texarkanacollege
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -14,12 +15,25 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        load()
+        if (Build.VERSION.SDK_INT < 31) {
+            load()
+        }
+        else {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        load()
+
+        if (Build.VERSION.SDK_INT < 31) {
+            load()
+        }
+        else {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun load() {

@@ -12,7 +12,7 @@
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="28dp"
@@ -27,8 +27,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="5dp"
-            android:paddingEnd="20dp">
+            android:padding="5dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePicComments"
@@ -38,7 +37,9 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_baseline_close_24"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/ic_baseline_close_24"/>
+                android:src="@drawable/ic_baseline_close_24"
+                app:civ_border_color="#3f51b5"
+                app:civ_border_width="2dp" />
 
             <TextView
                 android:id="@+id/row_display_name"
@@ -48,11 +49,12 @@
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/profilePicComments"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/dateChip"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText"
                 android:paddingTop="5dp"
                 android:paddingStart="2dp"
                 android:paddingEnd="0dp"
+                android:layout_marginStart="5dp"
                 android:textStyle="italic"/>
 
             <TextView
@@ -65,22 +67,23 @@
                 app:layout_constraintTop_toBottomOf="@id/row_display_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp"
-                android:paddingStart="6dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="5dp"
+                android:paddingStart="5dp"
                 android:paddingEnd="0dp"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/dateChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profilePicComments"
+                app:layout_constraintTop_toBottomOf="@id/row_comment_title"
                 android:text="Date"
                 app:chipBackgroundColor="@color/blue"
                 android:textColor="@color/white"
                 android:clickable="false"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

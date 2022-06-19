@@ -217,7 +217,7 @@ class CommunityBoardFragment : Fragment() {
                                     requireContext()
                                 )
                                 alert.setTitle("Error")
-                                alert.setMessage("There was an error fetching Frequently Asked Questions. Check your data connection.")
+                                alert.setMessage("There was an error. Check your data connection.")
                                 alert.setPositiveButton("OK") { _, _ ->
                                     activity?.supportFragmentManager?.popBackStack()
                                 }
@@ -349,7 +349,10 @@ class CommunityBoardFragment : Fragment() {
                                         result.addOnSuccessListener { downloadLink ->
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
-                                                .child("images").setValue("images/$imagePath")
+                                                .child("images").setValue(downloadLink.toString())
+                                            database.child("posts")
+                                                .child((childrenCount + 1).toString())
+                                                .child("imagePath").setValue("images/$imagePath")
 
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
@@ -362,7 +365,7 @@ class CommunityBoardFragment : Fragment() {
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
                                                 .child("title")
-                                                .setValue(titleEditText.text.toString())
+                                                .setValue(titleEditText.text.toString().trim())
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
                                                 .child("name")
@@ -370,7 +373,7 @@ class CommunityBoardFragment : Fragment() {
                                             database.child("posts")
                                                 .child((childrenCount + 1).toString())
                                                 .child("content")
-                                                .setValue(postEditText.text.toString())
+                                                .setValue(postEditText.text.toString().trim())
 
                                             val formatter =
                                                 SimpleDateFormat(
@@ -519,7 +522,7 @@ class CommunityBoardFragment : Fragment() {
 
                         for (i in snapshot.children) {
                             println("children " + i.toString())
-                            try {
+                            /*try {
 
                                 FirebaseStorage.getInstance().reference.child(
                                     snapshot.child(i.key.toString())
@@ -639,13 +642,63 @@ class CommunityBoardFragment : Fragment() {
 
                                 communityBoardRecyclerView?.layoutManager = gridLayoutManager
                                 communityBoardRecyclerView?.adapter = communityBoardAdapter
+                            }*/
+
+                            val map = HashMap<String, String>()
+                            map["images"] = snapshot.child(i.key.toString()).child("imagePath").value.toString()
+                            map["profilePicURL"] = snapshot.child(i.key.toString())
+                                .child("profile_photo").value.toString()
+                            map["email"] =
+                                snapshot.child(i.key.toString()).child("email").value.toString()
+                            map["name"] =
+                                snapshot.child(i.key.toString()).child("name").value.toString()
+                            map["title"] =
+                                snapshot.child(i.key.toString()).child("title").value.toString()
+                            map["content"] =
+                                snapshot.child(i.key.toString())
+                                    .child("content").value.toString()
+                            map["date"] =
+                                snapshot.child(i.key.toString()).child("date").value.toString()
+                            map["pinned"] =
+                                snapshot.child(i.key.toString())
+                                    .child("pinned").value.toString()
+                            map["urgent"] =
+                                snapshot.child(i.key.toString())
+                                    .child("urgent").value.toString()
+                            map["uid"] =
+                                snapshot.child(i.key.toString()).child("uid").value.toString()
+
+                            map["imageURL"] = snapshot.child(i.key.toString()).child("images").value.toString()
+                            map["childPosition"] = i.key.toString()
+                            dataList.add(map)
+
+                            val sortedDataList =
+                                dataList.sortedWith(
+                                    compareBy(
+                                        { it["pinned"] },
+                                        { it["urgent"] },
+                                        { it["date"] })
+                                )
+                                    .reversed()
+
+                            println("sorted data List " + sortedDataList)
+                            sortedData.clear()
+                            for (z in sortedDataList) {
+                                sortedData.add(z)
                             }
+
+                            communityBoardAdapter =
+                                CommunityBoardAdapter(requireContext(), sortedData)
+
+                            communityBoardRecyclerView?.layoutManager = gridLayoutManager
+                            communityBoardRecyclerView?.adapter = communityBoardAdapter
                         }
+
                         val handler = Handler(Looper.getMainLooper())
                         val runnable = Runnable {
                             loadAllD.dismiss()
                         }
-                        handler.postDelayed(runnable, 2000)
+                        handler.postDelayed(runnable, 500)
                         println("children count " + childrenCount)
 
                     }

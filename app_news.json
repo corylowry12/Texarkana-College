@@ -12,6 +12,6 @@
      {"title":"Add the ability to like comments in the community board", "status": false},
      {"title":"Add the ability to set a default category for assignments", "status": false},
      {"title":"Add the ability to change caching options for media", "status": false},
-     {"title":"Add the ability to load lower quality version of images to improve speed and save data", "status": false},
+     {"title":"Add the ability to load lower quality version of images to improve speed and save data", "status": false}
    ]
 }  

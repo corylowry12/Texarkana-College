@@ -284,22 +284,27 @@ class ClassesAdapter(
                 }
                 if (dataItemAddClass["classTime"].toString().contains("Mon")) {
                     mon?.isChecked = true
+                    mon?.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
                     daysArray.add(1)
                 }
                 if (dataItemAddClass["classTime"].toString().contains("Tue")) {
                     tue?.isChecked = true
+                    tue?.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
                     daysArray.add(2)
                 }
                 if (dataItemAddClass["classTime"].toString().contains("Wed")) {
                     wed?.isChecked = true
+                    wed?.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
                     daysArray.add(3)
                 }
                 if (dataItemAddClass["classTime"].toString().contains("Thur")) {
                     thur?.isChecked = true
+                    thur?.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
                     daysArray.add(4)
                 }
                 if (dataItemAddClass["classTime"].toString().contains("Fri")) {
                     fri?.isChecked = true
+                    fri?.setBackgroundColor(ContextCompat.getColor(context, R.color.toggleButtonCheckedBackground))
                     daysArray.add(5)
                 }
 
@@ -407,41 +412,69 @@ class ClassesAdapter(
                                     days += "Mon"
                                 }
                                 if (daysArray[i] == 2) {
-                                    if (i == daysArray.count() - 1) {
-                                        days += " and Tue"
-                                    } else if (i == 0) {
-                                        days += "Tue"
+                                    days += if (daysArray.count() == 1) {
+                                        "Tue"
                                     } else {
-                                        days += ", Tue"
+                                        when (i) {
+                                            daysArray.count() - 1 -> {
+                                                " and Tue"
+                                            }
+                                            0 -> {
+                                                "Tue"
+                                            }
+                                            else -> {
+                                                ", Tue"
+                                            }
+                                        }
                                     }
                                 }
                                 if (daysArray[i] == 3) {
-                                    if (i == daysArray.count() - 1) {
-                                        days += " and Wed"
-                                    } else if (i == 0) {
+                                    if (daysArray.count() == 1) {
                                         days += "Wed"
-                                    } else {
-                                        days += ", Wed"
+                                    }
+                                    else {
+                                        days += when (i) {
+                                            daysArray.count() - 1 -> {
+                                                " and Wed"
+                                            }
+                                            0 -> {
+                                                "Wed"
+                                            }
+                                            else -> {
+                                                ", Wed"
+                                            }
+                                        }
                                     }
                                 }
                                 if (daysArray[i] == 4) {
-                                    if (i == daysArray.count() - 1) {
-                                        days += " and Thur"
-                                    } else if (i == 0) {
-                                        days += "Thur"
+                                    days += if (daysArray.count() == 1) {
+                                        "Thur"
                                     } else {
-                                        days += ", Thur"
+                                        when (i) {
+                                            daysArray.count() - 1 -> {
+                                                " and Thur"
+                                            }
+                                            0 -> {
+                                                "Thur"
+                                            }
+                                            else -> {
+                                                ", Thur"
+                                            }
+                                        }
                                     }
                                 }
                                 if (daysArray[i] == 5) {
-                                    if (daysArray.count() == 2) {
-                                        days += " and Fri"
-                                    }
-                                    else {
-                                        if (i == 0) {
-                                            days += "Fri"
+                                    days += if (daysArray.count() == 1) {
+                                        "Fri"
+                                    } else {
+                                        if (daysArray.count() == 2) {
+                                            " and Fri"
                                         } else {
-                                            days += " and Fri"
+                                            if (i == 0) {
+                                                "Fri"
+                                            } else {
+                                                ", and Fri"
+                                            }
                                         }
                                     }
                                 }

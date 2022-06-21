@@ -1,11 +1,19 @@
 package com.cory.texarkanacollege.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -16,16 +24,27 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.blue
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.ViewImageCommunityBoardPostIntent
 import com.cory.texarkanacollege.adapters.ViewCommunityBoardPostCommentsAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -35,6 +54,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -46,6 +66,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -60,6 +81,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
     private lateinit var viewCommunityBoardPostCommentsAdapter: ViewCommunityBoardPostCommentsAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
     private val sortedData = ArrayList<HashMap<String, String>>()
+    var childPosition: String? = ""
 
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -116,13 +138,9 @@ class ViewCommunityBoardPostFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_view_community_board_post, container, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val materialToolbar = activity?.findViewById<MaterialToolbar>(R.id.viewPostToolbar)
-        materialToolbar?.setNavigationOnClickListener {
-            activity?.supportFragmentManager?.popBackStack()
-        }
 
         swipeRefreshLayout = view.findViewById(R.id.communityBoardPostSwipeRefreshLayout)
 
@@ -137,10 +155,19 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val title = args?.getString("title", "")
         val content = args?.getString("content", "")
         val imageURL = args?.getString("imageURL", "")
-        val childPosition = args?.getString("childPosition", "")
+        childPosition = args?.getString("childPosition", "")
         val date = args?.getString("date", "")
         val profilePicURL = args?.getString("profilePicURL", "")
         val email = args?.getString("email", "")
+        val pinned = args?.getString("pinned", "")
+
+        val pinnedChip = requireActivity().findViewById<Chip>(R.id.communityBoardPostPinnedChip)
+        if (pinned == "true") {
+            pinnedChip.visibility = View.VISIBLE
+        }
+        else {
+            pinnedChip.visibility = View.GONE
+        }
 
         val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
         dateChip?.text = date
@@ -148,11 +175,13 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val circularProgressDrawable = CircularProgressDrawable(requireContext())
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
         circularProgressDrawable.start()
 
         val circularProgressDrawableImage = CircularProgressDrawable(requireContext())
         circularProgressDrawableImage.strokeWidth = 5f
         circularProgressDrawableImage.centerRadius = 30f
+        circularProgressDrawableImage.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
         circularProgressDrawableImage.start()
 
         val profileImageView =
@@ -160,9 +189,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
         Glide.with(requireContext())
             .load(profilePicURL)
-            .error(R.drawable.ic_baseline_broken_image_24)
             .placeholder(circularProgressDrawable)
             .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .placeholder(R.drawable.ic_baseline_broken_image_24)
             .into(profileImageView!!)
 
         val imageView = activity?.findViewById<ImageView>(R.id.imageView)
@@ -177,7 +207,62 @@ class ViewCommunityBoardPostFragment : Fragment() {
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(circularProgressDrawableImage)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        imageView?.visibility = View.GONE
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+
+
+
+                        return false
+                    }
+                })
                 .into(imageView!!)
+        }
+
+        imageView.setOnClickListener {
+            val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
+            val bs = ByteArrayOutputStream()
+            val b : Bitmap = imageView.drawable.toBitmap()
+            b.compress(Bitmap.CompressFormat.PNG, 100, bs)
+            intent.putExtra("image", bs.toByteArray())
+            startActivity(intent)
+        }
+
+        imageView.setOnLongClickListener {
+            val viewImageDialog =
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+            val layout =
+                LayoutInflater.from(context).inflate(R.layout.view_image_long_press_layout, null)
+            val imageView2 = layout.findViewById<ImageView>(R.id.viewImageImageView)
+            imageView2.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.transparent
+                )
+            )
+            Glide.with(requireContext())
+                .load(imageView.drawable)
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imageView2)
+            viewImageDialog.setView(layout)
+            viewImageDialog.show()
+            return@setOnLongClickListener true
         }
 
         val nameTextView = activity?.findViewById<TextView>(R.id.nameTextView)
@@ -209,6 +294,11 @@ class ViewCommunityBoardPostFragment : Fragment() {
                     GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
                 val signInIntent: Intent = mGoogleSignInClient.signInIntent
                 getSignInData.launch(signInIntent)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.press_submit_again_to_submit_comment),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 submitComment(
                     commentTextInputEditText.text.toString(),
@@ -216,8 +306,8 @@ class ViewCommunityBoardPostFragment : Fragment() {
                 )
 
                 loadIntoList(childPosition.toString())
+                commentTextInputEditText.setText("")
             }
-            commentTextInputEditText.setText("")
         }
         commentTextInputEditText!!.setOnEditorActionListener { _, i, _ ->
             hideKeyboard(commentTextInputEditText)
@@ -234,6 +324,11 @@ class ViewCommunityBoardPostFragment : Fragment() {
                         GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
                     val signInIntent: Intent = mGoogleSignInClient.signInIntent
                     getSignInData.launch(signInIntent)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.press_submit_again_to_submit_comment),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     submitComment(
                         commentTextInputEditText.text.toString(),
@@ -242,14 +337,193 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
                     loadIntoList(childPosition.toString())
                 }
+                commentTextInputEditText.setText("")
                 return@setOnEditorActionListener true
             }
-            commentTextInputEditText.setText("")
             return@setOnEditorActionListener false
         }
 
         swipeRefreshLayout.setOnRefreshListener {
             loadIntoList(childPosition.toString())
+        }
+
+        val materialToolbar = activity?.findViewById<MaterialToolbar>(R.id.viewPostToolbar)
+        materialToolbar?.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
+
+        database.child("posts").child(childPosition.toString()).child("likes").orderByKey()
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (i in snapshot.children) {
+                        if (i.key == firebaseAuth.currentUser?.uid) {
+                            if (i.child("liked").value == true) {
+                                materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        R.drawable.ic_baseline_favorite_24
+                                    )
+
+                            } else {
+                                materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        R.drawable.ic_baseline_favorite_border_24
+                                    )
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+        materialToolbar?.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.likePost -> {
+                    firebaseAuth.currentUser?.reload()
+                    val user = firebaseAuth.currentUser
+                    if (user == null) {
+                        mGoogleSignInOptions =
+                            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(getString(R.string.app_client_id))
+                                .requestEmail()
+                                .build()
+                        mGoogleSignInClient =
+                            GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
+                        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+                        getSignInData.launch(signInIntent)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.press_like_again_to_like_the_post),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        database.child("posts").child(childPosition.toString()).child("likes")
+                            .orderByKey()
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+
+                                    if (snapshot.children.count() == 0) {
+                                        database.child("posts")
+                                            .child((childPosition).toString())
+                                            .child("likes")
+                                            .child(firebaseAuth.currentUser!!.uid)
+                                            .child("liked")
+                                            .setValue(true)
+                                        database.child("posts")
+                                            .child((childPosition).toString())
+                                            .child("likes")
+                                            .child(firebaseAuth.currentUser!!.uid)
+                                            .child("profilePicURL")
+                                            .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                                        database.child("posts")
+                                            .child((childPosition).toString())
+                                            .child("likes")
+                                            .child(firebaseAuth.currentUser!!.uid)
+                                            .child("name")
+                                            .setValue(firebaseAuth.currentUser!!.displayName)
+                                        materialToolbar.menu?.findItem(R.id.likePost)?.icon =
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_baseline_favorite_24
+                                            )
+                                    } else {
+                                        for (i in snapshot.children) {
+                                            if (i.key.toString() == firebaseAuth.currentUser!!.uid) {
+                                                if (i.child("liked").value == false) {
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("liked")
+                                                        .setValue(true)
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("profilePicURL")
+                                                        .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("name")
+                                                        .setValue(firebaseAuth.currentUser!!.displayName)
+                                                    materialToolbar.menu?.findItem(R.id.likePost)?.icon =
+                                                        ContextCompat.getDrawable(
+                                                            requireContext(),
+                                                            R.drawable.ic_baseline_favorite_24
+                                                        )
+                                                } else {
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("liked")
+                                                        .setValue(false)
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("profilePicURL")
+                                                        .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                                                    database.child("posts")
+                                                        .child((childPosition).toString())
+                                                        .child("likes")
+                                                        .child(firebaseAuth.currentUser!!.uid)
+                                                        .child("name")
+                                                        .setValue(firebaseAuth.currentUser!!.displayName)
+                                                    materialToolbar.menu?.findItem(R.id.likePost)?.icon =
+                                                        ContextCompat.getDrawable(
+                                                            requireContext(),
+                                                            R.drawable.ic_baseline_favorite_border_24
+                                                        )
+                                                }
+                                                break
+                                            } else {
+                                                database.child("posts")
+                                                    .child((childPosition).toString())
+                                                    .child("likes")
+                                                    .child(firebaseAuth.currentUser!!.uid)
+                                                    .child("liked")
+                                                    .setValue(true)
+                                                database.child("posts")
+                                                    .child((childPosition).toString())
+                                                    .child("likes")
+                                                    .child(firebaseAuth.currentUser!!.uid)
+                                                    .child("profilePicURL")
+                                                    .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
+                                                database.child("posts")
+                                                    .child((childPosition).toString())
+                                                    .child("likes")
+                                                    .child(firebaseAuth.currentUser!!.uid)
+                                                    .child("name")
+                                                    .setValue(firebaseAuth.currentUser!!.displayName)
+                                                materialToolbar.menu?.findItem(R.id.likePost)?.icon =
+                                                    ContextCompat.getDrawable(
+                                                        requireContext(),
+                                                        R.drawable.ic_baseline_favorite_24
+                                                    )
+                                                break
+                                            }
+                                        }
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+                            })
+                    }
+                    true
+                }
+                else -> false
+            }
+
         }
     }
 
@@ -270,7 +544,9 @@ class ViewCommunityBoardPostFragment : Fragment() {
             database.child("posts").child((childPosition))
                 .child("comments").child((childrenCount + 1).toString()).child("profile_pic")
                 .setValue(firebaseAuth.currentUser!!.photoUrl.toString())
-            database.child("posts").child(childPosition).child("comments").child((childrenCount + 1).toString()).child("uid").setValue(firebaseAuth.currentUser!!.uid)
+            database.child("posts").child(childPosition).child("comments")
+                .child((childrenCount + 1).toString()).child("uid")
+                .setValue(firebaseAuth.currentUser!!.uid)
             val formatter =
                 SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
             val dateFormatted = formatter.format(Date())
@@ -296,6 +572,9 @@ class ViewCommunityBoardPostFragment : Fragment() {
         }
     }
 
+    fun setTextView() {
+        loadIntoList(childPosition.toString())
+    }
 
     fun loadIntoList(childPosition: String) {
 
@@ -326,11 +605,15 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
                     if (snapshot.children.count() == 0) {
                         swipeRefreshLayout.isRefreshing = false
-                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility = View.GONE
-                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility = View.VISIBLE
+                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+                            View.GONE
+                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+                            View.VISIBLE
                     } else {
-                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility = View.VISIBLE
-                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility = View.GONE
+                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+                            View.VISIBLE
+                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+                            View.GONE
                         for (i in snapshot.children) {
                             println("children " + i.toString())
                             val map = java.util.HashMap<String, String>()

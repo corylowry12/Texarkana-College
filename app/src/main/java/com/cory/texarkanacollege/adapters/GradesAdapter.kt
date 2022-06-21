@@ -17,8 +17,10 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cory.texarkanacollege.*
 import com.cory.texarkanacollege.classes.ImagePathData
+import com.cory.texarkanacollege.classes.ImageViewIntentData
 import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.ImageViewFragment
@@ -65,6 +67,7 @@ class GradesAdapter(
                 Glide.with(context)
                     .load(dataItem["image"])
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .placeholder(circularProgressDrawable)
                     .into(image)
             } else {
@@ -85,18 +88,29 @@ class GradesAdapter(
         val dataItem = dataList[holder.adapterPosition]
 
         holder.itemView.findViewById<ImageView>(R.id.image).setOnClickListener {
-            val viewImageFragment = ImageViewFragment()
-            val args = Bundle()
-            val id = dataItem["primary"]
-            val classID = dataItem["id"]
-            args.putInt("image", classID!!.toInt())
-            args.putInt("id", id!!.toInt())
-            viewImageFragment.arguments = args
+            if (!ImageViewIntentData(context).loadImageView()) {
+                val viewImageFragment = ImageViewFragment()
+                val args = Bundle()
+                val id = dataItem["primary"]
+                val classID = dataItem["id"]
+                args.putInt("image", classID!!.toInt())
+                args.putInt("id", id!!.toInt())
+                viewImageFragment.arguments = args
 
-            val manager = (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            manager.replace(R.id.fragment_container, viewImageFragment).addToBackStack(null)
-            manager.commit()
+                val manager =
+                    (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                manager.replace(R.id.fragment_container, viewImageFragment).addToBackStack(null)
+                manager.commit()
+            }
+            else {
+                val viewImageActivity = Intent(context, ViewImageActivity::class.java)
+                val id = dataItem["primary"]
+                val classID = dataItem["id"]
+                viewImageActivity.putExtra("image", classID!!.toInt())
+                viewImageActivity.putExtra("id", id!!.toInt())
+                context.startActivity(viewImageActivity)
+            }
 
         }
 
@@ -171,6 +185,7 @@ class GradesAdapter(
                         Glide.with(context)
                             .load(bitmap)
                             .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(imageView)
                         viewImageDialog.setPositiveButton("OK", null)
 
@@ -234,6 +249,7 @@ class GradesAdapter(
                         Glide.with(context)
                             .load(bitmap)
                             .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(imageView)
                         viewImageDialog.setPositiveButton("OK", null)
 

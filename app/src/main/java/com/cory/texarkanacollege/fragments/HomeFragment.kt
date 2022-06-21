@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.snackbar.Snackbar
 import java.lang.IllegalStateException
 
@@ -144,6 +145,9 @@ class HomeFragment : Fragment() {
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
         webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {
+            settings.forceDark = WebSettings.FORCE_DARK_ON
+        }
 
         refreshLayout.setOnRefreshListener { webView.reload() }
 

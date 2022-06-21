@@ -21,7 +21,8 @@
         app:navigationIconTint="@color/white"
         app:title="View Post"
         app:titleCentered="true"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        app:menu="@menu/view_post_community_board_menu"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/communityBoardPostSwipeRefreshLayout"
@@ -78,23 +79,10 @@
                         android:layout_marginStart="10dp"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/communityBoardPostPinnedChip"
                         app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Name" />
-
-                    <TextView
-                        android:id="@+id/postTitleTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:textSize="18sp"
-                        android:layout_marginTop="5dp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
-                        app:layout_constraintTop_toBottomOf="@id/nameTextView"
-                        tools:text="Title" />
 
                     <TextView
                         android:id="@+id/emailTextView"
@@ -105,9 +93,36 @@
                         android:textStyle="italic"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
-                        app:layout_constraintTop_toBottomOf="@id/postTitleTextView"
+                        app:layout_constraintTop_toBottomOf="@id/nameTextView"
                         tools:text="Email"
                         android:layout_marginTop="5dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.Material3.Chip.Assist"
+                        app:chipIcon="@drawable/ic_baseline_push_pin_24"
+                        android:id="@+id/communityBoardPostPinnedChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/nameTextView"
+                        app:textStartPadding="0dp"
+                        app:textEndPadding="0dp"
+                        android:clickable="false"
+                        android:textSize="12sp"
+                        app:chipIconSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/postTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/communityBoardPostPinnedChip"
+                        app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
+                        app:layout_constraintTop_toBottomOf="@id/emailTextView"
+                        tools:text="Title" />
 
                     <TextView
                         android:id="@+id/postContentTextView"
@@ -117,7 +132,7 @@
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/profilePicViewPost"
-                        app:layout_constraintTop_toBottomOf="@id/emailTextView"
+                        app:layout_constraintTop_toBottomOf="@id/postTitleTextView"
                         tools:text="Content"
                         android:layout_marginTop="5dp"
                         android:textIsSelectable="true"/>

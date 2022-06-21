@@ -120,6 +120,79 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardViewExperimental"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="28dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintExperimental"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground"
+                tools:targetApi="m"
+                tools:ignore="UnusedAttribute">
+
+                <ImageView
+                    android:id="@+id/experimentalImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_science_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    app:tint="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/experimentalHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:text="Experimental"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/experimentalChevron"
+                    app:layout_constraintStart_toEndOf="@id/experimentalImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/experimentalHeading"
+                    android:layout_alignStart="@id/experimentalHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:text="View and change settings that are experimental. Proceed with caution, you might not get the desired results!"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/experimentalChevron"
+                    app:layout_constraintStart_toEndOf="@id/experimentalImage"
+                    app:layout_constraintTop_toBottomOf="@id/experimentalHeading" />
+
+                <ImageView
+                    android:id="@+id/experimentalChevron"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardViewCampusNews"
         style="?attr/materialCardViewElevatedStyle"

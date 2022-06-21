@@ -33,8 +33,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -127,6 +127,39 @@
                 app:layout_constraintTop_toBottomOf="@id/row_date"
                 app:layout_constraintStart_toEndOf="@id/profilePic" />
 
+
+            <LinearLayout
+                android:id="@+id/counterLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/imageTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/likesCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_marginEnd="20dp"
+                android:drawablePadding="6dp"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_baseline_favorite_border_24" />
+
+            <TextView
+                android:id="@+id/commentCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                app:layout_constraintTop_toBottomOf="@id/imageTextView"
+                app:layout_constraintStart_toEndOf="@id/likesCountTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:drawablePadding="6dp"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_outline_comment_24" />
+            </LinearLayout>
             <ImageView
                 android:id="@+id/chevronImage"
                 android:layout_width="24dp"

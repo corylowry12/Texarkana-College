@@ -26,6 +26,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".ViewImageCommunityBoardPostIntent"
+            android:exported="false" />
+        <activity
+            android:name=".ViewImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
@@ -68,10 +74,8 @@
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+
             <intent-filter android:label="Deep Link Texarkana College">
                 <action android:name="android.intent.action.VIEW" />
 

@@ -7,10 +7,10 @@ android {
 
     defaultConfig {
         applicationId "com.cory.texarkanacollege"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 32
-        versionCode 20
-        versionName "3.0.3"
+        versionCode 22
+        versionName "3.0.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

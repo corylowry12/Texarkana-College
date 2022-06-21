@@ -182,7 +182,7 @@ class UpcomingAdapter(val context: Context,
                         Toast.makeText(context, "An assignment name is required", Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dueDateChip.text.toString(), assignmentNotes.text.toString())
+                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dueDateChip.text.toString(), assignmentNotes.text.toString(), "")
                         editAssignmentDialog.dismiss()
 
                         dataList.clear()

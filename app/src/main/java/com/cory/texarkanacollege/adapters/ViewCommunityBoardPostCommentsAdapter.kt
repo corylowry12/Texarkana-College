@@ -17,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
@@ -50,6 +52,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
             Glide.with(context)
                 .load(dataItem["profilePicURL"])
                 .error(R.drawable.ic_baseline_broken_image_24)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(profilePic)
 
         }
@@ -66,7 +69,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
         holder.itemView.setOnLongClickListener {
             if (dataItem["uid"] == FirebaseAuth.getInstance().currentUser!!.uid.toString()) {
                 val dialog = BottomSheetDialog(context)
-                val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
+                val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_comment_bottom_sheet, null)
                 dialog.setCancelable(false)
                 dialog.setContentView(postOptionsLayout)
                 val editPostEditButton = dialog.findViewById<Button>(R.id.editPostEditButton)
@@ -77,8 +80,8 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
                 editPostDeleteButton?.setOnClickListener {
                     val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
-                    materialAlertDialogBuilder.setTitle("Delete Post?")
-                    materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
+                    materialAlertDialogBuilder.setTitle("Delete Comment?")
+                    materialAlertDialogBuilder.setMessage("Would you like to delete this comment? It can not be undone.")
                     materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
 
                             FirebaseDatabase.getInstance().getReference("posts")
@@ -88,6 +91,13 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                             Toast.makeText(context, "Comment Deleted", Toast.LENGTH_SHORT)
                                 .show()
                             dialog.dismiss()
+
+                        val loadIntoList = Runnable {
+                            (context as MainActivity).setViewPostCommunityBoardLoadIntoList()
+
+                        }
+
+                        MainActivity().runOnUiThread(loadIntoList)
                     }
                     materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
                         dialog.dismiss()

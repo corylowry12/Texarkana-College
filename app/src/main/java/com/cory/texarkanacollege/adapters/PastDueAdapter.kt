@@ -194,7 +194,8 @@ class PastDueAdapter(val context: Context,
                             assignmentName.text.toString(),
                             classesMenu.text.toString(),
                             dueDateChip.text.toString(),
-                            assignmentNotes.text.toString()
+                            assignmentNotes.text.toString(),
+                            ""
                         )
                         editAssignmentDialog.dismiss()
 

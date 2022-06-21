@@ -41,10 +41,24 @@
         android:backgroundTint="@color/blue"/>
 
     <Button
+        android:id="@+id/editPostViewLikesButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="View Likes"
+        app:layout_constraintTop_toBottomOf="@id/editPostEditButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        style="@style/Widget.Material3.Button"
+        android:backgroundTint="@color/blue"/>
+
+    <Button
         android:id="@+id/editPostDeleteButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/editPostEditButton"
+        app:layout_constraintTop_toBottomOf="@id/editPostViewLikesButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"

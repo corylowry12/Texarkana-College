@@ -180,60 +180,82 @@ class ClassesFragment: Fragment() {
                         } else {
                             if (netClassSwitch!!.isChecked) {
                                 days = "Web"
-                            } else if (!netClassSwitch.isChecked && daysArray.count() == 0) {
+                            } else if (!netClassSwitch.isChecked && daysArray.isEmpty()) {
                                 Toast.makeText(
                                     requireContext(),
                                     "Must select a day of the week or web course",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            } else if (!netClassSwitch.isChecked && daysArray.count() != 0){
+                            } else if (!netClassSwitch.isChecked && daysArray.isNotEmpty()){
                                 daysArray.sort()
                                 for (i in 0 until daysArray.count()) {
                                     if (daysArray[i] == 1) {
                                         days += "Mon"
                                     }
                                     if (daysArray[i] == 2) {
-                                        if (i == daysArray.count() - 1) {
-                                            days += " and Tue"
-                                        }
-                                        else if (i == 0) {
-                                            days += "Tue"
-                                        }
-                                        else {
-                                            days += ", Tue"
+                                        days += if (daysArray.count() == 1) {
+                                            "Tue"
+                                        } else {
+                                            when (i) {
+                                                daysArray.count() - 1 -> {
+                                                    " and Tue"
+                                                }
+                                                0 -> {
+                                                    "Tue"
+                                                }
+                                                else -> {
+                                                    ", Tue"
+                                                }
+                                            }
                                         }
                                     }
                                     if (daysArray[i] == 3) {
-                                        if (i == daysArray.count() - 1) {
-                                            days += " and Wed"
-                                        }
-                                        else if (i == 0) {
+                                        if (daysArray.count() == 1) {
                                             days += "Wed"
                                         }
                                         else {
-                                            days += ", Wed"
+                                            days += when (i) {
+                                                daysArray.count() - 1 -> {
+                                                    " and Wed"
+                                                }
+                                                0 -> {
+                                                    "Wed"
+                                                }
+                                                else -> {
+                                                    ", Wed"
+                                                }
+                                            }
                                         }
                                     }
                                     if (daysArray[i] == 4) {
-                                        if (i == daysArray.count() - 1) {
-                                            days += " and Thur"
-                                        }
-                                        else if (i == 0) {
-                                            days += "Thur"
-                                        }
-                                        else {
-                                            days += ", Thur"
+                                        days += if (daysArray.count() == 1) {
+                                            "Thur"
+                                        } else {
+                                            when (i) {
+                                                daysArray.count() - 1 -> {
+                                                    " and Thur"
+                                                }
+                                                0 -> {
+                                                    "Thur"
+                                                }
+                                                else -> {
+                                                    ", Thur"
+                                                }
+                                            }
                                         }
                                     }
                                     if (daysArray[i] == 5) {
-                                        if (daysArray.count() == 2) {
-                                            days += " and Fri"
-                                        }
-                                        else {
-                                            if (i == 0) {
-                                                days += "Fri"
+                                        days += if (daysArray.count() == 1) {
+                                            "Fri"
+                                        } else {
+                                            if (daysArray.count() == 2) {
+                                                " and Fri"
                                             } else {
-                                                days += ", and Fri"
+                                                if (i == 0) {
+                                                    "Fri"
+                                                } else {
+                                                    ", and Fri"
+                                                }
                                             }
                                         }
                                     }

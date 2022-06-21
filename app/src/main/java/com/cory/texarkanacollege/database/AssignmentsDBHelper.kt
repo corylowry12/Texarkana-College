@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
@@ -16,17 +17,41 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
 
         db.execSQL(
             "CREATE TABLE $TABLE_NAME " +
-                    "($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_CLASS_NAME TEXT, $COLUMN_ASSIGNMENT_NAME TEXT, $COLUMN_ASSIGNMENT_DUE_DATE TEXT, $COLUMN_NOTES TEXT, $COLUMN_STATUS TEXT)"
+                    "($COLUMN_ID INTEGER PRIMARY KEY, $COLUMN_CLASS_NAME TEXT, $COLUMN_ASSIGNMENT_NAME TEXT, $COLUMN_ASSIGNMENT_DUE_DATE TEXT, $COLUMN_NOTES TEXT, $COLUMN_STATUS TEXT, $COLUMN_CATEGORY TEXT)"
         )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_CLASS_NAME TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_ASSIGNMENT_DUE_DATE TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_NOTES TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_STATUS TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_CATEGORY TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS ${GradesDBHelper.TABLE_NAME}")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
@@ -112,7 +137,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         assignmentName: String,
         className: String,
         classTime: String,
-        notes: String
+        notes: String,
+        category: String
     ) {
         val values = ContentValues()
         values.put(COLUMN_ASSIGNMENT_NAME, assignmentName)
@@ -152,7 +178,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done'",
             null,
@@ -175,7 +202,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID == $id",
             null,
@@ -198,7 +226,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done'",
             null,
@@ -222,7 +251,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID == $id",
             null,
@@ -245,7 +275,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_STATUS == 'done'",
             null,
@@ -268,7 +299,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                 COLUMN_STATUS,
                 COLUMN_ASSIGNMENT_DUE_DATE,
                 COLUMN_ASSIGNMENT_NAME,
-                COLUMN_CLASS_NAME
+                COLUMN_CLASS_NAME,
+                COLUMN_CATEGORY
             ),
             "$COLUMN_STATUS == 'done' AND $COLUMN_ID == $id",
             null,
@@ -293,7 +325,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
     }
 
     companion object {
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "assignments.db"
         const val TABLE_NAME = "assignments"
 
@@ -303,5 +335,6 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         const val COLUMN_ASSIGNMENT_DUE_DATE = "assignmentDueDate"
         const val COLUMN_NOTES = "assignmentNotes"
         const val COLUMN_STATUS = "assignmentStatus"
+        const val COLUMN_CATEGORY = "assignmentCategory"
     }
 }

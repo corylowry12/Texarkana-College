@@ -90,17 +90,29 @@
         android:text="Add An Image"
         style="@style/Widget.Material3.Button"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pinnedSwitchConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/addImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:foreground="?attr/selectableItemBackground"
+        tools:targetApi="m"
+        tools:ignore="UnusedAttribute">
+
     <com.suke.widget.SwitchButton
         android:id="@+id/pinnedSwitch"
         app:sb_show_indicator="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/addImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:sb_checked_color="@color/blue"/>
 
     <TextView
         android:id="@+id/pinnedTextView"
@@ -112,14 +124,14 @@
         app:layout_constraintBottom_toBottomOf="@id/pinnedSwitch"
         android:text="This is a pinned post"
         android:textSize="18sp"
-        android:layout_marginStart="10dp"
-        android:visibility="gone"/>
+        android:layout_marginStart="10dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/urgentSwitchConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/pinnedSwitch"
+        app:layout_constraintTop_toBottomOf="@id/pinnedSwitchConstraintLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"

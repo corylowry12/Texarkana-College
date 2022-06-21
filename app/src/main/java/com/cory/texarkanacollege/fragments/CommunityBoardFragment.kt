@@ -28,6 +28,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.CommunityBoardAdapter
+import com.cory.texarkanacollege.classes.CurrentTOSVersion
+import com.cory.texarkanacollege.classes.PinnedSwitchVisible
+import com.cory.texarkanacollege.classes.TOSJsonVersion
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -35,6 +38,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -65,6 +70,7 @@ class CommunityBoardFragment : Fragment() {
 
     private lateinit var communityBoardAdapter: CommunityBoardAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
+    private val likesDataList = ArrayList<HashMap<String, String>>()
     private val sortedData = ArrayList<HashMap<String, String>>()
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -158,7 +164,7 @@ class CommunityBoardFragment : Fragment() {
         return result
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "UnsafeOptInUsageError")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -168,7 +174,7 @@ class CommunityBoardFragment : Fragment() {
         val storage = FirebaseStorage.getInstance()
 
         gridLayoutManager = GridLayoutManager(requireContext(), 1)
-        communityBoardAdapter = CommunityBoardAdapter(requireContext(), dataList)
+        communityBoardAdapter = CommunityBoardAdapter(requireContext(), dataList, likesDataList)
 
         loadIntoList()
 
@@ -191,6 +197,12 @@ class CommunityBoardFragment : Fragment() {
         }
         else {
             toolBar.menu.findItem(R.id.signOut).title = "Sign In"
+        }
+
+        val badge = BadgeDrawable.create(requireContext())
+
+        if (CurrentTOSVersion(requireContext()).loadVersion() != TOSJsonVersion(requireContext()).loadVersion()) {
+            BadgeUtils.attachBadgeDrawable(badge, toolBar, R.id.termsOfService)
         }
 
         toolBar.setOnMenuItemClickListener { menuItem ->
@@ -239,6 +251,8 @@ class CommunityBoardFragment : Fragment() {
                             GlobalScope.launch(Dispatchers.Main) {
                                 progressBar.visibility = View.GONE
                                 textView.text = final
+                                TOSJsonVersion(requireContext()).setVersion(CurrentTOSVersion(requireContext()).loadVersion())
+                                BadgeUtils.detachBadgeDrawable(badge, toolBar, R.id.termsOfService)
                             }
                         }
                     })
@@ -274,9 +288,21 @@ class CommunityBoardFragment : Fragment() {
                         val titleEditText = dialog.findViewById<TextInputEditText>(R.id.grade)
                         val postEditText = dialog.findViewById<TextInputEditText>(R.id.weight)
                         val pinnedSwitch = dialog.findViewById<SwitchButton>(R.id.pinnedSwitch)
+                        val pinnedSwitchConstraint = dialog.findViewById<ConstraintLayout>(R.id.pinnedSwitchConstraintLayout)
                         val urgentSwitch = dialog.findViewById<SwitchButton>(R.id.urgenSwitch)
                         val addImageButton = dialog.findViewById<Button>(R.id.addImage)
                         val urgentSwitchConstraintLayout = dialog.findViewById<ConstraintLayout>(R.id.urgentSwitchConstraintLayout)
+
+                        if (PinnedSwitchVisible(requireContext()).loadPinnedSwitchVisible()) {
+                            pinnedSwitchConstraint?.visibility = View.VISIBLE
+                        }
+                        else {
+                            pinnedSwitchConstraint?.visibility = View.GONE
+                        }
+
+                        pinnedSwitchConstraint?.setOnClickListener {
+                            pinnedSwitch?.isChecked = !pinnedSwitch!!.isChecked
+                        }
 
                         urgentSwitchConstraintLayout?.setOnClickListener {
                             urgentSwitch?.isChecked = !urgentSwitch!!.isChecked
@@ -514,193 +540,104 @@ class CommunityBoardFragment : Fragment() {
 
             database.child("posts").orderByKey()
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
+                    override fun onDataChange(snapshot1: DataSnapshot) {
                         dataList.clear()
                         sortedData.clear()
+                        likesDataList.clear()
 
-                        var url = ""
-
-                        for (i in snapshot.children) {
+                        for (i in snapshot1.children) {
                             println("children " + i.toString())
-                            /*try {
+                            var likedCount = 0
+                            var commentCount = 0
+                            database.child("posts").child(i.key.toString()).child("likes")
+                                .orderByKey()
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        for (z in snapshot.children) {
+                                            if (z.child("liked").value == true) {
+                                                likedCount++
+                                                val map = HashMap<String, String>()
+                                                map["name"] = z.child("name").value.toString()
+                                                map["profilePicURL"] = z.child("profilePicURL").value.toString()
+                                                likesDataList.add(map)
+                                            }
+                                        }
 
-                                FirebaseStorage.getInstance().reference.child(
-                                    snapshot.child(i.key.toString())
-                                        .child("images").value.toString()
-                                ).downloadUrl.addOnSuccessListener {
-                                    println("url is " + it.toString())
+                                        commentCount = snapshot1.child(i.key.toString()).child("comments").childrenCount.toInt()
 
-                                    url = it.toString()
+                                        val map = HashMap<String, String>()
+                                        map["images"] = snapshot1.child(i.key.toString())
+                                            .child("imagePath").value.toString()
+                                        map["profilePicURL"] = snapshot1.child(i.key.toString())
+                                            .child("profile_photo").value.toString()
+                                        map["email"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("email").value.toString()
+                                        map["name"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("name").value.toString()
+                                        map["title"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("title").value.toString()
+                                        map["content"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("content").value.toString()
+                                        map["date"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("date").value.toString()
+                                        map["pinned"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("pinned").value.toString()
+                                        map["urgent"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("urgent").value.toString()
+                                        map["uid"] =
+                                            snapshot1.child(i.key.toString())
+                                                .child("uid").value.toString()
 
-                                }.addOnFailureListener { exception ->
-                                    println("url is " + exception.toString())
+                                        map["imageURL"] = snapshot1.child(i.key.toString())
+                                            .child("images").value.toString()
+                                        map["childPosition"] = i.key.toString()
+                                        map["likedCount"] = likedCount.toString()
+                                        map["commentCount"] = commentCount.toString()
+                                        dataList.add(map)
 
-                                    url = ""
-                                }.addOnCompleteListener {
-                                    println("task completed")
-                                    val map = java.util.HashMap<String, String>()
-                                    map["images"] = snapshot.child(i.key.toString()).child("images").value.toString()
-                                    map["profilePicURL"] = snapshot.child(i.key.toString())
-                                        .child("profile_photo").value.toString()
-                                    map["email"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("email").value.toString()
-                                    map["name"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("name").value.toString()
-                                    map["title"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("title").value.toString()
-                                    map["content"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("content").value.toString()
-                                    map["date"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("date").value.toString()
-                                    map["pinned"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("pinned").value.toString()
-                                    map["urgent"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("urgent").value.toString()
-                                    map["uid"] =
-                                        snapshot.child(i.key.toString())
-                                            .child("uid").value.toString()
+                                        val sortedDataList =
+                                            dataList.sortedWith(
+                                                compareBy(
+                                                    { it["pinned"] },
+                                                    { it["urgent"] },
+                                                    { it["date"] })
+                                            )
+                                                .reversed()
 
-                                    map["imageURL"] = url
-                                    map["childPosition"] = i.key.toString()
-                                    dataList.add(map)
+                                        println("sorted data List " + sortedDataList)
+                                        sortedData.clear()
+                                        for (z in sortedDataList) {
+                                            sortedData.add(z)
+                                        }
 
-                                    val sortedDataList =
-                                        dataList.sortedWith(
-                                            compareBy(
-                                                { it["pinned"] },
-                                                { it["urgent"] },
-                                                { it["date"] })
-                                        )
-                                            .reversed()
+                                        communityBoardAdapter =
+                                            CommunityBoardAdapter(requireContext(), sortedData, likesDataList)
 
-                                    println("sorted data List " + sortedDataList)
-                                    sortedData.clear()
-                                    for (z in sortedDataList) {
-                                        sortedData.add(z)
+                                        communityBoardRecyclerView?.layoutManager =
+                                            gridLayoutManager
+                                        communityBoardRecyclerView?.adapter = communityBoardAdapter
+
+                                        val handler = Handler(Looper.getMainLooper())
+                                        val runnable = Runnable {
+                                            loadAllD.dismiss()
+                                        }
+                                        handler.postDelayed(runnable, 500)
+                                        println("children count " + childrenCount)
                                     }
 
-                                    communityBoardAdapter =
-                                        CommunityBoardAdapter(requireContext(), sortedData)
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+                                })
 
-                                    communityBoardRecyclerView?.layoutManager = gridLayoutManager
-                                    communityBoardRecyclerView?.adapter = communityBoardAdapter
-                                }
-
-                            } catch (e: IllegalArgumentException) {
-                                val map = java.util.HashMap<String, String>()
-                                map["images"] = snapshot.child(i.key.toString()).child("images").value.toString()
-                                map["profilePicURL"] = snapshot.child(i.key.toString())
-                                    .child("profile_photo").value.toString()
-                                map["email"] =
-                                    snapshot.child(i.key.toString()).child("email").value.toString()
-                                map["name"] =
-                                    snapshot.child(i.key.toString()).child("name").value.toString()
-                                map["title"] =
-                                    snapshot.child(i.key.toString()).child("title").value.toString()
-                                map["content"] =
-                                    snapshot.child(i.key.toString())
-                                        .child("content").value.toString()
-                                map["date"] =
-                                    snapshot.child(i.key.toString()).child("date").value.toString()
-                                map["pinned"] =
-                                    snapshot.child(i.key.toString())
-                                        .child("pinned").value.toString()
-                                map["urgent"] =
-                                    snapshot.child(i.key.toString())
-                                        .child("urgent").value.toString()
-                                map["uid"] =
-                                    snapshot.child(i.key.toString()).child("uid").value.toString()
-
-                                map["imageURL"] = ""
-                                map["childPosition"] = i.key.toString()
-                                dataList.add(map)
-
-                                val sortedDataList =
-                                    dataList.sortedWith(
-                                        compareBy(
-                                            { it["pinned"] },
-                                            { it["urgent"] },
-                                            { it["date"] })
-                                    )
-                                        .reversed()
-
-                                println("sorted data List " + sortedDataList)
-                                sortedData.clear()
-                                for (z in sortedDataList) {
-                                    sortedData.add(z)
-                                }
-
-                                communityBoardAdapter =
-                                    CommunityBoardAdapter(requireContext(), sortedData)
-
-                                communityBoardRecyclerView?.layoutManager = gridLayoutManager
-                                communityBoardRecyclerView?.adapter = communityBoardAdapter
-                            }*/
-
-                            val map = HashMap<String, String>()
-                            map["images"] = snapshot.child(i.key.toString()).child("imagePath").value.toString()
-                            map["profilePicURL"] = snapshot.child(i.key.toString())
-                                .child("profile_photo").value.toString()
-                            map["email"] =
-                                snapshot.child(i.key.toString()).child("email").value.toString()
-                            map["name"] =
-                                snapshot.child(i.key.toString()).child("name").value.toString()
-                            map["title"] =
-                                snapshot.child(i.key.toString()).child("title").value.toString()
-                            map["content"] =
-                                snapshot.child(i.key.toString())
-                                    .child("content").value.toString()
-                            map["date"] =
-                                snapshot.child(i.key.toString()).child("date").value.toString()
-                            map["pinned"] =
-                                snapshot.child(i.key.toString())
-                                    .child("pinned").value.toString()
-                            map["urgent"] =
-                                snapshot.child(i.key.toString())
-                                    .child("urgent").value.toString()
-                            map["uid"] =
-                                snapshot.child(i.key.toString()).child("uid").value.toString()
-
-                            map["imageURL"] = snapshot.child(i.key.toString()).child("images").value.toString()
-                            map["childPosition"] = i.key.toString()
-                            dataList.add(map)
-
-                            val sortedDataList =
-                                dataList.sortedWith(
-                                    compareBy(
-                                        { it["pinned"] },
-                                        { it["urgent"] },
-                                        { it["date"] })
-                                )
-                                    .reversed()
-
-                            println("sorted data List " + sortedDataList)
-                            sortedData.clear()
-                            for (z in sortedDataList) {
-                                sortedData.add(z)
-                            }
-
-                            communityBoardAdapter =
-                                CommunityBoardAdapter(requireContext(), sortedData)
-
-                            communityBoardRecyclerView?.layoutManager = gridLayoutManager
-                            communityBoardRecyclerView?.adapter = communityBoardAdapter
                         }
-
-                        val handler = Handler(Looper.getMainLooper())
-                        val runnable = Runnable {
-                            loadAllD.dismiss()
-                        }
-                        handler.postDelayed(runnable, 500)
-                        println("children count " + childrenCount)
-
                     }
 
                     override fun onCancelled(error: DatabaseError) {

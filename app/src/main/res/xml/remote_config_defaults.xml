@@ -2,7 +2,23 @@
 <!-- START xml_defaults -->
 <defaultsMap>
     <entry>
-        <key>community_board</key>
+        <key>community_board_302</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>campus_news</key>
         <value>true</value>
+    </entry>
+    <entry>
+        <key>comment_and_like_counter</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>image_view_intent</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>pinned_switch</key>
+        <value>false</value>
     </entry>
 </defaultsMap>

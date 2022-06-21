@@ -4,20 +4,29 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.CommentLikeCounter
 import com.cory.texarkanacollege.fragments.ViewCommunityBoardPostFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
@@ -30,7 +39,7 @@ import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CommunityBoardAdapter(val context: Context,
-                            private val dataList:  ArrayList<HashMap<String, String>>
+                            private val dataList:  ArrayList<HashMap<String, String>>, private val likesDataList:  ArrayList<HashMap<String, String>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var firebaseAuth: FirebaseAuth
@@ -38,13 +47,16 @@ class CommunityBoardAdapter(val context: Context,
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var contactName = itemView.findViewById<TextView>(R.id.row_contact_name)!!
-        var title = itemView.findViewById<TextView>(R.id.row_title)
-        var date = itemView.findViewById<TextView>(R.id.row_date)
-        val content = itemView.findViewById<TextView>(R.id.row_content)
-        val email = itemView.findViewById<TextView>(R.id.row_contact_email)
-        val pinnedChip = itemView.findViewById<Chip>(R.id.pinnedChip)
-        val imageTextView = itemView.findViewById<TextView>(R.id.imageTextView)
-        val profileImage = itemView.findViewById<CircleImageView>(R.id.profilePic)
+        var title = itemView.findViewById<TextView>(R.id.row_title)!!
+        var date = itemView.findViewById<TextView>(R.id.row_date)!!
+        val content = itemView.findViewById<TextView>(R.id.row_content)!!
+        val email = itemView.findViewById<TextView>(R.id.row_contact_email)!!
+        val pinnedChip = itemView.findViewById<Chip>(R.id.pinnedChip)!!
+        val imageTextView = itemView.findViewById<TextView>(R.id.imageTextView)!!
+        val profileImage = itemView.findViewById<CircleImageView>(R.id.profilePic)!!
+        val likedCountTextView = itemView.findViewById<TextView>(R.id.likesCountTextView)!!
+        val commentCountTextView = itemView.findViewById<TextView>(R.id.commentCountTextView)!!
+        val counterLinearLayout = itemView.findViewById<LinearLayout>(R.id.counterLinearLayout)
 
 
         fun bind(position: Int) {
@@ -54,6 +66,12 @@ class CommunityBoardAdapter(val context: Context,
             contactName.text = "Name: " + dataItem["name"]
             title.text = "Title: " + dataItem["title"]
             date.text = "Date: " + dataItem["date"]
+            likedCountTextView.text = dataItem["likedCount"]
+            commentCountTextView.text = dataItem["commentCount"]
+
+            if (!CommentLikeCounter(context).loadCounterVisibility()) {
+                counterLinearLayout.visibility = View.GONE
+            }
 
             if (dataItem["content"]!!.length < 30) {
                 content.text = "Content: " + dataItem["content"]!!.trim()
@@ -78,9 +96,17 @@ class CommunityBoardAdapter(val context: Context,
                 imageTextView.visibility = View.GONE
             }
 
+            val circularProgressDrawableProfilePic = CircularProgressDrawable(context)
+            circularProgressDrawableProfilePic.strokeWidth = 2f
+            circularProgressDrawableProfilePic.centerRadius = 20f
+            circularProgressDrawableProfilePic.setColorSchemeColors(ContextCompat.getColor(context, R.color.blue))
+            circularProgressDrawableProfilePic.start()
+
             Glide.with(context)
                 .load(dataItem["profilePicURL"])
                 .centerCrop()
+                .placeholder(circularProgressDrawableProfilePic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(profileImage)
 
         }
@@ -100,8 +126,9 @@ class CommunityBoardAdapter(val context: Context,
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
             holder.itemView.setOnLongClickListener {
+                firebaseAuth.currentUser?.reload()
+                if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
                 val dialog = BottomSheetDialog(context)
                 val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
                 dialog.setCancelable(false)
@@ -109,6 +136,20 @@ class CommunityBoardAdapter(val context: Context,
                 val editPostEditButton = dialog.findViewById<Button>(R.id.editPostEditButton)
                 val editPostDeleteButton = dialog.findViewById<Button>(R.id.editPostDeleteButton)
                 val editPostCancelButton = dialog.findViewById<Button>(R.id.editPostCancelButton)
+                val editPostViewLikesButton = dialog.findViewById<Button>(R.id.editPostViewLikesButton)
+
+                editPostViewLikesButton?.setOnClickListener {
+                    val bottomSheetDialog = BottomSheetDialog(context)
+                    val editGradeBottomSheetView =
+                        LayoutInflater.from(context).inflate(R.layout.view_likes_bottom_sheet, null)
+                    val recyclerView = editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
+                    val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
+                    recyclerView.adapter = viewLikesAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                    bottomSheetDialog.setContentView(editGradeBottomSheetView)
+                    bottomSheetDialog.show()
+                    dialog.dismiss()
+                }
 
                 editPostEditButton?.visibility = View.GONE
 
@@ -167,11 +208,45 @@ class CommunityBoardAdapter(val context: Context,
                 dialog.show()
                 return@setOnLongClickListener true
             }
+                else {
+                    val dialog = BottomSheetDialog(context)
+                    val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
+                    dialog.setCancelable(false)
+                    dialog.setContentView(postOptionsLayout)
+                    val editPostEditButton = dialog.findViewById<Button>(R.id.editPostEditButton)
+                    val editPostDeleteButton = dialog.findViewById<Button>(R.id.editPostDeleteButton)
+                    val editPostCancelButton = dialog.findViewById<Button>(R.id.editPostCancelButton)
+                    val editPostViewLikesButton = dialog.findViewById<Button>(R.id.editPostViewLikesButton)
+
+                    editPostViewLikesButton?.setOnClickListener {
+                        val bottomSheetDialog = BottomSheetDialog(context)
+                        val editGradeBottomSheetView =
+                            LayoutInflater.from(context).inflate(R.layout.view_likes_bottom_sheet, null)
+                        val recyclerView = editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
+                        val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
+                        recyclerView.adapter = viewLikesAdapter
+                        recyclerView.layoutManager = LinearLayoutManager(context)
+                        bottomSheetDialog.setContentView(editGradeBottomSheetView)
+                        bottomSheetDialog.show()
+                        dialog.dismiss()
+                    }
+
+                    editPostEditButton?.visibility = View.GONE
+                    editPostDeleteButton?.visibility = View.GONE
+
+                    editPostCancelButton?.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                    return@setOnLongClickListener true
+                }
+                false
         }
 
         holder.itemView.setOnClickListener {
 
             val fragment = ViewCommunityBoardPostFragment()
+            (context as MainActivity).viewPostCommunityBoardFragment = fragment
 
             val args = Bundle()
             args.putString("name", dataItem["name"])
@@ -182,6 +257,7 @@ class CommunityBoardAdapter(val context: Context,
             args.putString("date", dataItem["date"])
             args.putString("profilePicURL", dataItem["profilePicURL"])
             args.putString("email", dataItem["email"])
+            args.putString("pinned", dataItem["pinned"].toString())
             fragment.arguments = args
 
             val manager =
@@ -206,6 +282,7 @@ class CommunityBoardAdapter(val context: Context,
         super.setHasStableIds(true)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

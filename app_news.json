@@ -1,0 +1,15 @@
+{"update":[
+    {"date":"05/24/22","title":"Version 9.2.3 Rolling Out","body":"Version 9.2.3 is currently rolling out with more fixes for bugs introduced in 9.2.0"},
+    {"date":"05/23/22","title":"Version 9.2.2 Rolling Out","body":"Version 9.2.2 is currently rolling out with another fix for checkboxes that was introduced in version 9.2.0"},
+    {"date":"05/22/22","title":"Version 9.2.1 Rolling Out","body":"Version 9.2.1 is currently rolling out which removes a toast message that displays when changing the date when editing an entry."},
+    {"date":"05/16/22","title":"Version 9.2.0 Rolling Out","body":"Version 9.2.0 is currently rolling out and inclues tons of fixes and changes."},
+   {"date":"02/12/2022","title":"Version 9.1.0 Rolling Out","body":"There is currently an update rolling out which includes many bug fixes"}
+   ],
+ "known issues":[  
+   {"title":"No known issues", "status": true}
+   ],
+ "roadmap":[  
+    {"title":"Add ability to export hours to \"Time Cards\"", "status": false},
+   {"title":"Add ability to select and delete multiple hours at the same time", "status": true}
+   ]
+}  

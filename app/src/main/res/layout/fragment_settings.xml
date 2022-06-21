@@ -562,7 +562,7 @@
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
-            android:visibility="gone">
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintAppNews"

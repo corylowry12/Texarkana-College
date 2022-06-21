@@ -113,6 +113,11 @@ class SettingsFragment : Fragment() {
             openFragment(CampusMapFragment())
         }
 
+        val appNewsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAppNews)
+        appNewsConstraint.setOnClickListener {
+            openFragment(AppNewsFragment())
+        }
+
         val manageLinksConstraint = view.findViewById<ConstraintLayout>(R.id.constraintManageLinks)
         manageLinksConstraint.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

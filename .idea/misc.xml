@@ -29,6 +29,8 @@
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/view_corner_radius.xml" value="0.218" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/widgetimageviewbackground.xml" value="0.215" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout-land/activity_main.xml" value="0.18077601410934743" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout-land/known_issues_list_row.xml" value="0.1" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout-land/update_list_row.xml" value="0.1" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout-sw600dp/activity_main.xml" value="0.1" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/about_community_board_bottom_sheet.xml" value="0.264" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/activity_main.xml" value="0.21041666666666667" />
@@ -52,6 +54,7 @@
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fetching_community_board_dialog.xml" value="0.11744791666666667" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fetching_dialog_layout.xml" value="0.20520833333333333" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_account.xml" value="0.4" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_app_news.xml" value="0.11744791666666667" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_appearance.xml" value="0.264" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_assignment.xml" value="0.1" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_campus_map.xml" value="0.20833333333333334" />
@@ -69,10 +72,12 @@
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_view_community_board_post.xml" value="0.264" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/fragment_why_chooose_t_c.xml" value="0.10520833333333333" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/grades_list_item.xml" value="0.21041666666666667" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/known_issues_list_row.xml" value="0.11692708333333333" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/likes_list_item.xml" value="0.10677083333333333" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/list_item.xml" value="0.1" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/options_bottom_sheet.xml" value="0.20572916666666666" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/patch_notes_list_row.xml" value="0.20885416666666667" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/update_list_row.xml" value="0.11744791666666667" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/uploading_image_dialog.xml" value="0.4" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/view_community_board_list_item_row.xml" value="0.16" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/layout/view_image_layout.xml" value="0.20572916666666666" />

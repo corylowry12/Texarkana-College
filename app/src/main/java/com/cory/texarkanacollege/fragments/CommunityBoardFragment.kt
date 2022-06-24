@@ -366,8 +366,7 @@ class CommunityBoardFragment : Fragment() {
                                         val currentProgress =
                                             (100.0 * totalProgress.bytesTransferred) / totalProgress.totalByteCount
                                         progressBar.progress = currentProgress.toInt()
-                                        uploadProgressTextView.text =
-                                            "Upload Progress: ${currentProgress.toInt()}%"
+                                        uploadProgressTextView.text = getString(R.string.upload_progress, currentProgress.toInt())
                                         println("progress is: $currentProgress")
                                     }
                                     uploadTask.addOnSuccessListener {
@@ -482,8 +481,8 @@ class CommunityBoardFragment : Fragment() {
                 R.id.signOut -> {
                     if (firebaseAuth.currentUser != null) {
                         firebaseAuth.signOut()
-                        Toast.makeText(requireContext(), "You are now signed out", Toast.LENGTH_SHORT).show()
-                        toolBar.menu.findItem(R.id.signOut).title = "Sign In"
+                        Toast.makeText(requireContext(), getString(R.string.you_are_now_signed_out), Toast.LENGTH_SHORT).show()
+                        toolBar.menu.findItem(R.id.signOut).title = getString(R.string.sign_in)
                     }
                     else {
                         mGoogleSignInOptions =
@@ -628,12 +627,12 @@ class CommunityBoardFragment : Fragment() {
                                         val runnable = Runnable {
                                             loadAllD.dismiss()
                                         }
-                                        handler.postDelayed(runnable, 500)
+                                        handler.postDelayed(runnable, 250)
                                         println("children count " + childrenCount)
                                     }
 
                                     override fun onCancelled(error: DatabaseError) {
-                                        TODO("Not yet implemented")
+                                        Toast.makeText(requireContext(), getString(R.string.there_was_an_error), Toast.LENGTH_SHORT).show()
                                     }
                                 })
 
@@ -641,18 +640,13 @@ class CommunityBoardFragment : Fragment() {
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
+                        Toast.makeText(requireContext(), getString(R.string.there_was_an_error), Toast.LENGTH_SHORT).show()
                     }
                 })
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.there_was_an_error), Toast.LENGTH_SHORT).show()
             activity?.supportFragmentManager?.popBackStack()
         }
-    }
-
-    fun String.isEmailValid(): Boolean {
-        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this)
-            .matches()
     }
 }

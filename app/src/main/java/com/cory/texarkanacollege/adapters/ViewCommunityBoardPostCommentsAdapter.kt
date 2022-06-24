@@ -38,7 +38,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
         var name = itemView.findViewById<TextView>(R.id.row_display_name)
         var title = itemView.findViewById<TextView>(R.id.row_comment_title)
-        var dateChip = itemView.findViewById<Chip>(R.id.dateChip)
+        var dateTextView = itemView.findViewById<TextView>(R.id.dateTextView)
         var profilePic = itemView.findViewById<CircleImageView>(R.id.profilePicComments)
 
         fun bind(position: Int) {
@@ -47,7 +47,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
             name.text = dataItem["name"]
             title.text = dataItem["title"]
-            dateChip.text = dataItem["date"]
+            dateTextView.text = dataItem["date"]
 
             Glide.with(context)
                 .load(dataItem["profilePicURL"])

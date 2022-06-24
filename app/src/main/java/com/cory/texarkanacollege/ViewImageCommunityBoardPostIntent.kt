@@ -84,6 +84,10 @@ class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
                                 val imageViewConstraint = findViewById<ConstraintLayout>(R.id.imageViewConstraintViewPost)
                                 imageViewConstraint.setBackgroundColor(color)
 
+                                imageView.setOnClickListener {
+                                    finish()
+                                }
+
                             } catch (e: NullPointerException) {
                                 e.printStackTrace()
                             }

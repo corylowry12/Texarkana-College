@@ -11,9 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.classes.CategoryTextViewVisible
+import com.cory.texarkanacollege.classes.ColoredBackgroundsData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
@@ -33,10 +37,11 @@ class DoneAdapter(val context: Context,
 
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var className = itemView.findViewById<TextView>(R.id.className)!!
-        var title = itemView.findViewById<TextView>(R.id.assignmentName)!!
-        var classTime = itemView.findViewById<TextView>(R.id.dueDate)
-        var notes = itemView.findViewById<TextView>(R.id.notes)
+        val className = itemView.findViewById<TextView>(R.id.className)!!
+        val title = itemView.findViewById<TextView>(R.id.assignmentName)!!
+        val classTime = itemView.findViewById<TextView>(R.id.dueDate)!!
+        val notes = itemView.findViewById<TextView>(R.id.notes)!!
+        val category = itemView.findViewById<TextView>(R.id.category)!!
 
         fun bind(position: Int) {
 
@@ -45,6 +50,14 @@ class DoneAdapter(val context: Context,
             className.text = "Class Name: " + dataItem["className"]
             title.text = "Assignment Name: " + dataItem["assignmentName"]
             classTime.text = "Due Date: " + dataItem["dueDate"]
+
+            if (CategoryTextViewVisible(context).loadCategoryTextView()) {
+                category.visibility = View.VISIBLE
+                category.text = "Category: " + dataItem["category"]
+            }
+            else {
+                category.visibility = View.GONE
+            }
 
             if (dataItem["notes"] == "" || dataItem["notes"] == null) {
                 notes.visibility = View.GONE
@@ -67,8 +80,27 @@ class DoneAdapter(val context: Context,
 
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         val dataItem = dataList[position]
+        if (ColoredBackgroundsData(context).loadColoredBackgrounds()) {
+            if (dataItem["category"] == "Homework") {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.homeworkCardBackgroundColor
+                        )
+                    )
+            } else if (dataItem["category"] == "Exam") {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.examCardBackgroundColor
+                        )
+                    )
+            }
+        }
+
         holder.itemView.setOnClickListener {
             val viewAssignmentFragment = ViewAssignmentFragment()
 
@@ -77,6 +109,7 @@ class DoneAdapter(val context: Context,
             val args = Bundle()
             args.putString("id", dataItem["id"])
             args.putString("type", "done")
+            args.putString("category", dataItem["category"])
             viewAssignmentFragment.arguments = args
             manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             manager.add(R.id.fragment_container, viewAssignmentFragment).addToBackStack(null)

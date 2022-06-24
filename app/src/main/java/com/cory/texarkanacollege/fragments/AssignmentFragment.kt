@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,10 +28,11 @@ import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -115,6 +117,132 @@ class AssignmentFragment : Fragment() {
 
                         val assignmentNotes = addAssignmentView.findViewById<TextInputEditText>(R.id.notes)
 
+                        val categoryToggleGroup = addAssignmentView.findViewById<MaterialButtonToggleGroup>(R.id.categoryToggleGroup)
+                        val examToggle = addAssignmentView.findViewById<MaterialButton>(R.id.examToggle)
+                        val homeworkToggle = addAssignmentView.findViewById<MaterialButton>(R.id.homeworkToggle)
+                        val otherToggle = addAssignmentView.findViewById<MaterialButton>(R.id.otherToggle)
+
+                        otherToggle.isChecked = true
+                        otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+
+                        categoryToggleGroup.forEach {
+                            examToggle.setOnClickListener {
+                                if (examToggle.isChecked) {
+                                    examToggle.setBackgroundColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.toggleButtonCheckedBackground
+                                        )
+                                    )
+                                }
+                                examToggle.isChecked = true
+
+                                homeworkToggle.isChecked = false
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                                otherToggle.isChecked = false
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                            }
+                            homeworkToggle.setOnClickListener {
+                                if (homeworkToggle.isChecked) {
+                                    homeworkToggle.setBackgroundColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.toggleButtonCheckedBackground
+                                        )
+                                    )
+                                }
+                                homeworkToggle.isChecked = true
+                                examToggle.isChecked = false
+                                examToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                                otherToggle.isChecked = false
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                            }
+                            otherToggle.setOnClickListener {
+                                if (otherToggle.isChecked) {
+                                    otherToggle.setBackgroundColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.toggleButtonCheckedBackground
+                                        )
+                                    )
+                                }
+                                otherToggle.isChecked = true
+                                examToggle.isChecked = false
+                                examToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                                homeworkToggle.isChecked = false
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.transparent
+                                ))
+                            }
+                        }
+
+                        /*categoryToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                            if (checkedId.toString().endsWith("501")) {
+                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                examToggle.isChecked = true
+                            }
+                            else if (checkedId.toString().endsWith("502")) {
+                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                homeworkToggle.isChecked = true
+                            }
+                            else {
+                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                                otherToggle.isChecked = true
+                            }
+                        }
+
+                        examToggle?.setOnClickListener {
+                            if (examToggle.isChecked) {
+                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                            }
+                            else {
+                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                            }
+                        }
+
+                        homeworkToggle?.setOnClickListener {
+                            if (homeworkToggle.isChecked) {
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                            }
+                            else {
+                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                            }
+                        }
+
+                        otherToggle?.setOnClickListener {
+                            homeworkToggle.isChecked = false
+                            examToggle.isChecked = false
+                            if (otherToggle.isChecked) {
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                            }
+                            else {
+                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
+                            }
+                        }*/
+
+
                         val cancelButton = addAssignmentView.findViewById<Button>(R.id.cancelButton)
                         val dueDateChip = addAssignmentView.findViewById<Chip>(R.id.dueDateChip)
                         val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
@@ -158,6 +286,17 @@ class AssignmentFragment : Fragment() {
                         }
 
                         addAssignmentButton.setOnClickListener {
+                            var category = ""
+                            if (homeworkToggle.isChecked) {
+                                category = "Homework"
+                            }
+                            else if (examToggle.isChecked) {
+                                category = "Exam"
+                            }
+                            else if (otherToggle.isChecked) {
+                                category = "Other"
+                            }
+
                             if (assignmentName.text.toString() == "") {
                                 Toast.makeText(requireContext(), "An assignment name is required", Toast.LENGTH_SHORT).show()
                             }
@@ -167,7 +306,7 @@ class AssignmentFragment : Fragment() {
                                     classesMenu.text.toString(),
                                     date,
                                     assignmentNotes.text.toString()
-                                )
+                                ,category)
                                 loadIntoList()
                                 dialog.dismiss()
                             }
@@ -248,11 +387,11 @@ class AssignmentFragment : Fragment() {
         }
     }
 
-    private fun addAssignment(name: String, className: String, date: String, notes: String) {
+    private fun addAssignment(name: String, className: String, date: String, notes: String, category: String) {
 
         val dbHandler = AssignmentsDBHelper(requireContext(), null)
 
-        dbHandler.insertRow(name, date, notes, "", className)
+        dbHandler.insertRow(name, date, notes, "", className, category)
     }
 
     @SuppressLint("Range")
@@ -276,7 +415,20 @@ class AssignmentFragment : Fragment() {
                 map["dueDate"] =
                     upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
                 map["notes"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
-                map["category"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
+                try {
+                    if (upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY)) == "") {
+                        map["category"] = "Other"
+                    } else {
+                        map["category"] =
+                            upcomingCursor.getString(
+                                upcomingCursor.getColumnIndex(
+                                    AssignmentsDBHelper.COLUMN_CATEGORY
+                                )
+                            )
+                    }
+                } catch (e: Exception) {
+                    map["category"] = "Other"
+                }
                 upcomingDataList.add(map)
 
                 upcomingCursor.moveToNext()
@@ -305,7 +457,13 @@ class AssignmentFragment : Fragment() {
                 map["dueDate"] =
                     pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
                 map["notes"] = pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
-                map["category"] = pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
+                if (pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY)) == "") {
+                    map["category"] = "Other"
+                }
+                else {
+                    map["category"] =
+                        pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
+                }
                 pastDueDataList.add(map)
 
                 pastDueCursor.moveToNext()
@@ -334,7 +492,12 @@ class AssignmentFragment : Fragment() {
                 map["dueDate"] =
                     doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
                 map["notes"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
-                map["category"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
+                if (doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY)) == "") {
+                    map["category"] = "Other"
+                }
+                else {
+                    map["category"] = doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
+                }
                 doneDataList.add(map)
 
                 doneCursor.moveToNext()

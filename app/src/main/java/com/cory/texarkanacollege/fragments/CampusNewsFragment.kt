@@ -5,10 +5,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
-import android.os.Bundle
-import android.os.Parcelable
-import android.os.PersistableBundle
+import android.os.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -67,7 +64,6 @@ class CampusNewsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_campus_news, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -103,9 +99,25 @@ class CampusNewsFragment : Fragment() {
 
         campusNewsAdapter = CampusNewsAdapter(requireContext(), dataList)
 
+        materialDialog = MaterialAlertDialogBuilder(
+            requireContext(), R.style.AlertDialogStyle)
+        val layout = layoutInflater.inflate(R.layout.fetching_dialog_layout, null)
+        materialDialog.setCancelable(false)
+        materialDialog.setView(layout)
+        materialDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
+            d.dismiss()
+            activity?.supportFragmentManager?.popBackStack()
+        }
+        d = materialDialog.create()
+        if (activity != null && !requireActivity().isFinishing) {
+            d.show()
+        }
+
         if (isOnline(requireContext())) {
             try {
-                loadIntoList()
+                Handler(Looper.getMainLooper()).postDelayed( {
+                    loadIntoList()
+                }, 1000)
             }
             catch (e: Exception) {
                 Toast.makeText(requireContext(), getString(R.string.some_error_was_encountered), Toast.LENGTH_SHORT).show()
@@ -281,6 +293,10 @@ class CampusNewsFragment : Fragment() {
             for (i in (loadPosition+1)..pageNumber) {
                 if (stop) {
                     loadPosition = i
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "${i-1} pages fetched", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     break
                 }
                 val url = "https://www.texarkanacollege.edu/news/page/${i}/"
@@ -383,22 +399,6 @@ class CampusNewsFragment : Fragment() {
     }
 
     private fun loadIntoList() {
-
-        GlobalScope.launch(Dispatchers.Main) {
-            materialDialog = MaterialAlertDialogBuilder(
-                requireContext(), R.style.AlertDialogStyle)
-            val layout = layoutInflater.inflate(R.layout.fetching_dialog_layout, null)
-            materialDialog.setCancelable(false)
-            materialDialog.setView(layout)
-            materialDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
-                d.dismiss()
-                activity?.supportFragmentManager?.popBackStack()
-            }
-            d = materialDialog.create()
-            if (activity != null && !requireActivity().isFinishing) {
-                d.show()
-            }
-        }
 
         GlobalScope.launch(Dispatchers.IO) {
 

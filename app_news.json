@@ -1,13 +1,14 @@
 {"update":[
+  {"date":"06/24/22","title":"Version 3.0.7 Rolling Out","body":"Version 3.0.7 is currently rolling out which includes tons of fixes"},
+  {"date":"06/22/22","title":"Version 3.0.4 Rolling Out","body":"Version 3.0.4 is currently rolling out which includes tons of fixes"},
     {"date":"06/19/22","title":"Version 3.0.3.1 Rolling Out","body":"Version 3.0.3.1 is currently rolling out which includes tons of fixes"},
-    {"date":"06/15/22","title":"Version 3.0.2.1 Rolling Out","body":"Version 3.0.2.1 is currently rolling out and inclues tons of fixes."},
+    {"date":"06/15/22","title":"Version 3.0.2.1 Rolling Out","body":"Version 3.0.2.1 is currently rolling out and includes tons of fixes."},
    {"date":"06/08/2022","title":"Version 3.0.1 Rolling Out","body":"Version 3.0.1 is currently rolling out which adds tons of features and redesigned the entire app"}
    ],
  "known issues":[  
    {"title":"No known issues", "status": true}
    ],
- "roadmap":[  
-    {"title":"Add the ability to set categories for assignments", "status": false},
+ "roadmap":[
    {"title":"Add the ability to set light or dark theme for the app", "status": false},
      {"title":"Add the ability to like comments in the community board", "status": false},
      {"title":"Add the ability to set a default category for assignments", "status": false},

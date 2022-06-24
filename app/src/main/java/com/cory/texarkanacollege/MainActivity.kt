@@ -32,6 +32,11 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.Dispatchers
@@ -67,55 +72,70 @@ class MainActivity : AppCompatActivity() {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
                 if (extras.getString("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else if (extras.getString("view_classes") == "view_classes") {
+                } else if (extras.getString("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                }
-                else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (extras.getString("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                }
-                else if (extras.getString("view_map") == "view_map") {
+                } else if (extras.getString("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else {
+                } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
                 if (extras.getString("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else if (extras.getString("view_classes") == "view_classes") {
+                } else if (extras.getString("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                }
-                else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (extras.getString("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                }
-                else if (extras.getString("view_map") == "view_map") {
+                } else if (extras.getString("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else {
+                } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             }
 
             if (extras.getString("widget") == "Widget") {
                 replaceFragment(CampusMapFragment())
-            }
-            else if (extras.getString("view_classes") == "view_classes") {
+            } else if (extras.getString("view_classes") == "view_classes") {
                 replaceFragment(classesFragment)
-            }
-            else if (extras.getString("view_assignments") == "view_assignments") {
+            } else if (extras.getString("view_assignments") == "view_assignments") {
                 replaceFragment(assignmentFragment)
-            }
-            else if (extras.getString("view_map") == "view_map") {
+            } else if (extras.getString("view_map") == "view_map") {
                 replaceFragment(CampusMapFragment())
-            }
-            else if (intent.action == Intent.ACTION_VIEW) {
+            } else if (intent.action == Intent.ACTION_VIEW) {
                 val args = Bundle()
                 args.putString("deepLink", intent.dataString)
                 homeFragment.arguments = args
                 replaceFragment(homeFragment)
+            }
+        }
+    }
+
+    private val listener = InstallStateUpdatedListener { installState ->
+        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+            val materialAlertDialogBuilder =
+                MaterialAlertDialogBuilder(this, R.style.AlertDialogStyle)
+            materialAlertDialogBuilder.setTitle("Update Downloaded")
+            materialAlertDialogBuilder.setMessage("App Update Downloaded, click restart to install")
+            materialAlertDialogBuilder.setPositiveButton("Restart") { _, _ ->
+            }
+            materialAlertDialogBuilder.show()
+        }
+    }
+
+    private fun checkUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateManager.registerListener(listener)
+        appUpdateInfoTask.addOnSuccessListener {
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
+                appUpdateManager.startUpdateFlowForResult(it, AppUpdateType.IMMEDIATE, this, 123)
+                appUpdateManager.completeUpdate()
             }
         }
     }
@@ -125,46 +145,47 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val classesIntent = Intent(this, MainActivity::class.java)
-            classesIntent.action = Intent.ACTION_VIEW
-            classesIntent.putExtra("view_classes", "view_classes")
+        checkUpdate()
 
-            val assignmentIntent = Intent(this, MainActivity::class.java)
-            assignmentIntent.action = Intent.ACTION_VIEW
-            assignmentIntent.putExtra("view_assignments", "view_assignments")
+        val classesIntent = Intent(this, MainActivity::class.java)
+        classesIntent.action = Intent.ACTION_VIEW
+        classesIntent.putExtra("view_classes", "view_classes")
 
-            val mapIntent = Intent(this, MainActivity::class.java)
-            mapIntent.action = Intent.ACTION_VIEW
-            mapIntent.putExtra("view_map", "view_map")
+        val assignmentIntent = Intent(this, MainActivity::class.java)
+        assignmentIntent.action = Intent.ACTION_VIEW
+        assignmentIntent.putExtra("view_assignments", "view_assignments")
 
-            val shortcutManager = getSystemService(ShortcutManager::class.java) as ShortcutManager
-            val classesShortCut = ShortcutInfo.Builder(this, "classes")
-                .setShortLabel("Classes")
-                .setLongLabel("View Classes")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_class_24_shortcut))
-                .setIntent(classesIntent)
-                .build()
-            val assignmentsShortcut = ShortcutInfo.Builder(this, "assignments")
-                .setShortLabel("Assignments")
-                .setLongLabel("View Assignments")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_assignment_24_shortcut))
-                .setIntent(assignmentIntent)
-                .build()
-            val mapShortcut = ShortcutInfo.Builder(this, "map")
-                .setShortLabel("Map")
-                .setLongLabel("View Campus Map")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_map_24_shortcut))
-                .setIntent(mapIntent)
-                .build()
-            GlobalScope.launch(Dispatchers.Main) {
-                shortcutManager.dynamicShortcuts = listOf(classesShortCut, assignmentsShortcut, mapShortcut)
-            }
+        val mapIntent = Intent(this, MainActivity::class.java)
+        mapIntent.action = Intent.ACTION_VIEW
+        mapIntent.putExtra("view_map", "view_map")
+
+        val shortcutManager = getSystemService(ShortcutManager::class.java) as ShortcutManager
+        val classesShortCut = ShortcutInfo.Builder(this, "classes")
+            .setShortLabel("Classes")
+            .setLongLabel("View Classes")
+            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_class_24_shortcut))
+            .setIntent(classesIntent)
+            .build()
+        val assignmentsShortcut = ShortcutInfo.Builder(this, "assignments")
+            .setShortLabel("Assignments")
+            .setLongLabel("View Assignments")
+            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_assignment_24_shortcut))
+            .setIntent(assignmentIntent)
+            .build()
+        val mapShortcut = ShortcutInfo.Builder(this, "map")
+            .setShortLabel("Map")
+            .setLongLabel("View Campus Map")
+            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_map_24_shortcut))
+            .setIntent(mapIntent)
+            .build()
+        GlobalScope.launch(Dispatchers.Main) {
+            shortcutManager.dynamicShortcuts =
+                listOf(classesShortCut, assignmentsShortcut, mapShortcut)
         }
 
 
         setSmallSettingsBadge()
-        fetchTOSJsonBadget()
+        fetchTOSJsonBadge()
 
         val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = remoteConfigSettings {
@@ -197,51 +218,39 @@ class MainActivity : AppCompatActivity() {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
                 if (extras.getString("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else if (extras.getString("view_classes") == "view_classes") {
+                } else if (extras.getString("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                }
-                else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (extras.getString("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                }
-                else if (extras.getString("view_map") == "view_map") {
+                } else if (extras.getString("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else {
+                } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
                 if (extras.getString("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else if (extras.getString("view_classes") == "view_classes") {
+                } else if (extras.getString("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                }
-                else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (extras.getString("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                }
-                else if (extras.getString("view_map") == "view_map") {
+                } else if (extras.getString("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                }
-                else {
+                } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             }
 
             if (extras.getString("widget") == "Widget") {
                 replaceFragment(CampusMapFragment())
-            }
-            else if (extras.getString("view_classes") == "view_classes") {
+            } else if (extras.getString("view_classes") == "view_classes") {
                 replaceFragment(classesFragment)
-            }
-            else if (extras.getString("view_assignments") == "view_assignments") {
+            } else if (extras.getString("view_assignments") == "view_assignments") {
                 replaceFragment(assignmentFragment)
-            }
-            else if (extras.getString("view_map") == "view_map") {
+            } else if (extras.getString("view_map") == "view_map") {
                 replaceFragment(CampusMapFragment())
-            }
-            else if (intent.action == Intent.ACTION_VIEW) {
+            } else if (intent.action == Intent.ACTION_VIEW) {
                 val args = Bundle()
                 args.putString("deepLink", intent.dataString)
                 homeFragment.arguments = args
@@ -312,7 +321,7 @@ class MainActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 
-            transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
+        transaction.replace(R.id.fragment_container, fragment).addToBackStack(null)
         transaction.commit()
 
     }
@@ -360,7 +369,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getRealPathFromURI(contentURI: Uri): String {
+    private fun getRealPathFromURI(contentURI: Uri): String {
         var result = ""
         val cursor = this.contentResolver?.query(contentURI, null, null, null, null)
         if (cursor == null) {
@@ -484,21 +493,20 @@ class MainActivity : AppCompatActivity() {
             } else {
                 badge.isVisible = false
             }
-        }
-        else {
-        val badge =
-            findViewById<BottomNavigationView>(R.id.bottomNav).getOrCreateBadge(R.id.settings)
-        if (Version(this).loadVersion() != getString(R.string.versionNumber)) {
-            badge.isVisible = true
-
-            badge.backgroundColor = ContextCompat.getColor(this, R.color.redBadgeColor)
         } else {
-            badge.isVisible = false
-        }
+            val badge =
+                findViewById<BottomNavigationView>(R.id.bottomNav).getOrCreateBadge(R.id.settings)
+            if (Version(this).loadVersion() != getString(R.string.versionNumber)) {
+                badge.isVisible = true
+
+                badge.backgroundColor = ContextCompat.getColor(this, R.color.redBadgeColor)
+            } else {
+                badge.isVisible = false
+            }
         }
     }
 
-    fun fetchTOSJsonBadget() {
+    private fun fetchTOSJsonBadge() {
         val request = Request.Builder()
             .url("https://raw.githubusercontent.com/corylowry12/Texarkana-College/main/community_board_tos.json")
             .build()
@@ -533,14 +541,11 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (homeFragment.isVisible) {
                 bottomNav.menu.findItem(R.id.home).isChecked = true
-            }
-            else if (classesFragment.isVisible) {
+            } else if (classesFragment.isVisible) {
                 bottomNav.menu.findItem(R.id.classes).isChecked = true
-            }
-            else if (assignmentFragment.isVisible) {
+            } else if (assignmentFragment.isVisible) {
                 bottomNav.menu.findItem(R.id.assignments).isChecked = true
-            }
-            else if (settingsFragment.isVisible) {
+            } else if (settingsFragment.isVisible) {
                 bottomNav.menu.findItem(R.id.settings).isChecked = true
             }
         }, 200)

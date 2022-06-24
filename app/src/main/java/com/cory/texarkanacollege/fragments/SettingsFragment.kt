@@ -54,6 +54,11 @@ class SettingsFragment : Fragment() {
             openFragment(AppearanceFragment())
         }
 
+        val assignmentSettingsConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintAssignmentSettings)
+        assignmentSettingsConstraint?.setOnClickListener {
+            openFragment(AssignmentSettingsFragment())
+        }
+
         val experimentalConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintExperimental)
         val experimentalCardView = activity?.findViewById<CardView>(R.id.cardViewExperimental)
 

@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.ColoredBackgroundsData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
@@ -34,6 +36,22 @@ class ViewAssignmentFragment : Fragment() {
         val args = arguments
         val id = args?.getString("id", "")
         val type = args?.getString("type", "")
+        val category = args?.getString("category", "")
+
+        val categoryTextView = activity?.findViewById<TextView>(R.id.viewAssignmentCategory)
+        categoryTextView?.text = "Category: " + category
+
+        if (ColoredBackgroundsData(requireContext()).loadColoredBackgrounds()) {
+            if (category == "Homework") {
+                activity?.findViewById<CardView>(R.id.viewAssignmentCardView)?.setCardBackgroundColor(ContextCompat.getColor(requireContext(),
+                            R.color.homeworkCardBackgroundColor))
+            } else if (category == "Exam") {
+                activity?.findViewById<CardView>(R.id.viewAssignmentCardView)?.setCardBackgroundColor(ContextCompat.getColor(requireContext(),
+                            R.color.examCardBackgroundColor
+                        )
+                    )
+            }
+        }
 
         var date = ""
 

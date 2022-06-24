@@ -8,15 +8,12 @@
     <string name="downloading">Downloading file…</string>
     <string name="permissions_granted">Permissions Granted</string>
     <string name="permissions_denied">Permissions Denied</string>
-
     <string name="app_client_id">541700732898-vc0jvlunp5g84brohnsq8nd4io50t2ht.apps.googleusercontent.com</string>
-
     <string name="communityBoardTOS">\u2022 No harassment\n\u2022 No bullying\n\u2022 No Gore\n\u2022 No NSFW Content</string>
     <string name="assignment_deleted">Assignment Deleted</string>
     <string name="mark_as_not_done">Mark as not Done</string>
     <string name="there_was_an_error_check_connection">There was an error, check data connection</string>
-
-    <string name="versionNumber">3.0.4</string>
+    <string name="versionNumber">3.0.7</string>
     <string name="some_error_was_encountered">Some error was encountered</string>
     <string name="everything_is_already_loaded">Everything is already loaded</string>
     <string name="there_is_no_more_news">There is no more news</string>
@@ -24,6 +21,9 @@
     <string name="press_submit_again_to_submit_comment">Press Submit again to submit the comment</string>
     <string name="press_like_again_to_like_the_post">Press like again to like the post</string>
     <string name="why_choose_tc">Why Choose TC</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="there_was_an_error">There was an error</string>
+    <string name="you_are_now_signed_out">You are now signed out</string>
+    <string name="sign_in">Sign In</string>
+    <string name="upload_progress">Upload Progress: %1$d%%</string>
 </resources>

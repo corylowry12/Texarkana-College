@@ -24,14 +24,18 @@ import com.google.android.material.appbar.MaterialToolbar
 
 class PatchNotesFragment : Fragment() {
 
-    private var bugFixesArray = arrayOf("Fixed an issue with permissions dialog not matching the theme", "Fixed an issue with the choose an image dialog when adding a grade not matching the theme of the rest of the dialogs",
-                                        "Fixed issue with there being no loading circle when loading images in the community board")
+    private var bugFixesArray = arrayOf("Fixed issue where app would crash if you clicked on an image in the community board before it loaded", "Fixed some issues with janky scrolling in the Patch Notes view",
+                                        "Fixed issue with the \"There are no comments\" text view being pushed down to the middle of the screen if you opened the community board post with no data connection",
+                                        "Fixed issue with image failing to load and it not being visible and if you refreshed it still wouldn't show up", "Fixed issue with the text selection being purple instead of blue " +
+                                        "blue when copying text when viewing a post", "Fixed some crashing issues when adding assignments and viewing them after the version 3.0.4 update")
 
-    private var newFeaturesArray = arrayOf("Tons of tweaks to the community board before I start the roll out on 06/20/2022", "Tons more features coming in the near future")
+    private var newFeaturesArray = arrayOf("Added the ability to click an image to dismiss it when viewing an image in the community board", "Added an in app updater to force you to update the app so you always have the latest and " +
+                                            "greatest version", "Added the option to set categories for your assignments", "Added colored backgrounds for each assignment category", "Added the option to enable/disable " +
+                                            "colored backgrounds for the assignments", "Added the option to enable/disable the category text view for each assignment, so you don't see it and can still have the colored background")
 
-    private var enhancementsArray = arrayOf("The post content text box will now expand based on how much text you enter", "Redesigned the view post screen", "Image view in the view post screen will now not show up if there is no image for that post",
-                                            "Tweaked the design of the community board layout", "Added a border around the profile images in the view post layout", "Redesigned the comments in the view post layout", "Added the ability to swipe and refresh comments in the view post screen",
-                                            "Improved loading times in the community board", "There is now a text view that will show up when no comments are stored", "App will no longer cache images to save storage space")
+    private var enhancementsArray = arrayOf("Slightly smaller app size", "View will now automatically refresh if you have no data connection and recover connection when viewing a post", "Now when refreshing a post when viewing " +
+                                            "it, it will reload the entire post instead of just the comments", "Redesigned the comments section for the view post to have a much nicer aesthetic", "The title bar will now be set " +
+                                             "to a blue color when it collapses when the content is scrolled")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -10,9 +10,14 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.classes.CategoryTextViewVisible
+import com.cory.texarkanacollege.classes.ColoredBackgroundsData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
@@ -38,10 +43,12 @@ class UpcomingAdapter(val context: Context,
 
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var className = itemView.findViewById<TextView>(R.id.className)!!
-        var title = itemView.findViewById<TextView>(R.id.assignmentName)!!
-        var classTime = itemView.findViewById<TextView>(R.id.dueDate)
-        var notes = itemView.findViewById<TextView>(R.id.notes)
+        val className = itemView.findViewById<TextView>(R.id.className)!!
+        val title = itemView.findViewById<TextView>(R.id.assignmentName)!!
+        val classTime = itemView.findViewById<TextView>(R.id.dueDate)!!
+        val notes = itemView.findViewById<TextView>(R.id.notes)!!
+        val category = itemView.findViewById<TextView>(R.id.category)!!
+
 
         fun bind(position: Int) {
 
@@ -50,6 +57,14 @@ class UpcomingAdapter(val context: Context,
             className.text = "Class Name: " + dataItem["className"]
             title.text = "Assignment Name: " + dataItem["assignmentName"]
             classTime.text = "Due Date: " + dataItem["dueDate"]
+
+            if (CategoryTextViewVisible(context).loadCategoryTextView()) {
+                category.visibility = View.VISIBLE
+                category.text = "Category: " + dataItem["category"]
+            }
+            else {
+                category.visibility = View.GONE
+            }
 
             if (dataItem["notes"] == "" || dataItem["notes"] == null) {
                 notes.visibility = View.GONE
@@ -73,6 +88,27 @@ class UpcomingAdapter(val context: Context,
     @SuppressLint("Range", "NewApi")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val dataItem = dataList[position]
+
+        if (ColoredBackgroundsData(context).loadColoredBackgrounds()) {
+            if (dataItem["category"] == "Homework") {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.homeworkCardBackgroundColor
+                        )
+                    )
+            } else if (dataItem["category"] == "Exam") {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.examCardBackgroundColor
+                        )
+                    )
+            }
+        }
+
         holder.itemView.setOnClickListener {
             val viewAssignmentFragment = ViewAssignmentFragment()
 
@@ -81,6 +117,7 @@ class UpcomingAdapter(val context: Context,
             val args = Bundle()
             args.putString("id", dataItem["id"])
             args.putString("type", "upcoming")
+            args.putString("category", dataItem["category"])
             viewAssignmentFragment.arguments = args
             manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             manager.add(R.id.fragment_container, viewAssignmentFragment).addToBackStack(null)
@@ -136,6 +173,104 @@ class UpcomingAdapter(val context: Context,
 
                 val assignmentNotes = addAssignmentView.findViewById<TextInputEditText>(R.id.notes)
 
+                val categoryToggleGroup = addAssignmentView.findViewById<MaterialButtonToggleGroup>(R.id.categoryToggleGroup)
+                val examToggle = addAssignmentView.findViewById<MaterialButton>(R.id.examToggle)
+                val homeworkToggle = addAssignmentView.findViewById<MaterialButton>(R.id.homeworkToggle)
+                val otherToggle = addAssignmentView.findViewById<MaterialButton>(R.id.otherToggle)
+
+                if (dataItem["category"] == "Exam") {
+                    examToggle.isChecked = true
+                    examToggle.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.toggleButtonCheckedBackground
+                        )
+                    )
+                }
+                else if (dataItem["category"] == "Homework") {
+                    homeworkToggle.isChecked = true
+                    homeworkToggle.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.toggleButtonCheckedBackground
+                        )
+                    )
+                }
+                else {
+                    otherToggle.isChecked = true
+                    otherToggle.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.toggleButtonCheckedBackground
+                        )
+                    )
+                }
+
+                categoryToggleGroup.forEach {
+                    examToggle.setOnClickListener {
+
+                            examToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+
+                        examToggle.isChecked = true
+
+                        homeworkToggle.isChecked = false
+                        homeworkToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                        otherToggle.isChecked = false
+                        otherToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                    }
+                    homeworkToggle.setOnClickListener {
+                            homeworkToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+
+                        homeworkToggle.isChecked = true
+                        examToggle.isChecked = false
+                        examToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                        otherToggle.isChecked = false
+                        otherToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                    }
+                    otherToggle.setOnClickListener {
+                            otherToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+
+                        otherToggle.isChecked = true
+                        examToggle.isChecked = false
+                        examToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                        homeworkToggle.isChecked = false
+                        homeworkToggle.setBackgroundColor(ContextCompat.getColor(
+                            context,
+                            R.color.transparent
+                        ))
+                    }
+                }
+
                 assignmentName.setText(dataItem["assignmentName"].toString())
                 assignmentNotes.setText(dataItem["notes"].toString())
 
@@ -182,7 +317,17 @@ class UpcomingAdapter(val context: Context,
                         Toast.makeText(context, "An assignment name is required", Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dueDateChip.text.toString(), assignmentNotes.text.toString(), "")
+                        var category = ""
+                        if (homeworkToggle.isChecked) {
+                            category = "Homework"
+                        }
+                        else if (examToggle.isChecked) {
+                            category = "Exam"
+                        }
+                        else if (otherToggle.isChecked) {
+                            category = "Other"
+                        }
+                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dueDateChip.text.toString(), assignmentNotes.text.toString(), category)
                         editAssignmentDialog.dismiss()
 
                         dataList.clear()
@@ -198,6 +343,7 @@ class UpcomingAdapter(val context: Context,
                             map["dueDate"] =
                                 upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))
                             map["notes"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES))
+                            map["category"] = upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_CATEGORY))
                             dataList.add(map)
 
                             upcomingCursor.moveToNext()

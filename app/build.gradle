@@ -9,14 +9,15 @@ android {
         applicationId "com.cory.texarkanacollege"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 22
-        versionName "3.0.4"
+        versionCode 28
+        versionName "3.0.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -83,9 +84,9 @@ dependencies {
 
     implementation 'com.github.zcweng:switch-button:0.0.3'
 
-    implementation 'com.alexvasilkov:gesture-views:2.8.3'
-
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    implementation 'org.honorato.multistatetogglebutton:multistatetogglebutton:0.2.2'
 }

@@ -81,8 +81,6 @@ class ClassesFragment: Fragment() {
 
                     val toggleGroup = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleGroup)
 
-
-
                     val mon = dialog.findViewById<MaterialButton>(R.id.mon)
                     val tue = dialog.findViewById<MaterialButton>(R.id.tue)
                     val wed = dialog.findViewById<MaterialButton>(R.id.wed)

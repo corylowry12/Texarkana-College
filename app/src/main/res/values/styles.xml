@@ -6,6 +6,8 @@
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="colorControlActivated">@color/blue</item>
+        <item name="colorControlNormal">@color/transparent</item>
+        <item name="android:textColorHighlight">@color/itemIndicatorColor</item>
     </style>
 
     <style name="toggleButton" parent="Widget.Material3.Button.OutlinedButton" >

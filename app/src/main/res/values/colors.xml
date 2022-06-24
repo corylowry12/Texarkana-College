@@ -9,10 +9,14 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="itemIndicatorColor">#519ACC</color>
     <color name="patchNotesBadgeColor">#807F7F</color>
+    <color name="toolBarScrimColor">#4281AC</color>
 
     <color name="urgentPostRed">#E36161</color>
 
     <color name="transparent">#00000000</color>
     <color name="redBadgeColor">#D36C6C</color>
     <color name="redAccent">#E53935</color>
+
+    <color name="examCardBackgroundColor">#EAA844</color>
+    <color name="homeworkCardBackgroundColor">#2FAF5E</color>
 </resources>

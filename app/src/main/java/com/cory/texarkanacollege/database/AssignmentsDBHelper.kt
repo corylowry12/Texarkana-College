@@ -60,7 +60,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         dueDate: String,
         notes: String,
         status: String,
-        className: String
+        className: String,
+        assignmentCategory : String
     ) {
         val values = ContentValues()
         values.put(COLUMN_ASSIGNMENT_NAME, assignmentName)
@@ -68,6 +69,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         values.put(COLUMN_NOTES, notes)
         values.put(COLUMN_STATUS, status)
         values.put(COLUMN_CLASS_NAME, className)
+        values.put(COLUMN_CATEGORY, assignmentCategory)
 
         val db = this.writableDatabase
         db.insert(TABLE_NAME, null, values)
@@ -145,6 +147,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         values.put(COLUMN_CLASS_NAME, className)
         values.put(COLUMN_ASSIGNMENT_DUE_DATE, classTime)
         values.put(COLUMN_NOTES, notes)
+        values.put(COLUMN_CATEGORY, category)
 
         val db = this.writableDatabase
 

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
-import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.appbar.MaterialToolbar
@@ -21,7 +20,7 @@ class WhyChoooseTCFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_why_chooose_t_c, container, false)
+        return inflater.inflate(R.layout.fragment_why_choose_t_c, container, false)
     }
 
 

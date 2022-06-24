@@ -1,5 +1,7 @@
 package com.cory.texarkanacollege.fragments
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -78,6 +80,8 @@ class ViewCommunityBoardPostFragment : Fragment() {
     lateinit var mGoogleSignInOptions: GoogleSignInOptions
     private lateinit var firebaseAuth: FirebaseAuth
 
+    private lateinit var communityBoardPostViewRecyclerView : RecyclerView
+
     private lateinit var viewCommunityBoardPostCommentsAdapter: ViewCommunityBoardPostCommentsAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
     private val sortedData = ArrayList<HashMap<String, String>>()
@@ -100,9 +104,40 @@ class ViewCommunityBoardPostFragment : Fragment() {
                     "You have successfully been logged in",
                     Toast.LENGTH_SHORT
                 ).show()
-                activity?.findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)?.menu?.findItem(
-                    R.id.signOut
-                )?.title = "Sign Out"
+                val materialToolbar = activity?.findViewById<MaterialToolbar>(R.id.viewPostToolbar)
+                database.child("posts").child(childPosition.toString()).child("likes").orderByKey()
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (i in snapshot.children) {
+                                if (i.key == firebaseAuth.currentUser?.uid) {
+                                    if (i.child("liked").value == true) {
+                                        materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_baseline_favorite_24
+                                            )
+
+                                    } else {
+                                        materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_baseline_favorite_border_24
+                                            )
+                                        Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.press_like_again_to_like_the_post),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
             } else if (it.exception is FirebaseAuthInvalidUserException) {
                 Toast.makeText(requireContext(), "Sorry, you have been banned", Toast.LENGTH_SHORT)
                     .show()
@@ -142,6 +177,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        communityBoardPostViewRecyclerView =
+            requireActivity().findViewById<RecyclerView>(R.id.commentRecyclerView)
+        communityBoardPostViewRecyclerView.visibility = View.GONE
+
         swipeRefreshLayout = view.findViewById(R.id.communityBoardPostSwipeRefreshLayout)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -150,130 +189,8 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
         gridLayoutManager = GridLayoutManager(requireContext(), 1)
 
-        val args = arguments
-        val name = args?.getString("name", "")
-        val title = args?.getString("title", "")
-        val content = args?.getString("content", "")
-        val imageURL = args?.getString("imageURL", "")
-        childPosition = args?.getString("childPosition", "")
-        val date = args?.getString("date", "")
-        val profilePicURL = args?.getString("profilePicURL", "")
-        val email = args?.getString("email", "")
-        val pinned = args?.getString("pinned", "")
 
-        val pinnedChip = requireActivity().findViewById<Chip>(R.id.communityBoardPostPinnedChip)
-        if (pinned == "true") {
-            pinnedChip.visibility = View.VISIBLE
-        }
-        else {
-            pinnedChip.visibility = View.GONE
-        }
-
-        val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
-        dateChip?.text = date
-
-        val circularProgressDrawable = CircularProgressDrawable(requireContext())
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
-        circularProgressDrawable.start()
-
-        val circularProgressDrawableImage = CircularProgressDrawable(requireContext())
-        circularProgressDrawableImage.strokeWidth = 5f
-        circularProgressDrawableImage.centerRadius = 30f
-        circularProgressDrawableImage.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
-        circularProgressDrawableImage.start()
-
-        val profileImageView =
-            requireActivity().findViewById<CircleImageView>(R.id.profilePicViewPost)
-
-        Glide.with(requireContext())
-            .load(profilePicURL)
-            .placeholder(circularProgressDrawable)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .placeholder(R.drawable.ic_baseline_broken_image_24)
-            .into(profileImageView!!)
-
-        val imageView = activity?.findViewById<ImageView>(R.id.imageView)
-
-        if (imageURL == "" || imageURL == null) {
-            imageView!!.visibility = View.GONE
-        } else {
-            Glide.with(requireContext())
-                .load(imageURL)
-                .error(R.drawable.ic_baseline_broken_image_24)
-                .fitCenter()
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .placeholder(circularProgressDrawableImage)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        imageView?.visibility = View.GONE
-                        return false
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-
-
-
-                        return false
-                    }
-                })
-                .into(imageView!!)
-        }
-
-        imageView.setOnClickListener {
-            val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
-            val bs = ByteArrayOutputStream()
-            val b : Bitmap = imageView.drawable.toBitmap()
-            b.compress(Bitmap.CompressFormat.PNG, 100, bs)
-            intent.putExtra("image", bs.toByteArray())
-            startActivity(intent)
-        }
-
-        imageView.setOnLongClickListener {
-            val viewImageDialog =
-                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-            val layout =
-                LayoutInflater.from(context).inflate(R.layout.view_image_long_press_layout, null)
-            val imageView2 = layout.findViewById<ImageView>(R.id.viewImageImageView)
-            imageView2.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.transparent
-                )
-            )
-            Glide.with(requireContext())
-                .load(imageView.drawable)
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(imageView2)
-            viewImageDialog.setView(layout)
-            viewImageDialog.show()
-            return@setOnLongClickListener true
-        }
-
-        val nameTextView = activity?.findViewById<TextView>(R.id.nameTextView)
-        val titleTextView = activity?.findViewById<TextView>(R.id.postTitleTextView)
-        val contentTextView = activity?.findViewById<TextView>(R.id.postContentTextView)
-        val emailTextView = activity?.findViewById<TextView>(R.id.emailTextView)
-
-        nameTextView!!.text = name
-        titleTextView!!.text = "Title: " + title
-        contentTextView!!.text = content
-        emailTextView!!.text = email
+        loadItems()
 
         loadIntoList(childPosition.toString())
 
@@ -344,6 +261,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
+            loadItems()
             loadIntoList(childPosition.toString())
         }
 
@@ -396,11 +314,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
                             GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
                         val signInIntent: Intent = mGoogleSignInClient.signInIntent
                         getSignInData.launch(signInIntent)
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.press_like_again_to_like_the_post),
-                            Toast.LENGTH_SHORT
-                        ).show()
+
                     } else {
                         database.child("posts").child(childPosition.toString()).child("likes")
                             .orderByKey()
@@ -527,6 +441,117 @@ class ViewCommunityBoardPostFragment : Fragment() {
         }
     }
 
+    private fun loadItems() {
+
+        val args = arguments
+        val name = args?.getString("name", "")
+        val title = args?.getString("title", "")
+        val content = args?.getString("content", "")
+        val imageURL = args?.getString("imageURL", "")
+        childPosition = args?.getString("childPosition", "")
+        val date = args?.getString("date", "")
+        val profilePicURL = args?.getString("profilePicURL", "")
+        val email = args?.getString("email", "")
+        val pinned = args?.getString("pinned", "")
+
+        val pinnedChip = requireActivity().findViewById<Chip>(R.id.communityBoardPostPinnedChip)
+        if (pinned == "true") {
+            pinnedChip.visibility = View.VISIBLE
+        }
+        else {
+            pinnedChip.visibility = View.GONE
+        }
+
+        val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
+        dateChip?.text = date
+
+        val circularProgressDrawable = CircularProgressDrawable(requireContext())
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
+        circularProgressDrawable.start()
+
+        val circularProgressDrawableImage = CircularProgressDrawable(requireContext())
+        circularProgressDrawableImage.strokeWidth = 5f
+        circularProgressDrawableImage.centerRadius = 30f
+        circularProgressDrawableImage.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
+        circularProgressDrawableImage.start()
+
+        val profileImageView =
+            requireActivity().findViewById<CircleImageView>(R.id.profilePicViewPost)
+
+        Glide.with(requireContext())
+            .load(profilePicURL)
+            .placeholder(circularProgressDrawable)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .into(profileImageView!!)
+
+        val imageView = activity?.findViewById<ImageView>(R.id.imageView)
+
+        if (imageURL == "" || imageURL == null) {
+            imageView!!.visibility = View.GONE
+        } else {
+            Glide.with(requireContext())
+                .load(imageURL)
+                .error(R.drawable.ic_baseline_broken_image_24)
+                .fitCenter()
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(circularProgressDrawableImage)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        imageView?.visibility = View.GONE
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        imageView?.visibility = View.VISIBLE
+
+
+                        return false
+                    }
+                })
+                .into(imageView!!)
+        }
+
+        imageView.setOnClickListener {
+            try {
+                val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
+                val bs = ByteArrayOutputStream()
+                val b: Bitmap = imageView.drawable.toBitmap()
+                b.compress(Bitmap.CompressFormat.PNG, 100, bs)
+                intent.putExtra("image", bs.toByteArray())
+                startActivity(intent)
+            }
+            catch (e: Exception) {
+                Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val nameTextView = activity?.findViewById<TextView>(R.id.nameTextView)
+        val titleTextView = activity?.findViewById<TextView>(R.id.postTitleTextView)
+        val contentTextView = activity?.findViewById<TextView>(R.id.postContentTextView)
+        val emailTextView = activity?.findViewById<TextView>(R.id.emailTextView)
+
+        nameTextView!!.text = name
+        titleTextView!!.text = "Title: " + title
+        contentTextView!!.text = content
+        emailTextView!!.text = email
+
+    }
+
     private fun submitComment(commentText: String, childPosition: String) {
         if (commentText == "") {
             Toast.makeText(
@@ -646,11 +671,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
                             sortedData.add(i)
                         }
 
-                        val communityBoardPostViewRecyclerView =
-                            activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)
-                        communityBoardPostViewRecyclerView?.layoutManager = gridLayoutManager
-                        communityBoardPostViewRecyclerView?.adapter =
+                        communityBoardPostViewRecyclerView.layoutManager = gridLayoutManager
+                        communityBoardPostViewRecyclerView.adapter =
                             viewCommunityBoardPostCommentsAdapter
+                        communityBoardPostViewRecyclerView.visibility = View.VISIBLE
 
                         println("children count " + childrenCount)
                         swipeRefreshLayout.isRefreshing = false

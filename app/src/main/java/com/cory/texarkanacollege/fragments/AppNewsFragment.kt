@@ -47,8 +47,6 @@ class AppNewsFragment : Fragment() {
     private var sizeKnownIssues = 0
     private var sizeRoadMap = 0
 
-    private var themeSelection = false
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,11 +72,9 @@ class AppNewsFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(
             requireContext(),
             R.style.AlertDialogStyle)
-        val progressBar =
-            ProgressBar(requireContext(), null, android.R.attr.progressBarStyleLarge)
-
-        dialog.setTitle("Fetching The Latest App News...")
-        dialog.setView(progressBar)
+        val dialogLayout = layoutInflater.inflate(R.layout.fetching_dialog_layout, null)
+        dialog.setCancelable(false)
+        dialog.setView(dialogLayout)
         dialog.setNegativeButton("Cancel") { d, _ ->
             d.dismiss()
             activity?.supportFragmentManager?.popBackStack()

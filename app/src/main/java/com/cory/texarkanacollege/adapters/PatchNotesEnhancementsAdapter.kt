@@ -33,10 +33,6 @@ class PatchNotesEnhancementsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        val layout2 = holder.itemView.findViewById<RelativeLayout>(R.id.relativeLayoutPatchNotes)
-        val layoutTransition2 = layout2.layoutTransition
-        layoutTransition2.enableTransitionType(LayoutTransition.CHANGING)
-
         (holder as PatchNotesEnhancementsAdapter.ViewHolder).bind(position)
     }
 

@@ -238,6 +238,7 @@ class CommunityBoardAdapter(val context: Context,
                             recyclerView.layoutManager = LinearLayoutManager(context)
                             bottomSheetDialog.setContentView(editGradeBottomSheetView)
                             bottomSheetDialog.show()
+                            dialog.dismiss()
                         }
                         else {
                             Toast.makeText(context, "There are no likes for this post", Toast.LENGTH_SHORT).show()

@@ -16,6 +16,7 @@ import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,8 +33,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
@@ -53,6 +56,8 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val client = OkHttpClient()
+
+    private lateinit var appUpdateManager : AppUpdateManager
 
     var path = ""
 
@@ -119,9 +124,11 @@ class MainActivity : AppCompatActivity() {
         if (installState.installStatus() == InstallStatus.DOWNLOADED) {
             val materialAlertDialogBuilder =
                 MaterialAlertDialogBuilder(this, R.style.AlertDialogStyle)
+            materialAlertDialogBuilder.setCancelable(false)
             materialAlertDialogBuilder.setTitle("Update Downloaded")
             materialAlertDialogBuilder.setMessage("App Update Downloaded, click restart to install")
             materialAlertDialogBuilder.setPositiveButton("Restart") { _, _ ->
+                appUpdateManager.completeUpdate()
                 val intent =
                     packageManager.getLaunchIntentForPackage(packageName)
                 intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -131,10 +138,17 @@ class MainActivity : AppCompatActivity() {
             }
             materialAlertDialogBuilder.show()
         }
+        else if (installState.installStatus() == InstallStatus.INSTALLED) {
+            unregister()
+        }
+    }
+
+    private fun unregister() {
+        appUpdateManager.unregisterListener(listener)
     }
 
     private fun checkUpdate() {
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateManager.registerListener(listener)
         appUpdateInfoTask.addOnSuccessListener {
@@ -565,6 +579,39 @@ class MainActivity : AppCompatActivity() {
         viewPostCommunityBoardFragment.setTextView()
     }
 
+    fun campusMapWidgetExit() {
+        if (resources.getBoolean(R.bool.isTablet)) {
+            val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (homeFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                } else if (classesFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (assignmentFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (settingsFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+            }, 200)
+        }
+        else {
+            val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (homeFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                } else if (classesFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (assignmentFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (settingsFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+            }, 200)
+        }
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
 
@@ -598,5 +645,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }, 200)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        appUpdateManager.unregisterListener(listener)
     }
 }

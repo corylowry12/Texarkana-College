@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.appbar.MaterialToolbar
@@ -28,6 +29,11 @@ class CampusMapFragment : Fragment() {
         val toolBar = activity?.findViewById<MaterialToolbar>(R.id.materialToolbarCampusMap)
         toolBar?.setNavigationOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
+
+            val runnable = Runnable {
+                (context as MainActivity).campusMapWidgetExit()
+            }
+            MainActivity().runOnUiThread(runnable)
         }
 
         val pdfViewer = view.findViewById<PDFView>(R.id.pdfViewer)

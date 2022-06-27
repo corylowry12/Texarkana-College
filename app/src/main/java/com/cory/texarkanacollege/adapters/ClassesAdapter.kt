@@ -10,10 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -26,6 +23,7 @@ import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.GradeFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -238,6 +236,16 @@ class ClassesAdapter(
                 LayoutInflater.from(context).inflate(R.layout.options_bottom_sheet, null)
             dialog.setCancelable(false)
             dialog.setContentView(addGradeView)
+
+            if (context.resources.getBoolean(R.bool.isTablet)) {
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.skipCollapsed = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.isDraggable = false
+            }
 
             val headingTextView = dialog.findViewById<TextView>(R.id.headingTextView)
             headingTextView!!.text = "Options/" + dataItem["className"]

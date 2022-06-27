@@ -180,7 +180,7 @@ class ClassesAdapter(
             val spannable = SpannableString("Class Average: " + average.toString() + "%")
             if (average >= 90) {
                 spannable.setSpan(
-                    ForegroundColorSpan(Color.GREEN),
+                    ForegroundColorSpan(Color.parseColor("#46ad21")),
                     "Class Average: ".length,
                     "Class Average: ".length + average.toString().length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.DatabaseUtils
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
 import java.util.*
@@ -91,27 +92,41 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
     fun upcomingMarkAsDone(
         doneStatus: String,
         id: String
-    ) {
+    ): Cursor {
         val values = ContentValues()
         values.put(COLUMN_STATUS, doneStatus)
 
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         db.update(TABLE_NAME, values, "$COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID =?", arrayOf(id))
+        return db.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME WHERE $COLUMN_ASSIGNMENT_DUE_DATE >= '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID = $id", null)
+    }
+
+    fun update(
+        id: String,
+        date: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_ASSIGNMENT_DUE_DATE, date)
+
+        val db = this.writableDatabase
+
+        db.update(TABLE_NAME, values, "$COLUMN_ID =?", arrayOf(id))
     }
 
     fun pastDueMarkAsDone(
         doneStatus: String,
         id: String
-    ) {
+    ): Cursor {
         val values = ContentValues()
         values.put(COLUMN_STATUS, doneStatus)
 
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         db.update(TABLE_NAME, values, "$COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID =?", arrayOf(id))
+        return db.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME WHERE $COLUMN_ASSIGNMENT_DUE_DATE < '$dateFormatted' AND $COLUMN_STATUS != 'done' AND $COLUMN_ID = $id", null)
     }
 
     fun doneMarkAsUndone(
@@ -169,9 +184,8 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
     }
 
     fun getUpcoming(): Cursor {
-
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         return db.query(
             TABLE_NAME,
@@ -188,14 +202,14 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
             null,
             null,
             null,
-            null
+            "$COLUMN_ASSIGNMENT_DUE_DATE ASC"
         )
     }
 
     fun getUpcomingSingleRow(id: String): Cursor {
 
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         return db.query(
             TABLE_NAME,
@@ -219,7 +233,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
     fun getPastDue(): Cursor {
 
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         return db.query(
             TABLE_NAME,
@@ -236,7 +250,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
             null,
             null,
             null,
-            null
+            "$COLUMN_ASSIGNMENT_DUE_DATE ASC"
         )
 
     }
@@ -244,7 +258,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
     fun getPastDueSingleRow(id: String): Cursor {
 
         val db = this.writableDatabase
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
         return db.query(
             TABLE_NAME,

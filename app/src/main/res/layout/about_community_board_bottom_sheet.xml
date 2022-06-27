@@ -41,7 +41,7 @@
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.Material3.CardView.Filled"
+        style="@style/Widget.Material3.CardView.Elevated"
         app:cardCornerRadius="28dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
         <ProgressBar
             android:id="@+id/tosProgressBar"

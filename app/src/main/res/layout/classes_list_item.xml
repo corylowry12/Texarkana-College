@@ -100,7 +100,7 @@
                 app:layout_constraintTop_toBottomOf="@id/row_class_time"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText"
-                android:layout_marginStart="4dp"/>
+                android:layout_marginStart="4dp" />
 
             <ImageView
                 android:id="@+id/chevronImage"

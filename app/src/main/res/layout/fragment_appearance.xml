@@ -43,16 +43,22 @@
         android:padding="10dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themeCardView"
             style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="28dp">
+            app:cardCornerRadius="28dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp">
+                android:layout_height="wrap_content">
 
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -90,6 +96,49 @@
             </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/darkWebViewCardView"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true"
+                android:layout_below="@id/themeCardView"
+                app:cardBackgroundColor="@color/cardViewLightBlue" >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/darkWebViewConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Force WebView to be Dark"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="10dp"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toStartOf="@id/darkWebViewSwitch"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <com.suke.widget.SwitchButton
+                        android:id="@+id/darkWebViewSwitch"
+                        app:sb_show_indicator="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:sb_checked_color="@color/blue"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

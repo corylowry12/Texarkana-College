@@ -29,6 +29,8 @@ import com.cory.texarkanacollege.adapters.GradesAdapter
 import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.database.GradesDBHelper
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -101,12 +103,15 @@ class GradeFragment : Fragment() {
                     val addGradeView = layoutInflater.inflate(R.layout.add_grade_bottom_sheet, null)
                     dialog.setCancelable(false)
                     dialog.setContentView(addGradeView)
-                    val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
-                    val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    bottomSheetBehavior.skipCollapsed = true
-                    bottomSheetBehavior.isHideable = false
-                    bottomSheetBehavior.isDraggable = false
+                    if (resources.getBoolean(R.bool.isTablet)) {
+                        val bottomSheet =
+                            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        bottomSheetBehavior.skipCollapsed = true
+                        bottomSheetBehavior.isHideable = false
+                        bottomSheetBehavior.isDraggable = false
+                    }
                     val addGradeButton = dialog.findViewById<Button>(R.id.addGradeButton)
                     val cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
                     val nameEditText = dialog.findViewById<TextInputEditText>(R.id.name)

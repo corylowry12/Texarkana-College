@@ -180,6 +180,7 @@ class CommunityBoardFragment : Fragment() {
 
         val swipeRefreshLayout =
             requireView().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue)
         swipeRefreshLayout.setOnRefreshListener {
             loadIntoList()
             swipeRefreshLayout.isRefreshing = false

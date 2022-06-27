@@ -23,6 +23,7 @@ import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.GradeFragment
 import com.cory.texarkanacollege.fragments.ViewAssignmentFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -31,6 +32,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.suke.widget.SwitchButton
+import java.lang.IndexOutOfBoundsException
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,7 +58,12 @@ class UpcomingAdapter(val context: Context,
 
             className.text = "Class Name: " + dataItem["className"]
             title.text = "Assignment Name: " + dataItem["assignmentName"]
-            classTime.text = "Due Date: " + dataItem["dueDate"]
+
+                val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormatted = formatter.parse(dataItem["dueDate"].toString()) as Date
+                val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted2 = formatter2.format(dateFormatted)
+                classTime.text = "Due Date: " + dateFormatted2.toString()
 
             if (CategoryTextViewVisible(context).loadCategoryTextView()) {
                 category.visibility = View.VISIBLE
@@ -107,6 +114,15 @@ class UpcomingAdapter(val context: Context,
                         )
                     )
             }
+            else {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.cardViewLightBackgroundColor
+                        )
+                    )
+            }
         }
 
         holder.itemView.setOnClickListener {
@@ -130,6 +146,20 @@ class UpcomingAdapter(val context: Context,
                 LayoutInflater.from(context).inflate(R.layout.assignment_options_bottom_sheet, null)
             dialog.setCancelable(false)
             dialog.setContentView(assignmentOptionsView)
+
+            if (context.resources.getBoolean(R.bool.isTablet)) {
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.skipCollapsed = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.isDraggable = false
+            }
+
+            val headingTextView = dialog.findViewById<TextView>(R.id.headingTextView)
+            headingTextView!!.text = "Options/" + dataItem["assignmentName"]
+
             val editButton = assignmentOptionsView.findViewById<Button>(R.id.editButton)
             val markAsDoneButton = assignmentOptionsView.findViewById<Button>(R.id.doneButton)
             val deleteButton = assignmentOptionsView.findViewById<Button>(R.id.deleteButton)
@@ -277,17 +307,36 @@ class UpcomingAdapter(val context: Context,
                 val cancelButtonEditAssignment = addAssignmentView.findViewById<Button>(R.id.cancelButton)
                 val dueDateChip = addAssignmentView.findViewById<Chip>(R.id.dueDateChip)
 
-                dueDateChip.text = dataItem["dueDate"]
+                val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormatted2 = formatter.parse(dataItem["dueDate"]!!)
+                val dateFormattedStored = formatter.format(dateFormatted2!!)
+                val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted3 = formatter2.format(dateFormatted2)
+                dueDateChip.text = dateFormatted3.toString()
+
                 val adapter =
                     ArrayAdapter(context, R.layout.list_item, classesArray)
                 classesMenu.setAdapter(adapter)
                 classesMenu.setText(dataItem["className"], false)
 
+                var dateFormattedSimple2 = dateFormattedStored
                 dueDateChip.setOnClickListener {
                     val datePicker = DatePickerDialog(
                         context, R.style.datePickerLight
                     )
                     datePicker.setCancelable(false)
+
+                    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                    val date = dateFormatter.parse(dataItem["dueDate"]!!)
+                    val monthFormat = SimpleDateFormat("MM", Locale.ENGLISH)
+                    val month = monthFormat.format(date!!)
+                    val yearFormat = SimpleDateFormat("yyyy", Locale.ENGLISH)
+                    val year = yearFormat.format(date)
+                    val dayFormat = SimpleDateFormat("dd", Locale.ENGLISH)
+                    val day = dayFormat.format(date)
+
+                    datePicker.updateDate(year.toInt(), (month.toInt() - 1), day.toInt())
+
                     datePicker.datePicker.minDate = System.currentTimeMillis()
 
                     datePicker.show()
@@ -298,16 +347,20 @@ class UpcomingAdapter(val context: Context,
                         datePicker.getButton(DatePickerDialog.BUTTON_NEGATIVE)
 
                     positiveButton.setOnClickListener {
-                        val year = datePicker.datePicker.year
-                        val month = datePicker.datePicker.month
-                        val day = datePicker.datePicker.dayOfMonth
+                        val year2 = datePicker.datePicker.year
+                        val month2 = datePicker.datePicker.month
+                        val day2 = datePicker.datePicker.dayOfMonth
 
                         val calendar = Calendar.getInstance()
-                        calendar.set(year, month, day)
-                        val simpleDateFormat =
-                            SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                        calendar.set(year2, month2, day2)
+
+                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
                         val dateFormattedSimple = simpleDateFormat.format(calendar.time)
-                        dueDateChip.text = dateFormattedSimple
+                        val dateFormatterSimple = simpleDateFormat.parse(dateFormattedSimple)
+                        dateFormattedSimple2 = dateFormattedSimple
+                        val formatterSimple = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                        val dateFormattedSimple3 = formatterSimple.format(dateFormatterSimple!!)
+                        dueDateChip.text = dateFormattedSimple3
                         datePicker.dismiss()
                     }
                 }
@@ -327,7 +380,7 @@ class UpcomingAdapter(val context: Context,
                         else if (otherToggle.isChecked) {
                             category = "Other"
                         }
-                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dueDateChip.text.toString(), assignmentNotes.text.toString(), category)
+                        AssignmentsDBHelper(context, null).update(dataItem["id"].toString(), assignmentName.text.toString(), classesMenu.text.toString(), dateFormattedSimple2, assignmentNotes.text.toString(), category)
                         editAssignmentDialog.dismiss()
 
                         dataList.clear()
@@ -349,7 +402,18 @@ class UpcomingAdapter(val context: Context,
                             upcomingCursor.moveToNext()
 
                         }
-                        notifyItemRangeChanged(0, dataList.count())
+                        try {
+                            notifyItemRangeChanged(0, dataList.count())
+                        }
+                        catch (e: IndexOutOfBoundsException) {
+                            e.printStackTrace()
+                            notifyItemRemoved(holder.adapterPosition)
+                        }
+
+                        val loadIntoList = Runnable {
+                            (context as MainActivity).assignmentLoadIntoList()
+                        }
+                        MainActivity().runOnUiThread(loadIntoList)
                     }
                 }
                 cancelButtonEditAssignment.setOnClickListener {

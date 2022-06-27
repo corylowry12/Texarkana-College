@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.cory.texarkanacollege.fragments.GradeFragment
 import com.cory.texarkanacollege.fragments.ViewAssignmentFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -30,6 +32,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.suke.widget.SwitchButton
 import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class DoneAdapter(val context: Context,
                       private val dataList:  ArrayList<HashMap<String, String>>
@@ -49,7 +55,11 @@ class DoneAdapter(val context: Context,
 
             className.text = "Class Name: " + dataItem["className"]
             title.text = "Assignment Name: " + dataItem["assignmentName"]
-            classTime.text = "Due Date: " + dataItem["dueDate"]
+            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val dateFormatted = formatter.parse(dataItem["dueDate"].toString()) as Date
+            val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+            val dateFormatted2 = formatter2.format(dateFormatted)
+            classTime.text = "Due Date: " + dateFormatted2.toString()
 
             if (CategoryTextViewVisible(context).loadCategoryTextView()) {
                 category.visibility = View.VISIBLE
@@ -99,6 +109,15 @@ class DoneAdapter(val context: Context,
                         )
                     )
             }
+            else {
+                holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem)
+                    .setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.cardViewLightBackgroundColor
+                        )
+                    )
+            }
         }
 
         holder.itemView.setOnClickListener {
@@ -122,6 +141,21 @@ class DoneAdapter(val context: Context,
                 LayoutInflater.from(context).inflate(R.layout.assignment_options_bottom_sheet, null)
             dialog.setCancelable(false)
             dialog.setContentView(assignmentOptionsView)
+
+            if (context.resources.getBoolean(R.bool.isTablet)) {
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.skipCollapsed = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.isDraggable = false
+            }
+
+
+            val headingTextView = dialog.findViewById<TextView>(R.id.headingTextView)
+            headingTextView!!.text = "Options/" + dataItem["assignmentName"]
+
             val editButton = assignmentOptionsView.findViewById<Button>(R.id.editButton)
             val deleteButton = assignmentOptionsView.findViewById<Button>(R.id.deleteButton)
             val cancelButton = assignmentOptionsView.findViewById<Button>(R.id.cancelButton)

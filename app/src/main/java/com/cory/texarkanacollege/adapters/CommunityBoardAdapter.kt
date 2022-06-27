@@ -139,15 +139,22 @@ class CommunityBoardAdapter(val context: Context,
                 val editPostViewLikesButton = dialog.findViewById<Button>(R.id.editPostViewLikesButton)
 
                 editPostViewLikesButton?.setOnClickListener {
-                    val bottomSheetDialog = BottomSheetDialog(context)
-                    val editGradeBottomSheetView =
-                        LayoutInflater.from(context).inflate(R.layout.view_likes_bottom_sheet, null)
-                    val recyclerView = editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
-                    val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
-                    recyclerView.adapter = viewLikesAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(context)
-                    bottomSheetDialog.setContentView(editGradeBottomSheetView)
-                    bottomSheetDialog.show()
+                    if (likesDataList.isNotEmpty()) {
+                        val bottomSheetDialog = BottomSheetDialog(context)
+                        val editGradeBottomSheetView =
+                            LayoutInflater.from(context)
+                                .inflate(R.layout.view_likes_bottom_sheet, null)
+                        val recyclerView =
+                            editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
+                        val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
+                        recyclerView.adapter = viewLikesAdapter
+                        recyclerView.layoutManager = LinearLayoutManager(context)
+                        bottomSheetDialog.setContentView(editGradeBottomSheetView)
+                        bottomSheetDialog.show()
+                    }
+                    else {
+                        Toast.makeText(context, "There are no likes for this post", Toast.LENGTH_SHORT).show()
+                    }
                     dialog.dismiss()
                 }
 
@@ -219,16 +226,22 @@ class CommunityBoardAdapter(val context: Context,
                     val editPostViewLikesButton = dialog.findViewById<Button>(R.id.editPostViewLikesButton)
 
                     editPostViewLikesButton?.setOnClickListener {
-                        val bottomSheetDialog = BottomSheetDialog(context)
-                        val editGradeBottomSheetView =
-                            LayoutInflater.from(context).inflate(R.layout.view_likes_bottom_sheet, null)
-                        val recyclerView = editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
-                        val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
-                        recyclerView.adapter = viewLikesAdapter
-                        recyclerView.layoutManager = LinearLayoutManager(context)
-                        bottomSheetDialog.setContentView(editGradeBottomSheetView)
-                        bottomSheetDialog.show()
-                        dialog.dismiss()
+                        if (likesDataList.isNotEmpty()) {
+                            val bottomSheetDialog = BottomSheetDialog(context)
+                            val editGradeBottomSheetView =
+                                LayoutInflater.from(context)
+                                    .inflate(R.layout.view_likes_bottom_sheet, null)
+                            val recyclerView =
+                                editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
+                            val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
+                            recyclerView.adapter = viewLikesAdapter
+                            recyclerView.layoutManager = LinearLayoutManager(context)
+                            bottomSheetDialog.setContentView(editGradeBottomSheetView)
+                            bottomSheetDialog.show()
+                        }
+                        else {
+                            Toast.makeText(context, "There are no likes for this post", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     editPostEditButton?.visibility = View.GONE

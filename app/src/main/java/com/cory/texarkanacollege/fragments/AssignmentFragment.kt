@@ -23,10 +23,12 @@ import com.cory.texarkanacollege.adapters.ClassesAdapter
 import com.cory.texarkanacollege.adapters.DoneAdapter
 import com.cory.texarkanacollege.adapters.PastDueAdapter
 import com.cory.texarkanacollege.adapters.UpcomingAdapter
+import com.cory.texarkanacollege.classes.DefaultCategoryData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -107,6 +109,15 @@ class AssignmentFragment : Fragment() {
                             layoutInflater.inflate(R.layout.add_assignment_bottom_sheet, null)
                         dialog.setCancelable(false)
                         dialog.setContentView(addAssignmentView)
+                        if (resources.getBoolean(R.bool.isTablet)) {
+                            val bottomSheet =
+                                dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            bottomSheetBehavior.skipCollapsed = true
+                            bottomSheetBehavior.isHideable = false
+                            bottomSheetBehavior.isDraggable = false
+                        }
                         val classesMenu =
                             addAssignmentView.findViewById<MaterialAutoCompleteTextView>(R.id.classesAutoComplete)
 
@@ -122,8 +133,33 @@ class AssignmentFragment : Fragment() {
                         val homeworkToggle = addAssignmentView.findViewById<MaterialButton>(R.id.homeworkToggle)
                         val otherToggle = addAssignmentView.findViewById<MaterialButton>(R.id.otherToggle)
 
-                        otherToggle.isChecked = true
-                        otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
+                        if (DefaultCategoryData(requireContext()).loadDefaultCategory() == 0) {
+                            examToggle.isChecked = true
+                            examToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+                        }
+                        else if (DefaultCategoryData(requireContext()).loadDefaultCategory() == 1) {
+                            homeworkToggle.isChecked = true
+                            homeworkToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+                        }
+                        else if (DefaultCategoryData(requireContext()).loadDefaultCategory() == 2) {
+                            otherToggle.isChecked = true
+                            otherToggle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.toggleButtonCheckedBackground
+                                )
+                            )
+                        }
 
                         categoryToggleGroup.forEach {
                             examToggle.setOnClickListener {
@@ -192,62 +228,14 @@ class AssignmentFragment : Fragment() {
                             }
                         }
 
-                        /*categoryToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                            if (checkedId.toString().endsWith("501")) {
-                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                examToggle.isChecked = true
-                            }
-                            else if (checkedId.toString().endsWith("502")) {
-                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                homeworkToggle.isChecked = true
-                            }
-                            else {
-                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                                otherToggle.isChecked = true
-                            }
-                        }
-
-                        examToggle?.setOnClickListener {
-                            if (examToggle.isChecked) {
-                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                            }
-                            else {
-                                examToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                            }
-                        }
-
-                        homeworkToggle?.setOnClickListener {
-                            if (homeworkToggle.isChecked) {
-                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                            }
-                            else {
-                                homeworkToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                            }
-                        }
-
-                        otherToggle?.setOnClickListener {
-                            homeworkToggle.isChecked = false
-                            examToggle.isChecked = false
-                            if (otherToggle.isChecked) {
-                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.toggleButtonCheckedBackground))
-                            }
-                            else {
-                                otherToggle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.transparent))
-                            }
-                        }*/
-
-
                         val cancelButton = addAssignmentView.findViewById<Button>(R.id.cancelButton)
                         val dueDateChip = addAssignmentView.findViewById<Chip>(R.id.dueDateChip)
-                        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
                         val dateFormatted = formatter.format(Date())
-                        dueDateChip.text = dateFormatted
+                        val dateFormatted2 = formatter.parse(dateFormatted)
+                        val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                        val dateFormatted3 = formatter2.format(dateFormatted2!!)
+                        dueDateChip.text = dateFormatted3.toString()
                         val adapter =
                             ArrayAdapter(requireContext(), R.layout.list_item, classesArray)
                         classesMenu.setAdapter(adapter)
@@ -276,10 +264,13 @@ class AssignmentFragment : Fragment() {
 
                                 val calendar = Calendar.getInstance()
                                 calendar.set(year, month, day)
-                                val simpleDateFormat =
-                                    SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+
+                                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
                                 val dateFormattedSimple = simpleDateFormat.format(calendar.time)
-                                dueDateChip.text = dateFormattedSimple
+                                val dateFormattedSimple2 = simpleDateFormat.parse(dateFormattedSimple)
+                                val formatterSimple = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                                val dateFormattedSimple3 = formatterSimple.format(dateFormattedSimple2!!)
+                                dueDateChip.text = dateFormattedSimple3
                                 date = dateFormattedSimple
                                 datePicker.dismiss()
                             }
@@ -304,7 +295,7 @@ class AssignmentFragment : Fragment() {
                                 addAssignment(
                                     assignmentName.text.toString(),
                                     classesMenu.text.toString(),
-                                    date,
+                                    date.toString(),
                                     assignmentNotes.text.toString()
                                 ,category)
                                 loadIntoList()

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.AssignmentSettingsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/assignmentSettingsAppBar"
         android:layout_width="match_parent"
         android:layout_height="128dp"
+        android:background="@color/transparent"
         android:foreground="?attr/selectableItemBackground"
         app:liftOnScroll="true">
 
@@ -41,55 +42,84 @@
         android:overScrollMode="always"
         android:paddingBottom="25dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewSetColoredBackgrounds"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:cardBackgroundColor="@color/cardViewLightBlue"
-        app:cardCornerRadius="28dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/enableColoredBackgrounds"
+            <TextView
+                android:id="@+id/coloredBackgroundsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="Enable Colored Backgrounds"
-                android:textSize="12sp" />
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Colored backgrounds for assignments"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/disableColoredBackgrounds"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewSetColoredBackgrounds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/coloredBackgroundsTextView"
                 android:layout_marginStart="10dp"
-                android:text="Disable Colored Backgrounds"
-                android:textSize="12sp" />
+                android:layout_marginEnd="10dp"
+                app:cardBackgroundColor="@color/cardViewLightBlue"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
 
-        </RadioGroup>
-    </androidx.cardview.widget.CardView>
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/enableColoredBackgrounds"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Enable Colored Backgrounds"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/disableColoredBackgrounds"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Disable Colored Backgrounds"
+                        android:textSize="12sp" />
+
+                </RadioGroup>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/categoryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardViewSetColoredBackgrounds"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Category text view for assignments"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewEnableCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/categoryTextView"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_below="@id/cardViewSetColoredBackgrounds"
                 app:cardBackgroundColor="@color/cardViewLightBlue"
                 app:cardCornerRadius="28dp"
                 app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                android:layout_marginTop="20sp">
+                app:cardUseCompatPadding="true">
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -109,6 +139,63 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:text="Disable Category Text View"
+                        android:textSize="12sp" />
+
+                </RadioGroup>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/defaultCategoryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardViewEnableCategory"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Default category for assignments"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDefaultCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/defaultCategoryTextView"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:cardBackgroundColor="@color/cardViewLightBlue"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/examCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Exam"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/homeworkCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Homework"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/otherCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Other"
                         android:textSize="12sp" />
 
                 </RadioGroup>

@@ -24,6 +24,7 @@ import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.database.GradesDBHelper
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -72,6 +73,15 @@ class ClassesFragment: Fragment() {
                     val addGradeView = layoutInflater.inflate(R.layout.add_class_bottom_sheet, null)
                     dialog.setCancelable(false)
                     dialog.setContentView(addGradeView)
+                    if (resources.getBoolean(R.bool.isTablet)) {
+                        val bottomSheet =
+                            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        bottomSheetBehavior.skipCollapsed = true
+                        bottomSheetBehavior.isHideable = false
+                        bottomSheetBehavior.isDraggable = false
+                    }
                     val nameEditText = dialog.findViewById<TextInputEditText>(R.id.name)
                     val cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
                     val addClassButton = dialog.findViewById<Button>(R.id.addClassButton)

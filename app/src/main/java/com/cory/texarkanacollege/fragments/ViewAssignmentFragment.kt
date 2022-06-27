@@ -57,7 +57,7 @@ class ViewAssignmentFragment : Fragment() {
 
         var type2 = type
 
-        val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val dateFormatted = formatter.format(Date())
 
         val dbHandler = AssignmentsDBHelper(requireActivity().applicationContext, null)
@@ -76,16 +76,26 @@ class ViewAssignmentFragment : Fragment() {
                 R.id.markAsDone -> {
 
                     if (type2 == "upcoming") {
-                        type2 = "done"
-                        Toast.makeText(requireContext(), "Marked assignment as done", Toast.LENGTH_SHORT).show()
-                        materialToolBar.menu.findItem(R.id.markAsDone).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_remove_done_24)
-                        dbHandler.upcomingMarkAsDone("done", id.toString())
+                       val update = dbHandler.upcomingMarkAsDone("done", id.toString())
+                        if (update.count != 0) {
+                            materialToolBar.menu.findItem(R.id.markAsDone).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_remove_done_24)
+                            type2 = "done"
+                            Toast.makeText(requireContext(), "Marked assignment as done", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            Toast.makeText(requireContext(), "There was an error marking assignment as done", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     else if (type2 == "pastDue") {
-                        type2 = "done"
-                        Toast.makeText(requireContext(), "Marked assignment as done", Toast.LENGTH_SHORT).show()
-                        materialToolBar.menu.findItem(R.id.markAsDone).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_remove_done_24)
-                        dbHandler.pastDueMarkAsDone("done", id.toString())
+                        val update = dbHandler.pastDueMarkAsDone("done", id.toString())
+                        if (update.count != 0) {
+                            materialToolBar.menu.findItem(R.id.markAsDone).icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_remove_done_24)
+                            type2 = "done"
+                            Toast.makeText(requireContext(), "Marked assignment as done", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            Toast.makeText(requireContext(), "There was an error marking assignment as done", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     else if (type2 == "done") {
 
@@ -127,12 +137,16 @@ class ViewAssignmentFragment : Fragment() {
                             AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME
                         )
                     )
-                textViewDueDate.text =
-                    "Due Date: " + upcomingCursor.getString(
-                        upcomingCursor.getColumnIndex(
-                            AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
-                        )
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormat = dateFormatter.parse(upcomingCursor.getString(
+                    upcomingCursor.getColumnIndex(
+                        AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
                     )
+                )) as Date
+                val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted2 = formatter2.format(dateFormat)
+                textViewDueDate.text =
+                    "Due Date: " + dateFormatted2
                 if (upcomingCursor.getString(upcomingCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES)) == "") {
                     textViewNotes.visibility = View.GONE
                 } else {
@@ -164,12 +178,17 @@ class ViewAssignmentFragment : Fragment() {
                             AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME
                         )
                     )
-                textViewDueDate.text =
-                    "Due Date: " + pastDueCursor.getString(
-                        pastDueCursor.getColumnIndex(
-                            AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
-                        )
+
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormat = dateFormatter.parse(pastDueCursor.getString(
+                    pastDueCursor.getColumnIndex(
+                        AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
                     )
+                )) as Date
+                val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted2 = formatter2.format(dateFormat)
+                textViewDueDate.text =
+                    "Due Date: " + dateFormatted2
                 if (pastDueCursor.getString(pastDueCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES)) == "") {
                     textViewNotes.visibility = View.GONE
                 } else {
@@ -203,12 +222,16 @@ class ViewAssignmentFragment : Fragment() {
                             AssignmentsDBHelper.COLUMN_ASSIGNMENT_NAME
                         )
                     )
-                textViewDueDate.text =
-                    "Due Date: " + doneCursor.getString(
-                        doneCursor.getColumnIndex(
-                            AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
-                        )
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormat = dateFormatter.parse(doneCursor.getString(
+                    doneCursor.getColumnIndex(
+                        AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE
                     )
+                )) as Date
+                val formatter2 = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted2 = formatter2.format(dateFormat)
+                textViewDueDate.text =
+                    "Due Date: " + dateFormatted2
                 if (doneCursor.getString(doneCursor.getColumnIndex(AssignmentsDBHelper.COLUMN_NOTES)) == "") {
                     textViewNotes.visibility = View.GONE
                 } else {

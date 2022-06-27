@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue">#013b63</color>
-    <color name="dialogLightBlue">#CAE9FF</color>
+    <color name="dialogLightBlue">#E4F4FF</color>
     <color name="cardViewLightBlue">#CAE9FF</color>
     <color name="cardViewLightBackgroundColor">#D8EFFF</color>
     <color name="toggleButtonCheckedBackground">#CAE9FF</color>
@@ -16,6 +16,8 @@
     <color name="transparent">#00000000</color>
     <color name="redBadgeColor">#D36C6C</color>
     <color name="redAccent">#E53935</color>
+
+    <color name="bottomNavBarBackground">#E8F2FA</color>
 
     <color name="examCardBackgroundColor">#EAA844</color>
     <color name="homeworkCardBackgroundColor">#2FAF5E</color>

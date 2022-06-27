@@ -24,18 +24,23 @@ import com.google.android.material.appbar.MaterialToolbar
 
 class PatchNotesFragment : Fragment() {
 
-    private var bugFixesArray = arrayOf("Fixed issue where app would crash if you clicked on an image in the community board before it loaded", "Fixed some issues with janky scrolling in the Patch Notes view",
-                                        "Fixed issue with the \"There are no comments\" text view being pushed down to the middle of the screen if you opened the community board post with no data connection",
-                                        "Fixed issue with image failing to load and it not being visible and if you refreshed it still wouldn't show up", "Fixed issue with the text selection being purple instead of blue " +
-                                        "blue when copying text when viewing a post", "Fixed some crashing issues when adding assignments and viewing them after the version 3.0.4 update")
+    private var bugFixesArray = arrayOf("Fixed issue where if you would edit an assignment and set the category to \"Other\", it wouldn't change the color", "Fixed some issues with assignments not being sorted " +
+                                        "to upcoming or past due properly if the assignment due date was in a different month than the current one", "Fixed issue with the date picker dialog not having the due date " +
+                                        "of the assignment preselected when editing assignments", "Fixed issue with the minimum date for the date picker dialog being set to the current time even though the assignment due date was in the past",
+                                        "Fixed issue where if you would edit a past due assignment and set the due date to current date or later, the updated assignment would not be removed from past due and inserted into upcoming",
+                                        "Fixed issue where the add class bottom sheet wouldn't be fully expanded on some devices", "Fixed issue where the add assignment bottom sheet wouldn't be full expanded on some devices",
+                                        "Fixed issue with the title bar in the classes view being slightly purple", "Fixed issue with the title bar in the grades view being slightly purple", "Fixed issue with the bottom nav bar being slightly purple, it is now a light blue",
+                                        "Made the background color for dialogs slightly lighter for better legibility", "Fixed issue with the title bar in settings be slightly purple when expanded", "Fixed issue with the community board having the wrong description",
+                                        "Fixed issue with the category text view section in the assignment settings having the wrong text", "Fixed issue with some bottom sheets in the assignments view not being expanded (tablets only)",
+                                        "Fixed issue where you could scroll and collapse the tool bar in the grades view if there was no grades stored", "Fixed issue where you could scroll and collapse the tool bar in the classes view if there was no classes stored",
+                                        "Fixed issue with the spinning circle when refreshing a post not respecting the theme", "Fixed issue with the spinning circle when refreshing the list of community board posts not respecting the theme",
+                                        "Fixed issue when crashing when pressing the back button (tablets only)", "Fixed issue with in app updater saying click restart, and the app wouldn't actually restart")
 
-    private var newFeaturesArray = arrayOf("Added the ability to click an image to dismiss it when viewing an image in the community board", "Added an in app updater to force you to update the app so you always have the latest and " +
-                                            "greatest version", "Added the option to set categories for your assignments", "Added colored backgrounds for each assignment category", "Added the option to enable/disable " +
-                                            "colored backgrounds for the assignments", "Added the option to enable/disable the category text view for each assignment, so you don't see it and can still have the colored background")
+    private var newFeaturesArray = arrayOf("Added the option to set a default category to be pre-selected when creating an assignment")
 
-    private var enhancementsArray = arrayOf("Slightly smaller app size", "View will now automatically refresh if you have no data connection and recover connection when viewing a post", "Now when refreshing a post when viewing " +
-                                            "it, it will reload the entire post instead of just the comments", "Redesigned the comments section for the view post to have a much nicer aesthetic", "The title bar will now be set " +
-                                             "to a blue color when it collapses when the content is scrolled")
+    private var enhancementsArray = arrayOf("Tweaked the design of the assignment settings view", "Assignments will now be sorted by the assignment due date", "Now when long pressing an assignment, the assignment name will show in the options bottom sheet so you know which assignment you are showing the options for",
+                                            "App will no longer say it marked an assignment as done if it didn't or there was an error", "Tweaked the green color for class average if you have an A in that class to make it more legible",
+                                            "A toast message will now be displayed when clicking to view likes if there are no likes for that post", "Changed the icon on the bottom nav bar for the classes tab", "Tweaked the design of the \"About the Community Board\" bottom sheet")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -182,6 +182,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
         communityBoardPostViewRecyclerView.visibility = View.GONE
 
         swipeRefreshLayout = view.findViewById(R.id.communityBoardPostSwipeRefreshLayout)
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue)
 
         firebaseAuth = FirebaseAuth.getInstance()
 

@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CategoryTextViewVisible
 import com.cory.texarkanacollege.classes.ColoredBackgroundsData
+import com.cory.texarkanacollege.classes.DefaultCategoryData
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
@@ -64,6 +65,31 @@ class AssignmentSettingsFragment : Fragment() {
         }
         disableCategoryTextView?.setOnClickListener {
             categoryTextViewVisible.setCategoryTextView(false)
+        }
+
+        val defaultCategoryData = DefaultCategoryData(requireContext())
+        val examDefaultCategory = activity?.findViewById<RadioButton>(R.id.examCategory)
+        val homeworkDefaultCategory = activity?.findViewById<RadioButton>(R.id.homeworkCategory)
+        val otherDefaultCategory = activity?.findViewById<RadioButton>(R.id.otherCategory)
+
+        if (defaultCategoryData.loadDefaultCategory() == 0) {
+            examDefaultCategory?.isChecked = true
+        }
+        else if (defaultCategoryData.loadDefaultCategory() == 1) {
+            homeworkDefaultCategory?.isChecked = true
+        }
+        else if (defaultCategoryData.loadDefaultCategory() == 2) {
+            otherDefaultCategory?.isChecked = true
+        }
+
+        examDefaultCategory?.setOnClickListener {
+            defaultCategoryData.setDefaultCategory(0)
+        }
+        homeworkDefaultCategory?.setOnClickListener {
+            defaultCategoryData.setDefaultCategory(1)
+        }
+        otherDefaultCategory?.setOnClickListener {
+            defaultCategoryData.setDefaultCategory(2)
         }
     }
 }

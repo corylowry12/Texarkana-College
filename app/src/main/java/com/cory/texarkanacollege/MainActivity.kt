@@ -1,5 +1,6 @@
 package com.cory.texarkanacollege
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutInfo
@@ -25,6 +26,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.classes.*
+import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -120,6 +122,12 @@ class MainActivity : AppCompatActivity() {
             materialAlertDialogBuilder.setTitle("Update Downloaded")
             materialAlertDialogBuilder.setMessage("App Update Downloaded, click restart to install")
             materialAlertDialogBuilder.setPositiveButton("Restart") { _, _ ->
+                val intent =
+                    packageManager.getLaunchIntentForPackage(packageName)
+                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
             }
             materialAlertDialogBuilder.show()
         }
@@ -140,10 +148,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("Range")
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val dbHandler = AssignmentsDBHelper(this, null)
+        val cursor = dbHandler.getAllRow(this)
+        cursor!!.moveToFirst()
+
+        while (!cursor.isAfterLast) {
+
+            try {
+                val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
+                val dateFormatted =
+                    formatter.parse(cursor.getString(cursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ASSIGNMENT_DUE_DATE))) as Date
+                val formatter2 = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                val dateFormatted2 = formatter2.format(dateFormatted)
+
+                dbHandler.update(
+                    cursor.getString(cursor.getColumnIndex(AssignmentsDBHelper.COLUMN_ID)),
+                    dateFormatted2
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            cursor.moveToNext()
+        }
 
         checkUpdate()
 
@@ -536,18 +568,35 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        if (resources.getBoolean(R.bool.isTablet)) {
+            val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (homeFragment.isVisible) {
-                bottomNav.menu.findItem(R.id.home).isChecked = true
-            } else if (classesFragment.isVisible) {
-                bottomNav.menu.findItem(R.id.classes).isChecked = true
-            } else if (assignmentFragment.isVisible) {
-                bottomNav.menu.findItem(R.id.assignments).isChecked = true
-            } else if (settingsFragment.isVisible) {
-                bottomNav.menu.findItem(R.id.settings).isChecked = true
-            }
-        }, 200)
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (homeFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                } else if (classesFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (assignmentFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (settingsFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+            }, 200)
+        }
+        else {
+            val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (homeFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                } else if (classesFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (assignmentFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (settingsFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+            }, 200)
+        }
     }
 }

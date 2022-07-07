@@ -8,15 +8,61 @@
         <item name="colorControlActivated">@color/blue</item>
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textColorHighlight">@color/itemIndicatorColor</item>
+        <item name="backgroundColor">#ffffff</item>
+        <item name="textColor">@android:color/black</item>
+        <item name="alwaysDarkTextColor">#000000</item>
+
+        <item name="navigationIconTintTheme">#000000</item>
+        <item name="backArrowColor">#000000</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenuLightActionbar</item>
+        <item name="viewCommunityBoardTransparency">#E6FFFFFF</item>
+        <item name="cardWebviewBackgroundColor">#ffffff</item>
+        <item name="bottomNavColor">@color/bottomNavBarBackground</item>
+        <item name="bottomNavIconTint">#000000</item>
+    </style>
+
+    <style name="Dark" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="backgroundColor">#000000</item>
+        <item name="textColor">@android:color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="alwaysDarkTextColor">#000000</item>
+        <item name="iconTint">#ffffff</item>
+        <item name="navigationIconTintTheme">#ffffff</item>
+        <item name="backArrowColor">#ffffff</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverFlowDark</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
+        <item name="radioButtonColor">@style/RadioButton</item>
+        <item name="viewCommunityBoardTransparency">#E6000000</item>
+        <item name="cardWebviewBackgroundColor">#121212</item>
+        <item name="bottomNavColor">@color/bottomNavBarBackgroundDark</item>
+        <item name="bottomNavIconTint">#ffffff</item>
+    </style>
+
+    <style name="RadioButton" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:textColorSecondary">#a9a9a9</item>
+        <item name="colorControlNormal">#000000</item>
     </style>
 
     <style name="toggleButton" parent="Widget.Material3.Button.OutlinedButton" >
         <item name="colorControlActivated">@color/blue</item>
     </style>
 
-    <style name="OverFlow">
+    <style name="OverFlowDark">
         <item name="android:src">@drawable/ic_baseline_more_vert_24</item>
 
+    </style>
+
+    <style name="OverFlow">
+        <item name="android:src">@drawable/ic_baseline_more_vert_24_dark</item>
+    </style>
+
+    <style name="PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/rounded_menu_dark</item>
+    </style>
+
+    <style name="PopupMenuLightActionbar" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/rounded_menu_light</item>
     </style>
 
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
@@ -51,6 +97,15 @@
 
     <style name="datePickerLight" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="backgroundColorDialog">@color/white</item>
+        <item name="android:windowBackground">@drawable/date_picker</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.70</item>
+    </style>
+
+    <style name="datePickerDark" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="backgroundColorDialog">#383B3C</item>
+        <item name="colorAccent">@color/cardViewLightBlue</item>
+        <item name="colorPrimary">@color/cardViewLightBlue</item>
         <item name="android:windowBackground">@drawable/date_picker</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.70</item>

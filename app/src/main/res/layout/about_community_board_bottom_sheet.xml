@@ -38,6 +38,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:text="About the Community Board"
+        android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
     <com.google.android.material.card.MaterialCardView
@@ -73,6 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?attr/alwaysDarkTextColor"
             app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

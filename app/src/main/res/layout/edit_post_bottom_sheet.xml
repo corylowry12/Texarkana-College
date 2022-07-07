@@ -24,6 +24,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:text="Options"
+        android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
     <Button

@@ -5,9 +5,11 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.Icon
 import android.media.ExifInterface
@@ -42,6 +44,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     var gradeFragment = GradeFragment()
     val assignmentFragment = AssignmentFragment()
     var campusNewsFragment = CampusNewsFragment()
+    val communityBoardFragment = CommunityBoardFragment()
     var viewPostCommunityBoardFragment = ViewCommunityBoardPostFragment()
 
     override fun onNewIntent(intent: Intent) {
@@ -166,6 +170,28 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val darkThemeData = DarkThemeData(this)
+        when {
+            darkThemeData.loadState() == 1 -> {
+                setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+               setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                       setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                       setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         setContentView(R.layout.activity_main)
 
         val dbHandler = AssignmentsDBHelper(this, null)
@@ -250,6 +276,8 @@ class MainActivity : AppCompatActivity() {
             PinnedSwitchVisible(this).setPinnedSwitchVisible(pinnedSwitchVisible)
             val commentLikeCounter = remoteConfig.getBoolean("comment_and_like_counter")
             CommentLikeCounter(this).setCounterVisibility(commentLikeCounter)
+            val communityBoardInBottomNav = remoteConfig.getBoolean("show_community_board_in_bottom_nav")
+            BottomNavWithCommunityBoard(this).setState(communityBoardInBottomNav)
         }
 
         this.cacheDir.deleteRecursively()
@@ -316,6 +344,14 @@ class MainActivity : AppCompatActivity() {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
             bottomNav.itemActiveIndicatorColor =
                 ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
+            if (BottomNavWithCommunityBoard(this).loadState() && CommunityBoardVisibileData(this).loadCommunityBoardVisible()) {
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu_with_community_board)
+                BottomNavContainsCommunityBoard(this).setState(true)
+            }
+            else {
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu)
+                BottomNavContainsCommunityBoard(this).setState(false)
+            }
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
@@ -327,6 +363,9 @@ class MainActivity : AppCompatActivity() {
                     R.id.assignments -> {
                         replaceFragment(assignmentFragment)
                     }
+                    R.id.communityBoard -> {
+                        replaceFragment(communityBoardFragment)
+                    }
                     R.id.settings -> {
                         replaceFragment(settingsFragment)
                     }
@@ -335,6 +374,14 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+            if (BottomNavWithCommunityBoard(this).loadState() && CommunityBoardVisibileData(this).loadCommunityBoardVisible()) {
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu_with_community_board)
+                BottomNavContainsCommunityBoard(this).setState(true)
+            }
+            else {
+                bottomNav.inflateMenu(R.menu.bottom_nav_menu)
+                BottomNavContainsCommunityBoard(this).setState(false)
+            }
             bottomNav.itemActiveIndicatorColor =
                 ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
             bottomNav.setOnItemSelectedListener {
@@ -347,6 +394,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.assignments -> {
                         replaceFragment(assignmentFragment)
+                    }
+                    R.id.communityBoard -> {
+                        replaceFragment(communityBoardFragment)
                     }
                     R.id.settings -> {
                         replaceFragment(settingsFragment)
@@ -590,6 +640,8 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
                 } else if (assignmentFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (communityBoardFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.communityBoard).isChecked = true
                 } else if (settingsFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 }
@@ -605,6 +657,8 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
                 } else if (assignmentFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (communityBoardFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.communityBoard).isChecked = true
                 } else if (settingsFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 }
@@ -625,6 +679,8 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
                 } else if (assignmentFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (communityBoardFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.communityBoard).isChecked = true
                 } else if (settingsFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 }
@@ -640,10 +696,73 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
                 } else if (assignmentFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (communityBoardFragment.isVisible) {
+                    bottomNav.menu.findItem(R.id.communityBoard).isChecked = true
                 } else if (settingsFragment.isVisible) {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 }
             }, 200)
+        }
+    }
+
+    fun setNavBarBackgroundColor() {
+        val darkThemeData = DarkThemeData(this)
+        if (resources.getBoolean(R.bool.isTablet)) {
+            val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+            when {
+                darkThemeData.loadState() == 1 -> {
+                    bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                    bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                }
+                darkThemeData.loadState() == 0 -> {
+                    bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                    bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                }
+                darkThemeData.loadState() == 2 -> {
+                    when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                        Configuration.UI_MODE_NIGHT_NO -> {
+                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                            bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                        }
+                        Configuration.UI_MODE_NIGHT_YES -> {
+                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                            bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                        }
+                        Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                            bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                        }
+                    }
+                }
+            }
+        } else {
+            val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+            when {
+            darkThemeData.loadState() == 1 -> {
+                bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+            }
+            darkThemeData.loadState() == 0 -> {
+                bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                        bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                        bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                        bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                    }
+                }
+            }
+        }
         }
     }
 

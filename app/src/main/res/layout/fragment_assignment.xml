@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinatorAssignments">
+    android:id="@+id/coordinatorAssignments"
+    android:background="?attr/backgroundColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutAssignments"
@@ -80,7 +81,7 @@
                         android:paddingEnd="20dp"
                         android:paddingBottom="10dp"
                         android:text="Upcoming"
-
+                        android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +97,7 @@
                         android:text="1"
                         android:background="@drawable/rounded_text_view"
                         android:textAlignment="center"
-
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toStartOf="@id/upcomingChevronImage"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -154,7 +155,7 @@
                         android:paddingEnd="20dp"
                         android:paddingBottom="10dp"
                         android:text="Past Due"
-
+                        android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -170,7 +171,7 @@
                         android:text="1"
                         android:background="@drawable/rounded_text_view"
                         android:textAlignment="center"
-
+                        android:textColor="@color/white"
                         app:layout_constraintEnd_toStartOf="@id/pastDueChevronImage"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -228,7 +229,7 @@
                         android:paddingEnd="20dp"
                         android:paddingBottom="10dp"
                         android:text="Done"
-
+                        android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -242,6 +243,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
+                        android:textColor="@color/white"
                         android:textAlignment="center"
                         android:background="@drawable/rounded_text_view"
                         app:layout_constraintEnd_toStartOf="@id/doneChevronImage"

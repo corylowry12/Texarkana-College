@@ -38,6 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        android:background="@color/bottomNavBarBackground"/>
+        app:labelVisibilityMode="unlabeled"
+        android:background="?attr/bottomNavColor"
+        app:itemIconTint="?attr/bottomNavIconTint"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

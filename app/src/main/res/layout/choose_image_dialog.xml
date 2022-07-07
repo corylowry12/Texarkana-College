@@ -12,7 +12,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_baseline_add_a_photo_24"/>
+        android:src="@drawable/ic_baseline_add_a_photo_24"
+        app:tint="?attr/alwaysDarkTextColor" />
 
     <TextView
         android:id="@+id/headline"
@@ -23,6 +24,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/iconImageView"
         android:text="Choose"
+        android:textColor="?attr/alwaysDarkTextColor"
         android:textAlignment="center"
         style="@style/TextAppearance.Material3.HeadlineSmall"/>
 
@@ -36,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@id/headline"
         android:text="Choose what you would like to do."
         style="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?attr/alwaysDarkTextColor"
         />
 
     <Button

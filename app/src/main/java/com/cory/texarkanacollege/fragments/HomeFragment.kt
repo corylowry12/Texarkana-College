@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.fragments
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.os.*
@@ -22,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.snackbar.Snackbar
 import java.lang.IllegalStateException
@@ -42,7 +44,28 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -213,8 +236,12 @@ class HomeFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        webViewState = Bundle()
-        webView.saveState(webViewState)
+        try {
+            webViewState = Bundle()
+            webView.saveState(webViewState)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

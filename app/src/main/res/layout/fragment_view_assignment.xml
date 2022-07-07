@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ViewAssignmentFragment"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     android:clickable="true"
     android:focusable="true">
 
@@ -36,6 +36,7 @@
                 app:layout_collapseMode="pin"
                 app:title="View Assignment"
                 app:titleCentered="true"
+                app:navigationIconTint="?attr/backArrowColor"
                 app:menu="@menu/view_assignment_menu"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -68,32 +69,37 @@
                     android:id="@+id/viewAssignmentTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title"/>
+                    android:text="Title"
+                    android:textColor="?attr/alwaysDarkTextColor"/>
 
                 <TextView
                     android:id="@+id/viewAssignmentClass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Class name"/>
+                    android:text="Class name"
+                    android:textColor="?attr/alwaysDarkTextColor"/>
 
                 <TextView
                     android:id="@+id/viewAssignmentNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Notes"/>
+                    android:text="Notes"
+                    android:textColor="?attr/alwaysDarkTextColor"/>
 
                 <TextView
                     android:id="@+id/viewAssignmentDueDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Due Date" />
+                    android:text="Due Date"
+                    android:textColor="?attr/alwaysDarkTextColor"/>
 
                     <TextView
                         android:id="@+id/viewAssignmentCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Category"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"
+                        android:textColor="?attr/alwaysDarkTextColor"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
     </androidx.core.widget.NestedScrollView>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.AppNewsFragment">
+    tools:context=".fragments.AppNewsFragment"
+    android:background="?attr/backgroundColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -32,6 +33,7 @@
                 app:layout_collapseMode="pin"
                 app:title="App News"
                 app:titleCentered="true"
+                app:navigationIconTint="?attr/backArrowColor"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -80,6 +82,7 @@
                         android:paddingBottom="10dp"
                         android:text="Updates"
                         android:textSize="18sp"
+                        android:textColor="?attr/alwaysDarkTextColor"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/updatesCounterTextView"
@@ -92,6 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
+                        android:textColor="@color/white"
                         android:textAlignment="center"
                         android:background="@drawable/rounded_text_view"
                         app:layout_constraintEnd_toStartOf="@id/updatesChevronImage"
@@ -152,6 +156,7 @@
                         android:text="Known Issues"
                         android:textSize="18sp"
                         android:visibility="visible"
+                        android:textColor="?attr/alwaysDarkTextColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/knownIssuesCounterTextView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -163,6 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
+                        android:textColor="@color/white"
                         android:textAlignment="center"
                         android:background="@drawable/rounded_text_view"
                         app:layout_constraintEnd_toStartOf="@id/knownIssuesChevronImage"
@@ -222,6 +228,7 @@
                         android:paddingBottom="10dp"
                         android:text="Upcoming Features"
                         android:textSize="18sp"
+                        android:textColor="?attr/alwaysDarkTextColor"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/upcomingFeaturesCounterTextView"
@@ -234,6 +241,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
+                        android:textColor="@color/white"
                         android:textAlignment="center"
                         android:background="@drawable/rounded_text_view"
                         app:layout_constraintEnd_toStartOf="@id/upcomingChevronImage"

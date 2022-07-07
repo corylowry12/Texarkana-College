@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.CampusNewsFragment">
+    tools:context=".fragments.CampusNewsFragment"
+    android:background="?attr/backgroundColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutCampusNews"
@@ -34,7 +35,8 @@
                 app:title="Campus News"
                 app:titleCentered="true"
                 app:menu="@menu/campus_news_menu"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                app:navigationIconTint="?attr/backArrowColor"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

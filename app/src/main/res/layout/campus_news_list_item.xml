@@ -42,7 +42,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 android:layout_marginEnd="5dp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <ImageView
                 android:id="@+id/chevronImage"

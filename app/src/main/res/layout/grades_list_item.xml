@@ -39,7 +39,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <TextView
                 android:id="@+id/row_grade"
@@ -50,7 +51,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_name"
                 app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <TextView
                 android:id="@+id/row_weight"
@@ -61,7 +63,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_grade"
                 app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <TextView
                 android:id="@+id/row_date"
@@ -72,7 +75,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/row_weight"
                 app:layout_constraintEnd_toStartOf="@id/cardViewGradeItem"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.Material3.CardView.Elevated"

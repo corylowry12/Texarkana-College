@@ -25,6 +25,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:text="Add Grade"
+        android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
     <com.google.android.material.textfield.TextInputLayout

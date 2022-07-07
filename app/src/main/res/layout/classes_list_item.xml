@@ -76,7 +76,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText"
-                android:layout_marginStart="4dp"/>
+                android:layout_marginStart="4dp"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <TextView
                 android:id="@+id/row_class_time"
@@ -88,7 +89,8 @@
                 app:layout_constraintTop_toBottomOf="@id/row_class"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText"
-                android:layout_marginStart="4dp"/>
+                android:layout_marginStart="4dp"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <TextView
                 android:id="@+id/row_class_average"
@@ -100,7 +102,8 @@
                 app:layout_constraintTop_toBottomOf="@id/row_class_time"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText"
-                android:layout_marginStart="4dp" />
+                android:layout_marginStart="4dp"
+                android:textColor="?attr/alwaysDarkTextColor"/>
 
             <ImageView
                 android:id="@+id/chevronImage"

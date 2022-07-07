@@ -128,6 +128,7 @@ class CommunityBoardAdapter(val context: Context,
 
             holder.itemView.setOnLongClickListener {
                 firebaseAuth.currentUser?.reload()
+
                 if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
                 val dialog = BottomSheetDialog(context)
                 val postOptionsLayout = LayoutInflater.from(context).inflate(R.layout.edit_post_bottom_sheet, null)
@@ -139,14 +140,24 @@ class CommunityBoardAdapter(val context: Context,
                 val editPostViewLikesButton = dialog.findViewById<Button>(R.id.editPostViewLikesButton)
 
                 editPostViewLikesButton?.setOnClickListener {
-                    if (likesDataList.isNotEmpty()) {
+                    val likesDataListPost = ArrayList<HashMap<String, String>>()
+                    for (i in 0 until likesDataList.count()) {
+                        if (likesDataList[i]["post_number"] == dataItem["childPosition"]) {
+                            val map = java.util.HashMap<String, String>()
+                            map["name"] = likesDataList[i]["name"].toString()
+                            map["profilePicURL"] = likesDataList[i]["profilePicURL"].toString()
+                            likesDataListPost.add(map)
+                        }
+                    }
+
+                    if (likesDataListPost.isNotEmpty()) {
                         val bottomSheetDialog = BottomSheetDialog(context)
                         val editGradeBottomSheetView =
                             LayoutInflater.from(context)
                                 .inflate(R.layout.view_likes_bottom_sheet, null)
                         val recyclerView =
                             editGradeBottomSheetView.findViewById<RecyclerView>(R.id.viewLikesRecyclerView)
-                        val viewLikesAdapter = ViewLikesAdapter(context, likesDataList)
+                        val viewLikesAdapter = ViewLikesAdapter(context, likesDataListPost)
                         recyclerView.adapter = viewLikesAdapter
                         recyclerView.layoutManager = LinearLayoutManager(context)
                         bottomSheetDialog.setContentView(editGradeBottomSheetView)

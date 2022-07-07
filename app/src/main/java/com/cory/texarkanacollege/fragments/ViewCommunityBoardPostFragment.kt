@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -13,6 +14,8 @@ import android.graphics.drawable.Icon
 import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -36,6 +39,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -47,7 +51,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.ViewImageCommunityBoardPostIntent
+import com.cory.texarkanacollege.adapters.CommunityBoardAdapter
 import com.cory.texarkanacollege.adapters.ViewCommunityBoardPostCommentsAdapter
+import com.cory.texarkanacollege.classes.DarkThemeData
+import com.cory.texarkanacollege.classes.SwipeGestures
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -81,9 +88,11 @@ class ViewCommunityBoardPostFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var communityBoardPostViewRecyclerView : RecyclerView
+    private lateinit var swipeGesture : SwipeGestures
 
     private lateinit var viewCommunityBoardPostCommentsAdapter: ViewCommunityBoardPostCommentsAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
+    private val likesDataList = ArrayList<HashMap<String, String>>()
     private val sortedData = ArrayList<HashMap<String, String>>()
     var childPosition: String? = ""
 
@@ -169,7 +178,28 @@ class ViewCommunityBoardPostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_view_community_board_post, container, false)
     }
 
@@ -180,6 +210,19 @@ class ViewCommunityBoardPostFragment : Fragment() {
         communityBoardPostViewRecyclerView =
             requireActivity().findViewById<RecyclerView>(R.id.commentRecyclerView)
         communityBoardPostViewRecyclerView.visibility = View.GONE
+
+        swipeGesture = object: SwipeGestures(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when(direction) {
+                    ItemTouchHelper.LEFT -> {
+                        viewCommunityBoardPostCommentsAdapter.likeComment(viewHolder.adapterPosition)
+                    }
+                }
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipeGesture)
+        touchHelper.attachToRecyclerView(communityBoardPostViewRecyclerView)
 
         swipeRefreshLayout = view.findViewById(R.id.communityBoardPostSwipeRefreshLayout)
         swipeRefreshLayout.setColorSchemeResources(R.color.blue)
@@ -603,9 +646,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
     }
 
     fun loadIntoList(childPosition: String) {
-
+        dataList.clear()
+        sortedData.clear()
         viewCommunityBoardPostCommentsAdapter =
-            ViewCommunityBoardPostCommentsAdapter(requireContext(), dataList)
+            ViewCommunityBoardPostCommentsAdapter(requireContext(), dataList, likesDataList)
 
         database.child("posts/$childPosition/comments").orderByKey().limitToLast(1)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -623,68 +667,98 @@ class ViewCommunityBoardPostFragment : Fragment() {
             })
 
         database.child("posts/$childPosition/comments").orderByKey()
-            .addListenerForSingleValueEvent(object :
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot1: DataSnapshot) {
                     dataList.clear()
                     sortedData.clear()
+                    likesDataList.clear()
 
-                    if (snapshot.children.count() == 0) {
-                        swipeRefreshLayout.isRefreshing = false
-                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
-                            View.GONE
-                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
-                            View.VISIBLE
-                    } else {
-                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
-                            View.VISIBLE
-                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
-                            View.GONE
-                        for (i in snapshot.children) {
-                            println("children " + i.toString())
-                            val map = java.util.HashMap<String, String>()
-                            map["title"] =
-                                snapshot.child(i.key.toString()).child("title").value.toString()
-                            map["name"] =
-                                snapshot.child(i.key.toString()).child("name").value.toString()
-                            map["profilePicURL"] =
-                                snapshot.child(i.key.toString())
-                                    .child("profile_pic").value.toString()
-                            map["date"] =
-                                snapshot.child(i.key.toString()).child("date").value.toString()
-                            map["uid"] =
-                                snapshot.child(i.key.toString()).child("uid").value.toString()
-                            map["childPosition"] = childPosition
-                            map["commentPosition"] = i.key.toString()
-                            dataList.add(map)
+                    for (i in snapshot1.children) {
+                        println("children " + i.key.toString())
+                        var likedCount = 0
 
-                            viewCommunityBoardPostCommentsAdapter =
-                                ViewCommunityBoardPostCommentsAdapter(requireContext(), dataList)
+                        database.child("posts/$childPosition/comments").child(i.key.toString()).child("likes")
+                            .orderByKey()
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (z in snapshot.children) {
+                                        if (z.child("liked").value == true) {
+                                            likedCount++
+                                            val map = java.util.HashMap<String, String>()
+                                            map["post_number"] = i.key.toString()
+                                            map["name"] = z.child("name").value.toString()
+                                            map["profilePicURL"] =
+                                                z.child("profilePicURL").value.toString()
+                                            likesDataList.add(map)
+                                        }
+                                    }
 
-                        }
+                                    if (snapshot1.children.count() == 0) {
+                                        swipeRefreshLayout.isRefreshing = false
+                                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+                                            View.GONE
+                                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+                                            View.VISIBLE
+                                    } else {
+                                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+                                            View.VISIBLE
+                                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+                                            View.GONE
 
-                        val sortedDataList =
-                            dataList.sortedWith(compareBy { it["date"] }).reversed()
+                                            println("children " + i.toString())
+                                            val map = java.util.HashMap<String, String>()
+                                            map["title"] =
+                                                snapshot1.child(i.key.toString())
+                                                    .child("title").value.toString()
+                                            map["name"] =
+                                                snapshot1.child(i.key.toString())
+                                                    .child("name").value.toString()
+                                            map["profilePicURL"] =
+                                                snapshot1.child(i.key.toString())
+                                                    .child("profile_pic").value.toString()
+                                            map["date"] =
+                                                snapshot1.child(i.key.toString())
+                                                    .child("date").value.toString()
+                                            map["uid"] =
+                                                snapshot1.child(i.key.toString())
+                                                    .child("uid").value.toString()
+                                            map["childPosition"] = childPosition
+                                            map["commentPosition"] = i.key.toString()
+                                            map["likedCount"] = likedCount.toString()
+                                            dataList.add(map)
 
-                        println("sorted data List " + sortedDataList)
 
-                        for (i in sortedDataList) {
-                            sortedData.add(i)
-                        }
+                                        viewCommunityBoardPostCommentsAdapter =
+                                            ViewCommunityBoardPostCommentsAdapter(requireContext(), dataList, likesDataList)
 
-                        communityBoardPostViewRecyclerView.layoutManager = gridLayoutManager
-                        communityBoardPostViewRecyclerView.adapter =
-                            viewCommunityBoardPostCommentsAdapter
-                        communityBoardPostViewRecyclerView.visibility = View.VISIBLE
+                                        communityBoardPostViewRecyclerView.layoutManager =
+                                            gridLayoutManager
+                                        communityBoardPostViewRecyclerView.adapter =
+                                            viewCommunityBoardPostCommentsAdapter
+                                        communityBoardPostViewRecyclerView.visibility = View.VISIBLE
 
-                        println("children count " + childrenCount)
-                        swipeRefreshLayout.isRefreshing = false
+                                        println("children count " + childrenCount)
+                                        swipeRefreshLayout.isRefreshing = false
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.there_was_an_error),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    swipeRefreshLayout.isRefreshing = false
+                                }
+                            })
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
                     swipeRefreshLayout.isRefreshing = false
                 }
             })
+        swipeRefreshLayout.isRefreshing = false
     }
 }

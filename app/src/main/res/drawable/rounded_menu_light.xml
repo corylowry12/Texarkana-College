@@ -1,0 +1,15 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/lightMenuBackground"/>
+
+    <corners
+        android:bottomLeftRadius="14dp"
+        android:bottomRightRadius="14dp"
+        android:topLeftRadius="14dp"
+        android:topRightRadius="14dp"/>
+
+    <padding
+        android:bottom="8dp"
+        android:left="4dp"
+        android:top="8dp"/>
+
+</shape>

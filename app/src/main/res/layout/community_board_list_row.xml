@@ -58,6 +58,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="Pinned"
+                app:chipBackgroundColor="@color/blue"
+                android:textColor="@color/white"
+                app:chipIconTint="@color/white"
                 android:clickable="false"
                 android:textSize="12sp"
                 app:chipIconSize="12dp"/>
@@ -68,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/pinnedChip"
@@ -80,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Email"
                 android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_contact_name"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -91,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Grade"
                 android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_contact_email"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -102,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:text="Grade"
                 android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_title"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -113,6 +120,7 @@
                 android:layout_height="wrap_content"
                 android:text="Weight"
                 android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
                 app:layout_constraintTop_toBottomOf="@id/row_content"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -124,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:text="Click to view image"
                 android:textStyle="italic"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintTop_toBottomOf="@id/row_date"
                 app:layout_constraintStart_toEndOf="@id/profilePic" />
 
@@ -146,13 +155,16 @@
                 android:layout_marginEnd="20dp"
                 android:drawablePadding="6dp"
                 android:textSize="16sp"
-                app:drawableStartCompat="@drawable/ic_baseline_favorite_border_24" />
+                android:textColor="?attr/alwaysDarkTextColor"
+                app:drawableStartCompat="@drawable/ic_baseline_favorite_border_24"
+                app:drawableTint="#000000" />
 
             <TextView
                 android:id="@+id/commentCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintTop_toBottomOf="@id/imageTextView"
                 app:layout_constraintStart_toEndOf="@id/likesCountTextView"
                 app:layout_constraintEnd_toEndOf="parent"

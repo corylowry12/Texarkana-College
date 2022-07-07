@@ -5,26 +5,25 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorLayoutClasses"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     tools:context=".fragments.GradeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutClasses"
         android:layout_width="match_parent"
         android:layout_height="128dp"
+        android:background="?attr/backgroundColor"
         android:fitsSystemWindows="true"
         app:liftOnScroll="true"
-        android:background="@color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolBarClasses"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="28dp"
-            app:contentScrim="@color/toolBarScrimColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -37,7 +36,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Classes"
                 app:titleCentered="true"
-                app:menu="@menu/classes_menu"/>
+                app:menu="@menu/classes_menu" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

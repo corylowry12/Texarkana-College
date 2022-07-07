@@ -70,7 +70,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:sb_checked_color="@color/blue"/>
+        app:sb_checked_color="@color/blue"
+        app:sb_background="#989898"
+        app:sb_border_width="0dp"/>
 
     <TextView
         android:layout_width="0dp"

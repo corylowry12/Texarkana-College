@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.AppearanceFragment">
+    tools:context=".fragments.AppearanceFragment"
+    android:background="?attr/backgroundColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutAppearance"
@@ -12,6 +13,7 @@
         android:layout_height="128dp"
         android:fitsSystemWindows="true"
         app:liftOnScroll="true"
+        android:background="@color/transparent"
         app:contentScrim="@color/toolBarScrimColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +35,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Appearance"
                 app:titleCentered="true"
+                app:navigationIconTint="?attr/backArrowColor"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -46,13 +49,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <com.google.android.material.card.MaterialCardView
+
+            <TextView
+                android:id="@+id/appearanceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Background Theme"
+                android:textColor="?attr/textColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
             android:id="@+id/themeCardView"
             style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="28dp"
             android:layout_marginStart="10dp"
+                android:layout_below="@id/appearanceTextView"
             android:layout_marginEnd="10dp"
             app:cardBackgroundColor="@color/cardViewLightBlue">
 
@@ -66,36 +85,52 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <RadioButton
+                    android:id="@+id/lightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Light Theme"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"
+                    android:layout_marginBottom="10dp"
+                    android:theme="@style/RadioButton"/>
 
                 <RadioButton
+                    android:id="@+id/darkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Dark Theme"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"
+                    android:layout_marginBottom="10dp"
+                    android:theme="@style/RadioButton"/>
 
                 <RadioButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Black Theme"
-                    android:textSize="16sp"/>
-
-                <RadioButton
+                    android:id="@+id/followSystem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Follow System"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"
+                    android:theme="@style/RadioButton"/>
             </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/webviewAppearanceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Web View Theme"
+                android:textColor="?attr/textColor"
+                android:textSize="14sp"
+                android:layout_below="@id/themeCardView"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/darkWebViewCardView"
@@ -104,11 +139,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="5dp"
                 app:cardCornerRadius="28dp"
                 app:cardPreventCornerOverlap="false"
                 app:cardUseCompatPadding="true"
-                android:layout_below="@id/themeCardView"
+                android:layout_below="@id/webviewAppearanceTextView"
                 app:cardBackgroundColor="@color/cardViewLightBlue" >
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/darkWebViewConstraint"
@@ -122,7 +156,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginStart="10dp"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
+                        android:textColor="?attr/alwaysDarkTextColor"
                         app:layout_constraintEnd_toStartOf="@id/darkWebViewSwitch"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -134,6 +169,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
+                        app:sb_background="#989898"
                         app:layout_constraintTop_toTopOf="parent"
                         app:sb_checked_color="@color/blue"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>

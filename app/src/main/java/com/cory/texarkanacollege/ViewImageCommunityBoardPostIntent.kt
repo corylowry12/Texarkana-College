@@ -1,5 +1,6 @@
 package com.cory.texarkanacollege
 
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -20,6 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.google.android.material.appbar.MaterialToolbar
 import com.ortiz.touchview.TouchImageView
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,28 @@ class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val darkThemeData = DarkThemeData(this)
+        when {
+            darkThemeData.loadState() == 1 -> {
+                setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         setContentView(R.layout.activity_view_image_community_board_post_intent)
 
         val viewImageMaterialToolbar = findViewById<MaterialToolbar>(R.id.viewImageCommunityBoardPostToolBar)

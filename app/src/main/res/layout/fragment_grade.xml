@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="grades"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     android:id="@+id/coordinatorLayoutGrades">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -37,7 +37,8 @@
                 app:title="Grades"
                 app:titleCentered="true"
                 app:menu="@menu/classes_menu"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                app:navigationIconTint="?attr/navigationIconTintTheme"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.fragments
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cory.texarkanacollege.*
 import com.cory.texarkanacollege.adapters.GradesAdapter
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.database.GradesDBHelper
@@ -63,7 +65,28 @@ class GradeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_grade, container, false)
     }
 

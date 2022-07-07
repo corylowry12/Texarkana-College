@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.fragments
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -29,6 +30,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.CommunityBoardAdapter
 import com.cory.texarkanacollege.classes.CurrentTOSVersion
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.PinnedSwitchVisible
 import com.cory.texarkanacollege.classes.TOSJsonVersion
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -90,7 +92,28 @@ class CommunityBoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_community_board, container, false)
     }
 
@@ -175,8 +198,19 @@ class CommunityBoardFragment : Fragment() {
 
         gridLayoutManager = GridLayoutManager(requireContext(), 1)
         communityBoardAdapter = CommunityBoardAdapter(requireContext(), dataList, likesDataList)
+        val communityBoardRecyclerView = view.findViewById<RecyclerView>(R.id.communityBoardRecyclerView)
 
-        loadIntoList()
+        if (dataList.isEmpty()) {
+            loadIntoList()
+        }
+        else {
+            communityBoardAdapter =
+                CommunityBoardAdapter(requireContext(), sortedData, likesDataList)
+
+            communityBoardRecyclerView?.layoutManager =
+                gridLayoutManager
+            communityBoardRecyclerView?.adapter = communityBoardAdapter
+        }
 
         val swipeRefreshLayout =
             requireView().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
@@ -557,6 +591,7 @@ class CommunityBoardFragment : Fragment() {
                                             if (z.child("liked").value == true) {
                                                 likedCount++
                                                 val map = HashMap<String, String>()
+                                                map["post_number"] = i.key.toString()
                                                 map["name"] = z.child("name").value.toString()
                                                 map["profilePicURL"] = z.child("profilePicURL").value.toString()
                                                 likesDataList.add(map)

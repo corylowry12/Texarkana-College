@@ -26,6 +26,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:text="Add Post"
+        android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -112,7 +113,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:sb_checked_color="@color/blue"/>
+        app:sb_checked_color="@color/blue"
+        app:sb_background="#989898"/>
 
     <TextView
         android:id="@+id/pinnedTextView"
@@ -124,6 +126,7 @@
         app:layout_constraintBottom_toBottomOf="@id/pinnedSwitch"
         android:text="This is a pinned post"
         android:textSize="18sp"
+        android:textColor="?attr/textColor"
         android:layout_marginStart="10dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -148,6 +151,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        app:sb_background="#989898"
         app:sb_checked_color="@color/blue"/>
 
     <TextView
@@ -160,6 +164,7 @@
         app:layout_constraintBottom_toBottomOf="@id/urgenSwitch"
         android:text="This is an urgent post"
         android:textSize="18sp"
+        android:textColor="?attr/textColor"
         android:layout_marginStart="10dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

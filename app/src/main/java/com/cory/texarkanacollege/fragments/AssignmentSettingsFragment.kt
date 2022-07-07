@@ -1,5 +1,6 @@
 package com.cory.texarkanacollege.fragments
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import com.cory.texarkanacollege.R
-import com.cory.texarkanacollege.classes.CategoryTextViewVisible
-import com.cory.texarkanacollege.classes.ColoredBackgroundsData
-import com.cory.texarkanacollege.classes.DefaultCategoryData
+import com.cory.texarkanacollege.classes.*
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
@@ -19,7 +18,28 @@ class AssignmentSettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_assignment_settings, container, false)
     }
 
@@ -90,6 +110,24 @@ class AssignmentSettingsFragment : Fragment() {
         }
         otherDefaultCategory?.setOnClickListener {
             defaultCategoryData.setDefaultCategory(2)
+        }
+
+        val rememberData = RememberRecyclerViewVisibilityForAssignments(requireContext())
+        val remember = activity?.findViewById<RadioButton>(R.id.remember)
+        val dontRemember = activity?.findViewById<RadioButton>(R.id.dontRemember)
+
+        if (rememberData.loadState()) {
+            remember?.isChecked = true
+        }
+        else {
+            dontRemember?.isChecked = true
+        }
+
+        remember?.setOnClickListener {
+            rememberData.setState(true)
+        }
+        dontRemember?.setOnClickListener {
+            rememberData.setState(false)
         }
     }
 }

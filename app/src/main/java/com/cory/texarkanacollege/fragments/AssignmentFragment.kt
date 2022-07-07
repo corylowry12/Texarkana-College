@@ -2,6 +2,7 @@ package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -23,7 +24,10 @@ import com.cory.texarkanacollege.adapters.ClassesAdapter
 import com.cory.texarkanacollege.adapters.DoneAdapter
 import com.cory.texarkanacollege.adapters.PastDueAdapter
 import com.cory.texarkanacollege.adapters.UpcomingAdapter
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DefaultCategoryData
+import com.cory.texarkanacollege.classes.RecyclerViewVisibility
+import com.cory.texarkanacollege.classes.RememberRecyclerViewVisibilityForAssignments
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.google.android.material.appbar.CollapsingToolbarLayout
@@ -59,7 +63,28 @@ class AssignmentFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         return inflater.inflate(R.layout.fragment_assignment, container, false)
     }
 
@@ -245,7 +270,7 @@ class AssignmentFragment : Fragment() {
 
                         dueDateChip.setOnClickListener {
                             val datePicker = DatePickerDialog(
-                                requireContext(), R.style.datePickerLight
+                                requireContext(), DarkThemeData(requireContext()).dateDialogTheme(requireContext())
                             )
                             datePicker.setCancelable(false)
                             datePicker.datePicker.minDate = System.currentTimeMillis()
@@ -316,18 +341,58 @@ class AssignmentFragment : Fragment() {
             }
         }
 
+        val upcomingRecyclerView =
+            requireView().findViewById<RecyclerView>(R.id.upcomingRecyclerView)
+        val upcomingChevron =
+            requireView().findViewById<ImageView>(R.id.upcomingChevronImage)
+
+        val pastDueRecyclerView =
+            requireView().findViewById<RecyclerView>(R.id.pastDueRecyclerView)
+        val pastDueChevron = requireView().findViewById<ImageView>(R.id.pastDueChevronImage)
+
+        val doneRecyclerView =
+            requireView().findViewById<RecyclerView>(R.id.doneRecyclerView)
+        val doneChevron = requireView().findViewById<ImageView>(R.id.doneChevronImage)
+
+        if (RememberRecyclerViewVisibilityForAssignments(requireContext()).loadState()) {
+            if (RecyclerViewVisibility(requireContext()).loadUpcoming()) {
+                upcomingRecyclerView.visibility = View.VISIBLE
+                upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+            }
+            else {
+                upcomingRecyclerView.visibility = View.GONE
+                upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+            }
+
+            if (RecyclerViewVisibility(requireContext()).loadPastDue()) {
+                pastDueRecyclerView.visibility = View.VISIBLE
+                pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+            }
+            else {
+                pastDueRecyclerView.visibility = View.GONE
+                pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+            }
+
+            if (RecyclerViewVisibility(requireContext()).loadPastDue()) {
+                doneRecyclerView.visibility = View.VISIBLE
+                doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+            }
+            else {
+                doneRecyclerView.visibility = View.GONE
+                doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+            }
+        }
+
         val upcomingConstraint = activity?.findViewById<ConstraintLayout>(R.id.UpcomingConstraint)
         upcomingConstraint?.setOnClickListener {
             if (upcomingDataList.isNotEmpty()) {
-                val upcomingRecyclerView =
-                    requireView().findViewById<RecyclerView>(R.id.upcomingRecyclerView)
-                val upcomingChevron =
-                    requireView().findViewById<ImageView>(R.id.upcomingChevronImage)
 
                 if (upcomingRecyclerView.visibility == View.GONE) {
+                    RecyclerViewVisibility(requireContext()).setUpcoming(true)
                     upcomingRecyclerView.visibility = View.VISIBLE
                     upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
+                    RecyclerViewVisibility(requireContext()).setUpcoming(false)
                     upcomingRecyclerView.visibility = View.GONE
                     upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
@@ -340,14 +405,13 @@ class AssignmentFragment : Fragment() {
         val pastDueConstraint = activity?.findViewById<ConstraintLayout>(R.id.pastDueConstraint)
         pastDueConstraint?.setOnClickListener {
             if (pastDueDataList.isNotEmpty()) {
-                val pastDueRecyclerView =
-                    requireView().findViewById<RecyclerView>(R.id.pastDueRecyclerView)
-                val pastDueChevron = requireView().findViewById<ImageView>(R.id.pastDueChevronImage)
 
                 if (pastDueRecyclerView.visibility == View.GONE) {
+                    RecyclerViewVisibility(requireContext()).setPastDue(true)
                     pastDueRecyclerView.visibility = View.VISIBLE
                     pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
+                    RecyclerViewVisibility(requireContext()).setPastDue(false)
                     pastDueRecyclerView.visibility = View.GONE
                     pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
@@ -360,14 +424,13 @@ class AssignmentFragment : Fragment() {
         val doneConstraint = activity?.findViewById<ConstraintLayout>(R.id.doneConstraint)
         doneConstraint?.setOnClickListener {
             if (doneDataList.isNotEmpty()) {
-                val doneRecyclerView =
-                    requireView().findViewById<RecyclerView>(R.id.doneRecyclerView)
-                val doneChevron = requireView().findViewById<ImageView>(R.id.doneChevronImage)
 
                 if (doneRecyclerView.visibility == View.GONE) {
+                    RecyclerViewVisibility(requireContext()).setDone(true)
                     doneRecyclerView.visibility = View.VISIBLE
                     doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
+                    RecyclerViewVisibility(requireContext()).setDone(false)
                     doneRecyclerView.visibility = View.GONE
                     doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
@@ -429,6 +492,7 @@ class AssignmentFragment : Fragment() {
         if (upcomingDataList.isEmpty()) {
             upcomingChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
             upcomingRecyclerView.visibility = View.GONE
+            RecyclerViewVisibility(requireContext()).setUpcoming(false)
         }
 
         val pastDueChevron =
@@ -464,6 +528,7 @@ class AssignmentFragment : Fragment() {
         if (pastDueDataList.isEmpty()) {
             pastDueChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
             pastDueRecyclerView.visibility = View.GONE
+            RecyclerViewVisibility(requireContext()).setPastDue(false)
         }
 
         val doneChevron =
@@ -498,6 +563,7 @@ class AssignmentFragment : Fragment() {
         if (doneDataList.isEmpty()) {
             doneChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
             doneRecyclerView.visibility = View.GONE
+            RecyclerViewVisibility(requireContext()).setDone(false)
         }
 
         upcomingRecyclerView?.layoutManager = upcomingGridLayoutManager

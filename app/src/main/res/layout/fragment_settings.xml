@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:tag="settings"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     android:id="@+id/coordinatorLayoutSettings">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -61,8 +61,8 @@
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="28dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        android:visibility="gone">
+        app:cardBackgroundColor="@color/cardViewLightBlue"
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintAppearance"
@@ -76,6 +76,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="12dp"
                 android:src="@drawable/ic_baseline_palette_24"
+                app:tint="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -89,6 +90,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="5dp"
                 android:text="Appearance"
+                android:textColor="?attr/alwaysDarkTextColor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 app:layout_constraintStart_toEndOf="@id/appearanceImage"
@@ -102,6 +104,7 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="5dp"
                 android:paddingBottom="4dp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 android:text="Customize the appearance settings of the app"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -130,6 +133,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:cardCornerRadius="28dp"
+            android:layout_marginBottom="5dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
             app:cardBackgroundColor="@color/cardViewLightBlue">
@@ -160,6 +164,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="Assignment Settings"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/assignmentSettingsChevron"
                     app:layout_constraintStart_toEndOf="@id/assignmentSettingsImage"
@@ -173,6 +178,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="Change and view the options for the assignments"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/assignmentSettingsChevron"
@@ -203,6 +209,7 @@
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -233,6 +240,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="Experimental"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/experimentalChevron"
                     app:layout_constraintStart_toEndOf="@id/experimentalImage"
@@ -246,6 +254,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="View and change settings that are experimental. Proceed with caution, you might not get the desired results!"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/experimentalChevron"
@@ -306,6 +315,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="5dp"
                 android:text="Campus News"
+                android:textColor="?attr/alwaysDarkTextColor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/appSettingsChevron"
                 app:layout_constraintStart_toEndOf="@id/appSettingsImage"
@@ -319,6 +329,7 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="5dp"
                 android:paddingBottom="4dp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 android:text="View news directly from the campus"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/appSettingsChevron"
@@ -378,6 +389,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="Community Board"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/communityBoardChevron"
                     app:layout_constraintStart_toEndOf="@id/communityBoardImage"
@@ -391,6 +403,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="This is a basic social media section for users at the campus who also have this app installed"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/communityBoardChevron"
@@ -451,6 +464,7 @@
                 android:paddingEnd="5dp"
                 android:text="Patch Notes"
                 android:textSize="18sp"
+                android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintEnd_toStartOf="@id/patchNotesChevron"
                 app:layout_constraintStart_toEndOf="@id/patchNotesImage"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -464,6 +478,7 @@
                 android:paddingEnd="5dp"
                 android:paddingBottom="4dp"
                 android:text="View changes in this update"
+                android:textColor="?attr/alwaysDarkTextColor"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/patchNotesChevron"
                 app:layout_constraintStart_toEndOf="@id/patchNotesImage"
@@ -521,6 +536,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="Why Choose TC"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/reasonsChevron"
                     app:layout_constraintStart_toEndOf="@id/reasonsImage"
@@ -534,6 +550,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="View reasons to see why YOU might want to go to TC"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/reasonsChevron"
@@ -592,6 +609,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="Campus Map"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/automaticChevron"
                     app:layout_constraintStart_toEndOf="@id/deletionImage"
@@ -606,6 +624,7 @@
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
                     android:text="View the campus map"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/automaticChevron"
                     app:layout_constraintStart_toEndOf="@id/deletionImage"
@@ -663,6 +682,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
                     android:text="App News"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/appNewsChevron"
                     app:layout_constraintStart_toEndOf="@id/appNewsImage"
@@ -676,6 +696,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="Click here to view latest info about the app"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/appNewsChevron"
@@ -684,6 +705,79 @@
 
                 <ImageView
                     android:id="@+id/appNewsChevron"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="28dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintSocialMedia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/socialMediaImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_emoji_people_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    app:tint="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/socialMediaHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Follow Us On Social Media"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/socialMediaChevron"
+                    app:layout_constraintStart_toEndOf="@id/socialMediaImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/socialMediaHeading"
+                    android:layout_alignStart="@id/socialMediaHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Find and connect with us on other platforms"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/socialMediaChevron"
+                    app:layout_constraintStart_toEndOf="@id/socialMediaImage"
+                    app:layout_constraintTop_toBottomOf="@id/socialMediaHeading" />
+
+                <ImageView
+                    android:id="@+id/socialMediaChevron"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="12dp"
@@ -733,6 +827,7 @@
                     android:paddingStart="12dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="5dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="Manage Default Links"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/manageLinksChevron"
@@ -747,6 +842,7 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     android:text="Manage whether or not the app will open links by default"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/manageLinksChevron"

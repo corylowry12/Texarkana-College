@@ -7,5 +7,21 @@
 
     <attr name="backgroundColorDialog" format="color" />
 
+    <attr name="bottomNavColor" format="color" />
+
+    <attr name="textColor" format="color" />
+    <attr name="alwaysDarkTextColor" format="color" />
+    <attr name="navigationIconTintTheme" format="color" />
+
+    <attr name="viewCommunityBoardTransparency" format="color" />
+
+    <attr name="cardWebviewBackgroundColor" format="color" />
+
+    <attr name="backArrowColor" format="color" />
+
+    <attr name="bottomNavIconTint" format="color" />
+
+    <attr name="radioButtonColor" format="color" />
+
     <bool name="isTablet">false</bool>
 </resources>

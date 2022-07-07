@@ -18,7 +18,11 @@
     <color name="redAccent">#E53935</color>
 
     <color name="bottomNavBarBackground">#E8F2FA</color>
+    <color name="bottomNavBarBackgroundDark">#32506A</color>
 
     <color name="examCardBackgroundColor">#EAA844</color>
     <color name="homeworkCardBackgroundColor">#2FAF5E</color>
+
+    <color name="darkMenuBackground">#2C353A</color>
+    <color name="lightMenuBackground">#FFFFFF</color>
 </resources>

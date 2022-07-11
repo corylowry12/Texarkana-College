@@ -168,12 +168,49 @@
         android:layout_marginStart="10dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hiddenConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/urgentSwitchConstraintLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:foreground="?attr/selectableItemBackground">
+
+        <com.suke.widget.SwitchButton
+            android:id="@+id/hiddenSwitch"
+            app:sb_show_indicator="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:sb_background="#989898"
+            app:sb_checked_color="@color/blue"/>
+
+        <TextView
+            android:id="@+id/hiddenTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/hiddenSwitch"
+            app:layout_constraintTop_toTopOf="@id/hiddenSwitch"
+            app:layout_constraintBottom_toBottomOf="@id/hiddenSwitch"
+            android:text="Hide this post (DEV USE ONLY)"
+            android:textSize="18sp"
+            android:textColor="?attr/textColor"
+            android:layout_marginStart="10dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Cancel"
-        app:layout_constraintTop_toBottomOf="@id/urgentSwitchConstraintLayout"
+        app:layout_constraintTop_toBottomOf="@id/hiddenConstraintLayout"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
@@ -185,7 +222,7 @@
         android:id="@+id/addGradeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/urgentSwitchConstraintLayout"
+        app:layout_constraintTop_toBottomOf="@id/hiddenConstraintLayout"
         app:layout_constraintStart_toEndOf="@id/cancelButton"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"

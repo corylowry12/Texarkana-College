@@ -64,7 +64,6 @@
     style="?attr/materialCardViewElevatedStyle"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/cardWebviewBackgroundColor"
     tools:ignore="WebViewLayout">
 
     <ProgressBar

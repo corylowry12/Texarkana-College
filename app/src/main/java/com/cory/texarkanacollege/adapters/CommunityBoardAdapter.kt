@@ -16,6 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +39,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class CommunityBoardAdapter(val context: Context,
                             private val dataList:  ArrayList<HashMap<String, String>>, private val likesDataList:  ArrayList<HashMap<String, String>>
@@ -50,46 +57,64 @@ class CommunityBoardAdapter(val context: Context,
         var title = itemView.findViewById<TextView>(R.id.row_title)!!
         var date = itemView.findViewById<TextView>(R.id.row_date)!!
         val content = itemView.findViewById<TextView>(R.id.row_content)!!
-        val email = itemView.findViewById<TextView>(R.id.row_contact_email)!!
-        val pinnedChip = itemView.findViewById<Chip>(R.id.pinnedChip)!!
+        val pinnedConstraint = itemView.findViewById<ConstraintLayout>(R.id.pinnedConstraintLayout)!!
         val imageTextView = itemView.findViewById<TextView>(R.id.imageTextView)!!
         val profileImage = itemView.findViewById<CircleImageView>(R.id.profilePic)!!
         val likedCountTextView = itemView.findViewById<TextView>(R.id.likesCountTextView)!!
         val commentCountTextView = itemView.findViewById<TextView>(R.id.commentCountTextView)!!
-        val counterLinearLayout = itemView.findViewById<LinearLayout>(R.id.counterLinearLayout)
+        val likesCounterCardView = itemView.findViewById<CardView>(R.id.likesCardView)
+        val commentCounterCardView = itemView.findViewById<CardView>(R.id.commentsCardView)
 
 
         fun bind(position: Int) {
 
             val dataItem = dataList[position]
 
-            contactName.text = "Name: " + dataItem["name"]
+            val dateFormatter = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
+            val dateFormatted = dateFormatter.parse(dataItem["date"]!!)!!
+            val timeInMil = dateFormatted.time
+            val currentTime = System.currentTimeMillis()
+            val difference = currentTime - timeInMil
+            var diff = ""
+
+            if (difference > 86400000) {
+                val dateFormatter2 = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
+                val daysFormatter = SimpleDateFormat("MMM dd", Locale.ENGLISH)
+                val daysDate = dateFormatter2.parse(dataItem["date"]!!)
+                val days = daysFormatter.format(daysDate!!)
+                diff = days.toString()
+            }
+            else if (difference >= 3600000 && difference < 86400000) {
+                diff = TimeUnit.MILLISECONDS.toHours(difference).toString() + "h"
+            }
+            else if (difference < 86400000) {
+                diff = TimeUnit.MILLISECONDS.toMinutes(difference).toString() + " Min"
+            }
+            else {
+                diff = dataItem["date"].toString()
+            }
+
+            contactName.text = dataItem["name"]
             title.text = "Title: " + dataItem["title"]
-            date.text = "Date: " + dataItem["date"]
+            date.text = diff
             likedCountTextView.text = dataItem["likedCount"]
             commentCountTextView.text = dataItem["commentCount"]
 
             if (!CommentLikeCounter(context).loadCounterVisibility()) {
-                counterLinearLayout.visibility = View.GONE
+                likesCounterCardView.visibility = View.GONE
+                commentCounterCardView.visibility = View.GONE
             }
 
-            if (dataItem["content"]!!.length < 30) {
-                content.text = "Content: " + dataItem["content"]!!.trim()
+            if (dataItem["content"]!!.length < 80) {
+                content.text = dataItem["content"]!!.trim()
             }
             else {
-                val contentSubstring = dataItem["content"]!!.substring(0, 30)
-                content.text = "Content: " + contentSubstring.trim() + "..."
-            }
-
-            if (dataItem["email"] == "") {
-                email.visibility = View.GONE
-            }
-            else {
-                email.text = "Email: " + dataItem["email"]
+                val contentSubstring = dataItem["content"]!!.substring(0, 80)
+                content.text = contentSubstring.trim() + "..."
             }
 
             if (dataItem["pinned"].toString() != "true") {
-                pinnedChip.visibility = View.GONE
+                pinnedConstraint.visibility = View.GONE
             }
 
             if (dataItem["imageURL"] == "" || dataItem["imageURL"] == null) {
@@ -122,6 +147,14 @@ class CommunityBoardAdapter(val context: Context,
 
         if (dataItem["urgent"] == "true") {
             holder.itemView.findViewById<MaterialCardView>(R.id.cardViewCampusBoard).setCardBackgroundColor(ContextCompat.getColor(context, R.color.urgentPostRed))
+            holder.itemView.findViewById<CardView>(R.id.contentCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentRed))
+            holder.itemView.findViewById<CardView>(R.id.likesCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentRed))
+            holder.itemView.findViewById<CardView>(R.id.commentsCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentRed))
+        }
+        else {
+            holder.itemView.findViewById<CardView>(R.id.contentCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentBlue))
+            holder.itemView.findViewById<CardView>(R.id.likesCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentBlue))
+            holder.itemView.findViewById<CardView>(R.id.commentsCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentBlue))
         }
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -283,6 +316,7 @@ class CommunityBoardAdapter(val context: Context,
             args.putString("profilePicURL", dataItem["profilePicURL"])
             args.putString("email", dataItem["email"])
             args.putString("pinned", dataItem["pinned"].toString())
+            args.putString("urgent", dataItem["urgent"].toString())
             fragment.arguments = args
 
             val manager =

@@ -15,8 +15,6 @@
 
     <attr name="viewCommunityBoardTransparency" format="color" />
 
-    <attr name="cardWebviewBackgroundColor" format="color" />
-
     <attr name="backArrowColor" format="color" />
 
     <attr name="bottomNavIconTint" format="color" />

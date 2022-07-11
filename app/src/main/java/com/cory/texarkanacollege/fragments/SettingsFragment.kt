@@ -66,18 +66,23 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appearanceConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintAppearance)
+        val appearanceConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAppearance)
         appearanceConstraint?.setOnClickListener {
             openFragment(AppearanceFragment())
         }
 
-        val assignmentSettingsConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintAssignmentSettings)
+        val appSettingsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAppSettings)
+        appSettingsConstraint.setOnClickListener {
+            openFragment(AppSettingsFragment())
+        }
+
+        val assignmentSettingsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAssignmentSettings)
         assignmentSettingsConstraint?.setOnClickListener {
             openFragment(AssignmentSettingsFragment())
         }
 
-        val experimentalConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintExperimental)
-        val experimentalCardView = activity?.findViewById<CardView>(R.id.cardViewExperimental)
+        val experimentalConstraint = view.findViewById<ConstraintLayout>(R.id.constraintExperimental)
+        val experimentalCardView = view.findViewById<CardView>(R.id.cardViewExperimental)
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             experimentalCardView?.visibility = View.GONE
@@ -86,8 +91,8 @@ class SettingsFragment : Fragment() {
             openFragment(ExperimentalFragment())
         }
 
-        val campusNewsConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintCampusNews)
-        val campusNewsCardView = activity?.findViewById<CardView>(R.id.cardViewCampusNews)
+        val campusNewsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintCampusNews)
+        val campusNewsCardView = view.findViewById<CardView>(R.id.cardViewCampusNews)
 
         if (!CampusNewsVisibleData(requireContext()).loadCampusNewsVisible()) {
             campusNewsCardView!!.visibility = View.GONE
@@ -98,8 +103,8 @@ class SettingsFragment : Fragment() {
             openFragment(campusNewsFragment)
         }
 
-        val communityBoardConstraint = activity?.findViewById<ConstraintLayout>(R.id.communityBoardConstraint)
-        val communityBoardCardView = activity?.findViewById<MaterialCardView>(R.id.communityBoardCardView)
+        val communityBoardConstraint = view.findViewById<ConstraintLayout>(R.id.communityBoardConstraint)
+        val communityBoardCardView = view.findViewById<MaterialCardView>(R.id.communityBoardCardView)
 
         if (BottomNavWithCommunityBoard(requireContext()).loadState() || !CommunityBoardVisibileData(requireContext()).loadCommunityBoardVisible() || BottomNavContainsCommunityBoard(requireContext()).loadState()) {
             communityBoardCardView!!.visibility = View.GONE
@@ -109,8 +114,8 @@ class SettingsFragment : Fragment() {
             openFragment(CommunityBoardFragment())
         }
 
-        val patchNotesConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintPatchNotes)
-        val patchNotesChevron = activity?.findViewById<ImageView>(R.id.patchNotesChevron)
+        val patchNotesConstraint = view.findViewById<ConstraintLayout>(R.id.constraintPatchNotes)
+        val patchNotesChevron = view.findViewById<ImageView>(R.id.patchNotesChevron)
         patchNotesConstraint?.setOnClickListener {
             openFragment(PatchNotesFragment())
         }
@@ -125,7 +130,7 @@ class SettingsFragment : Fragment() {
             )
         }
 
-        val whyChooseTCConstraint = activity?.findViewById<ConstraintLayout>(R.id.constraintWhyChooseTC)
+        val whyChooseTCConstraint = view.findViewById<ConstraintLayout>(R.id.constraintWhyChooseTC)
         whyChooseTCConstraint?.setOnClickListener {
             openFragment(WhyChoooseTCFragment())
         }
@@ -232,6 +237,11 @@ class SettingsFragment : Fragment() {
                 dialog.dismiss()
             }
             dialog.show()
+        }
+
+        val versionInfoConstraint = view.findViewById<ConstraintLayout>(R.id.constraintVersionInfo)
+        versionInfoConstraint.setOnClickListener {
+            openFragment(VersionInfoFragment())
         }
     }
 

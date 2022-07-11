@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
+import com.google.android.material.appbar.MaterialToolbar
 
 class VersionInfoFragment : Fragment() {
 
@@ -38,5 +39,14 @@ class VersionInfoFragment : Fragment() {
             }
         }
         return inflater.inflate(R.layout.fragment_version_info, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val topAppBar = view.findViewById<MaterialToolbar>(R.id.topAppBarVersionInfo)
+        topAppBar.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
     }
 }

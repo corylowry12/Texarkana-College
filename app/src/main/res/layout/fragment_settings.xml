@@ -126,6 +126,80 @@
     </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/appSettingsCardView"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="28dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardBackgroundColor="@color/cardViewLightBlue"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintAppSettings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/appSettingsImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_app_settings_alt_24"
+                    app:tint="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/appSettingsHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:text="App Settings"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/appSettingschevronImage"
+                    app:layout_constraintStart_toEndOf="@id/appSettingsImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/appSettingsHeading"
+                    android:layout_alignStart="@id/appSettingsHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Customize the basic functionality of the app"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/appSettingschevronImage"
+                    app:layout_constraintStart_toEndOf="@id/appSettingsImage"
+                    app:layout_constraintTop_toBottomOf="@id/appSettingsHeading" />
+
+                <ImageView
+                    android:id="@+id/appSettingschevronImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardViewAssignmentSettings"
             style="?attr/materialCardViewElevatedStyle"
             android:layout_width="match_parent"
@@ -216,9 +290,7 @@
                 android:id="@+id/constraintExperimental"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground"
-                tools:targetApi="m"
-                tools:ignore="UnusedAttribute">
+                android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
                     android:id="@+id/experimentalImage"
@@ -296,7 +368,7 @@
             tools:ignore="UnusedAttribute">
 
             <ImageView
-                android:id="@+id/appSettingsImage"
+                android:id="@+id/campusNewsImage"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="12dp"
@@ -318,7 +390,7 @@
                 android:textColor="?attr/alwaysDarkTextColor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/appSettingsChevron"
-                app:layout_constraintStart_toEndOf="@id/appSettingsImage"
+                app:layout_constraintStart_toEndOf="@id/campusNewsImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -333,7 +405,7 @@
                 android:text="View news directly from the campus"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/appSettingsChevron"
-                app:layout_constraintStart_toEndOf="@id/appSettingsImage"
+                app:layout_constraintStart_toEndOf="@id/campusNewsImage"
                 app:layout_constraintTop_toBottomOf="@id/appSettings" />
 
             <ImageView
@@ -873,8 +945,7 @@
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
-            app:cardBackgroundColor="@color/cardViewLightBlue"
-            android:visibility="gone">
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintVersionInfo"
@@ -902,6 +973,7 @@
                     android:paddingEnd="5dp"
                     android:text="Version Info"
                     android:textSize="18sp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     app:layout_constraintEnd_toStartOf="@id/versionInfoChevron"
                     app:layout_constraintStart_toEndOf="@id/versionInfoImage"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -916,6 +988,7 @@
                     android:paddingBottom="4dp"
                     android:text="View info about this version of the app"
                     android:textSize="12sp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     app:layout_constraintEnd_toStartOf="@id/versionInfoChevron"
                     app:layout_constraintStart_toEndOf="@id/versionInfoImage"
                     app:layout_constraintTop_toBottomOf="@id/versionInfoHeading" />
@@ -944,8 +1017,7 @@
             app:cardCornerRadius="28dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
-            app:cardBackgroundColor="@color/cardViewLightBlue"
-            android:visibility="gone">
+            app:cardBackgroundColor="@color/cardViewLightBlue">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintDeleteData"
@@ -973,6 +1045,7 @@
                     android:paddingEnd="5dp"
                     android:text="Delete App Data"
                     android:textSize="18sp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     app:layout_constraintEnd_toStartOf="@id/deleteDataChevron"
                     app:layout_constraintStart_toEndOf="@id/deleteDataImage"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -987,6 +1060,7 @@
                     android:paddingBottom="4dp"
                     android:text="Delete data within the app to start fresh"
                     android:textSize="12sp"
+                    android:textColor="?attr/alwaysDarkTextColor"
                     app:layout_constraintEnd_toStartOf="@id/deleteDataChevron"
                     app:layout_constraintStart_toEndOf="@id/deleteDataImage"
                     app:layout_constraintTop_toBottomOf="@id/deleteDataHeading" />

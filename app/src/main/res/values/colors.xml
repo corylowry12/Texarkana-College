@@ -23,6 +23,11 @@
     <color name="examCardBackgroundColor">#EAA844</color>
     <color name="homeworkCardBackgroundColor">#2FAF5E</color>
 
+    <color name="darkWebViewCardBackgroundColor">#121212</color>
+
     <color name="darkMenuBackground">#2C353A</color>
     <color name="lightMenuBackground">#FFFFFF</color>
+
+    <color name="communityBoardAccentBlue">#9CC7E6</color>
+    <color name="communityBoardAccentRed">#C84545</color>
 </resources>

@@ -33,37 +33,52 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pinnedConstraintLayout"
                 tools:src="@drawable/ic_baseline_settings_24"
                 app:civ_border_color="#3f51b5"
                 app:civ_border_width="2dp"
                 android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:paddingEnd="10dp"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginStart="10dp"
+                android:paddingTop="5dp"/>
 
-
-            <com.google.android.material.chip.Chip
-                style="@style/Widget.Material3.Chip.Assist"
-                app:chipIcon="@drawable/ic_baseline_push_pin_24"
-                android:id="@+id/pinnedChip"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/pinnedConstraintLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="Pinned"
-                app:chipBackgroundColor="@color/blue"
-                android:textColor="@color/white"
-                app:chipIconTint="@color/white"
-                android:clickable="false"
-                android:textSize="12sp"
-                app:chipIconSize="12dp"/>
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingTop="5dp">
+
+                <ImageView
+                    android:id="@+id/pinnedIcon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_baseline_push_pin_24"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="This is a pinned post"
+                    app:layout_constraintStart_toEndOf="@id/pinnedIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/alwaysDarkTextColor"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/row_contact_name"
@@ -73,58 +88,63 @@
                 android:textSize="16sp"
                 android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/pinnedChip"
+                app:layout_constraintTop_toTopOf="@id/profilePic"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 tools:ignore="HardcodedText"
-                android:paddingTop="20dp"/>
-
-            <TextView
-                android:id="@+id/row_contact_email"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textSize="16sp"
-                android:textColor="?attr/alwaysDarkTextColor"
-                app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toBottomOf="@id/row_contact_name"
-                app:layout_constraintEnd_toStartOf="@id/chevronImage"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/row_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Grade"
-                android:textSize="16sp"
-                android:textColor="?attr/alwaysDarkTextColor"
-                app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toBottomOf="@id/row_contact_email"
-                app:layout_constraintEnd_toStartOf="@id/chevronImage"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/row_content"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Grade"
-                android:textSize="16sp"
-                android:textColor="?attr/alwaysDarkTextColor"
-                app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toBottomOf="@id/row_title"
-                app:layout_constraintEnd_toStartOf="@id/chevronImage"
-                tools:ignore="HardcodedText" />
+                android:layout_marginStart="5dp"
+                android:textStyle="bold"
+                android:paddingTop="5dp"/>
 
             <TextView
                 android:id="@+id/row_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Weight"
+                android:text="Date"
+                android:textSize="12sp"
+                android:textColor="?attr/alwaysDarkTextColor"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
+                app:layout_constraintTop_toBottomOf="@id/row_contact_name"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
+                tools:ignore="HardcodedText"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/row_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Title"
                 android:textSize="16sp"
                 android:textColor="?attr/alwaysDarkTextColor"
                 app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toBottomOf="@id/row_content"
+                app:layout_constraintTop_toBottomOf="@id/row_date"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:layout_marginStart="5dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/contentCardView"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/profilePic"
+                app:layout_constraintTop_toBottomOf="@id/row_title"
+                app:layout_constraintEnd_toStartOf="@id/chevronImage"
+                app:cardCornerRadius="5dp"
+                app:cardBackgroundColor="@color/communityBoardAccentBlue">
+
+            <TextView
+                android:id="@+id/row_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Content"
+                android:textSize="16sp"
+                android:textColor="?attr/alwaysDarkTextColor"
+                tools:ignore="HardcodedText"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/imageTextView"
@@ -133,45 +153,55 @@
                 android:text="Click to view image"
                 android:textStyle="italic"
                 android:textColor="?attr/alwaysDarkTextColor"
-                app:layout_constraintTop_toBottomOf="@id/row_date"
-                app:layout_constraintStart_toEndOf="@id/profilePic" />
+                app:layout_constraintTop_toBottomOf="@id/contentCardView"
+                app:layout_constraintStart_toStartOf="@id/contentCardView" />
 
-
-            <LinearLayout
-                android:id="@+id/counterLinearLayout"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/likesCardView"
+                style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/imageTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:gravity="center"
+                app:layout_constraintStart_toStartOf="@id/imageTextView"
+                app:cardCornerRadius="5dp"
+                app:cardBackgroundColor="@color/communityBoardAccentBlue"
                 android:layout_marginTop="5dp">
             <TextView
                 android:id="@+id/likesCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:layout_marginEnd="20dp"
                 android:drawablePadding="6dp"
                 android:textSize="16sp"
                 android:textColor="?attr/alwaysDarkTextColor"
                 app:drawableStartCompat="@drawable/ic_baseline_favorite_border_24"
-                app:drawableTint="#000000" />
+                app:drawableTint="#000000"
+                android:layout_margin="6dp"/>
+            </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/commentsCardView"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/imageTextView"
+                app:layout_constraintStart_toEndOf="@id/likesCardView"
+                app:cardCornerRadius="5dp"
+                app:cardBackgroundColor="@color/communityBoardAccentBlue"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp">
             <TextView
                 android:id="@+id/commentCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="?attr/alwaysDarkTextColor"
-                app:layout_constraintTop_toBottomOf="@id/imageTextView"
-                app:layout_constraintStart_toEndOf="@id/likesCountTextView"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:drawablePadding="6dp"
                 android:textSize="16sp"
-                app:drawableStartCompat="@drawable/ic_outline_comment_24" />
-            </LinearLayout>
+                android:textColor="?attr/alwaysDarkTextColor"
+                app:drawableStartCompat="@drawable/ic_outline_comment_24"
+                app:drawableTint="#000000"
+                android:layout_margin="6dp" />
+            </androidx.cardview.widget.CardView>
             <ImageView
                 android:id="@+id/chevronImage"
                 android:layout_width="24dp"

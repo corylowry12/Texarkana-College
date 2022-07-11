@@ -78,6 +78,7 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
 
         var set = false
 
+        if (FirebaseAuth.getInstance().currentUser != null) {
         database.child("posts").child(dataItem["childPosition"].toString()).child("comments").child(dataItem["commentPosition"].toString())
             .orderByKey()
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -120,13 +121,6 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                             break
                         }
                         else {
-                            if (FirebaseAuth.getInstance().currentUser == null) {
-                                Toast.makeText(
-                                    context,
-                                    "You must be signed in to like comments",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
                                 val uid = FirebaseAuth.getInstance().currentUser!!.uid
                                 val name = FirebaseAuth.getInstance().currentUser!!.displayName
                                 val profilePicURL = FirebaseAuth.getInstance().currentUser!!.photoUrl
@@ -149,7 +143,6 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                                     .setValue(name)
                                 set = true
                             }
-                        }
                     }
                     if (set) {
                         val uid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -173,14 +166,15 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                     TODO("Not yet implemented")
                 }
             })
-
-       /* FirebaseDatabase.getInstance().getReference("posts")
-            .child(dataItem["childPosition"].toString()).child("comments").child(dataItem["commentPosition"].toString()).child("likes").child(FirebaseAuth.getInstance().currentUser!!.uid).child("liked").setValue(true)
-        FirebaseDatabase.getInstance().getReference("posts")
-            .child(dataItem["childPosition"].toString()).child("comments").child(dataItem["commentPosition"].toString()).child("likes").child(FirebaseAuth.getInstance().currentUser!!.uid).child("profilePicURL").setValue(FirebaseAuth.getInstance().currentUser!!.photoUrl.toString())
-        FirebaseDatabase.getInstance().getReference("posts")
-            .child(dataItem["childPosition"].toString()).child("comments").child(dataItem["commentPosition"].toString()).child("likes").child(FirebaseAuth.getInstance().currentUser!!.uid).child("name").setValue(FirebaseAuth.getInstance().currentUser!!.displayName)
-        notifyItemChanged(position)*/
+            }
+        else {
+            Toast.makeText(
+                context,
+                "You must be signed in to like comments",
+                Toast.LENGTH_SHORT
+            ).show()
+            notifyItemChanged(position)
+        }
     }
 
     @SuppressLint("Range")
@@ -245,12 +239,14 @@ class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                                 .show()
                             dialog.dismiss()
 
-                        val loadIntoList = Runnable {
-                            (context as MainActivity).setViewPostCommunityBoardLoadIntoList()
+                        if (dataList.isEmpty()) {
+                            val loadIntoList = Runnable {
+                                (context as MainActivity).setViewPostCommunityBoardLoadIntoList()
 
+                            }
+
+                            MainActivity().runOnUiThread(loadIntoList)
                         }
-
-                        MainActivity().runOnUiThread(loadIntoList)
                     }
                     materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
                         dialog.dismiss()

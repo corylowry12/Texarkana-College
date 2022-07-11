@@ -11,12 +11,10 @@
         <item name="backgroundColor">#ffffff</item>
         <item name="textColor">@android:color/black</item>
         <item name="alwaysDarkTextColor">#000000</item>
-
         <item name="navigationIconTintTheme">#000000</item>
         <item name="backArrowColor">#000000</item>
         <item name="actionOverflowMenuStyle">@style/PopupMenuLightActionbar</item>
         <item name="viewCommunityBoardTransparency">#E6FFFFFF</item>
-        <item name="cardWebviewBackgroundColor">#ffffff</item>
         <item name="bottomNavColor">@color/bottomNavBarBackground</item>
         <item name="bottomNavIconTint">#000000</item>
     </style>
@@ -33,7 +31,6 @@
         <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
         <item name="radioButtonColor">@style/RadioButton</item>
         <item name="viewCommunityBoardTransparency">#E6000000</item>
-        <item name="cardWebviewBackgroundColor">#121212</item>
         <item name="bottomNavColor">@color/bottomNavBarBackgroundDark</item>
         <item name="bottomNavIconTint">#ffffff</item>
     </style>

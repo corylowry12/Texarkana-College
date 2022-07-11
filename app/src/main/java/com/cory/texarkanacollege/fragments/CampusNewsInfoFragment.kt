@@ -162,6 +162,29 @@ class CampusNewsInfoFragment : Fragment() {
                         }
                     }
 
+                    val darkThemeData = DarkThemeData(requireContext())
+                    when {
+                        darkThemeData.loadState() == 1 -> {
+                            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                        }
+                        darkThemeData.loadState() == 0 -> {
+                            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        }
+                        darkThemeData.loadState() == 2 -> {
+                            when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                                Configuration.UI_MODE_NIGHT_NO -> {
+                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                                }
+                                Configuration.UI_MODE_NIGHT_YES -> {
+                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                                }
+                                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                                }
+                            }
+                        }
+                    }
+
                     webView!!.loadDataWithBaseURL(
                         null,
                         "<style>img{display: inline;height: auto;max-width: 85%;}</style>" + name.toString(),
@@ -172,6 +195,10 @@ class CampusNewsInfoFragment : Fragment() {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {
                         webView.settings.forceDark = WebSettings.FORCE_DARK_ON
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                    }
+                    else {
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
                     }
                 }
             }

@@ -18,7 +18,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/toolBarScrimColor"
             app:expandedTitleMarginBottom="28dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -31,6 +31,7 @@
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                app:navigationIconTint="?attr/backArrowColor"
                 app:title="Version Info"
                 app:titleCentered="true"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -75,6 +76,7 @@
                         android:paddingEnd="5dp"
                         android:text="Version Number:"
                         android:textSize="18sp"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -89,6 +91,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="3.0.8"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -123,6 +126,7 @@
                         android:paddingEnd="5dp"
                         android:text="Build Number:"
                         android:textSize="18sp"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -137,6 +141,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="123"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -170,7 +175,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Date Last Updated:"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -186,7 +191,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="07/01/2022"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -222,7 +227,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Material 3"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImage"
                         app:layout_constraintStart_toStartOf="parent"
@@ -239,7 +244,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="https://m3.material.io/"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImage"
                         app:layout_constraintStart_toStartOf="parent"
@@ -255,7 +260,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -288,6 +293,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Google Ads"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageGoogleAds"
                         app:layout_constraintStart_toStartOf="parent"
@@ -305,7 +311,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="https://developers.google.com/google-ads/api/docs/start"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageGoogleAds"
                         app:layout_constraintStart_toStartOf="parent"
@@ -321,7 +327,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -354,6 +360,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Firebase Analytics"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageAnalytics"
                         app:layout_constraintStart_toStartOf="parent"
@@ -369,6 +376,7 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:paddingBottom="8dp"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:text="https://firebase.google.com/docs/analytics/"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageAnalytics"
@@ -385,7 +393,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -418,6 +426,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Firebase Crashlytics"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageCrashlytics"
                         app:layout_constraintStart_toStartOf="parent"
@@ -434,6 +443,7 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:text="https://firebase.google.com/docs/crashlytics/"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageCrashlytics"
@@ -450,7 +460,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -483,7 +493,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Firebase Performance Monitoring"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImagePerf"
                         app:layout_constraintStart_toStartOf="parent"
@@ -501,7 +511,7 @@
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
                         android:text="https://firebase.google.com/docs/perf-mon/"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImagePerf"
                         app:layout_constraintStart_toStartOf="parent"
@@ -517,7 +527,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -550,7 +560,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Circle Image View"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageCircleImageView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -567,8 +577,8 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-                        android:text=""
-                        
+                        android:text="https://github.com/hdodenhof/CircleImageView"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageCircleImageView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -584,7 +594,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -617,7 +627,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Jsoup JSON Parsing"
-                        
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageJsoup"
                         app:layout_constraintStart_toStartOf="parent"
@@ -634,8 +644,8 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-                        
-                        
+                        android:text="https://github.com/jhy/jsoup"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageJsoup"
                         app:layout_constraintStart_toStartOf="parent"
@@ -651,7 +661,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -683,7 +694,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Glide Image Loading"
-
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageGlide"
                         app:layout_constraintStart_toStartOf="parent"
@@ -700,8 +711,8 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-
-
+                        android:text="https://github.com/bumptech/glide"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageGlide"
                         app:layout_constraintStart_toStartOf="parent"
@@ -717,7 +728,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -750,7 +762,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="PDF Viewer for the Campus Map"
-
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImagePDF"
                         app:layout_constraintStart_toStartOf="parent"
@@ -767,8 +779,8 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-
-
+                        android:text="https://github.com/barteksc/AndroidPdfViewer"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImagePDF"
                         app:layout_constraintStart_toStartOf="parent"
@@ -784,7 +796,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -816,7 +829,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
                         android:text="Touch Image View"
-
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageTouchImageView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -833,8 +846,8 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-
-
+                        android:text="https://github.com/MikeOrtiz/TouchImageView"
+                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/chevronImageTouchImageView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -850,12 +863,212 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/cardViewLightBlue"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/switchButtonConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/switchButtonHeading"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="5dp"
+                        android:text="Switch Button"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toStartOf="@id/switchButtonImageView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/switchButtonSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/switchButtonHeading"
+                        android:layout_alignStart="@id/switchButtonHeading"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="8dp"
+                        android:text="https://github.com/zcweng/SwitchButton"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@id/switchButtonImageView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/switchButtonHeading" />
+
+                    <ImageView
+                        android:id="@+id/switchButtonImageView"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_chevron_right_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/cardViewLightBlue"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/gsonConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/gsonHeading"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="5dp"
+                        android:text="Gson"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toStartOf="@id/chevronImageGson"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/gsonSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gsonHeading"
+                        android:layout_alignStart="@id/gsonHeading"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="8dp"
+                        android:text="https://github.com/google/gson"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@id/chevronImageGson"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/gsonHeading" />
+
+                    <ImageView
+                        android:id="@+id/chevronImageGson"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_chevron_right_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/cardViewLightBlue"
+                app:cardCornerRadius="28dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/swipedDecoratorConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/swipedDecoratorHeading"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="5dp"
+                        android:text="Recycler View Swipe Decorator"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toStartOf="@id/chevronImageSwipedDecorator"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/swipedDecoratorSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/swipedDecoratorHeading"
+                        android:layout_alignStart="@id/swipedDecoratorHeading"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="8dp"
+                        android:text="https://github.com/xabaras/RecyclerViewSwipeDecorator"
+                         android:textColor="?attr/alwaysDarkTextColor"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@id/chevronImageSwipedDecorator"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/swipedDecoratorHeading" />
+
+                    <ImageView
+                        android:id="@+id/chevronImageSwipedDecorator"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_chevron_right_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription"
+                        android:visibility="gone"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

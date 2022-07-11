@@ -29,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.blue
@@ -49,6 +50,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.ViewImageCommunityBoardPostIntent
 import com.cory.texarkanacollege.adapters.CommunityBoardAdapter
@@ -76,6 +78,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
+import java.lang.IllegalStateException
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -113,6 +117,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
                     "You have successfully been logged in",
                     Toast.LENGTH_SHORT
                 ).show()
+                val runnable = Runnable {
+                    (context as MainActivity).setCommunityBoardMenuText()
+                }
+                MainActivity().runOnUiThread(runnable)
                 val materialToolbar = activity?.findViewById<MaterialToolbar>(R.id.viewPostToolbar)
                 database.child("posts").child(childPosition.toString()).child("likes").orderByKey()
                     .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -317,23 +325,27 @@ class ViewCommunityBoardPostFragment : Fragment() {
         database.child("posts").child(childPosition.toString()).child("likes").orderByKey()
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    for (i in snapshot.children) {
-                        if (i.key == firebaseAuth.currentUser?.uid) {
-                            if (i.child("liked").value == true) {
-                                materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
-                                    ContextCompat.getDrawable(
-                                        requireContext(),
-                                        R.drawable.ic_baseline_favorite_24
-                                    )
+                    try {
+                        for (i in snapshot.children) {
+                            if (i.key == firebaseAuth.currentUser?.uid) {
+                                if (i.child("liked").value == true) {
+                                    materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                        ContextCompat.getDrawable(
+                                            requireContext(),
+                                            R.drawable.ic_baseline_favorite_24
+                                        )
 
-                            } else {
-                                materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
-                                    ContextCompat.getDrawable(
-                                        requireContext(),
-                                        R.drawable.ic_baseline_favorite_border_24
-                                    )
+                                } else {
+                                    materialToolbar?.menu?.findItem(R.id.likePost)?.icon =
+                                        ContextCompat.getDrawable(
+                                            requireContext(),
+                                            R.drawable.ic_baseline_favorite_border_24
+                                        )
+                                }
                             }
                         }
+                    } catch (e: IllegalStateException) {
+                        e.printStackTrace()
                     }
                 }
 
@@ -497,6 +509,13 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val profilePicURL = args?.getString("profilePicURL", "")
         val email = args?.getString("email", "")
         val pinned = args?.getString("pinned", "")
+        val urgent = args?.getString("urgent", "")
+
+        val postCardView = requireActivity().findViewById<CardView>(R.id.postCardView)
+
+        if (urgent == "true") {
+            postCardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.urgentPostRed))
+        }
 
         val pinnedChip = requireActivity().findViewById<Chip>(R.id.communityBoardPostPinnedChip)
         if (pinned == "true") {
@@ -509,11 +528,11 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
         dateChip?.text = date
 
-        val circularProgressDrawable = CircularProgressDrawable(requireContext())
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
-        circularProgressDrawable.start()
+        val circularProgressDrawableProfilePic = CircularProgressDrawable(requireContext())
+        circularProgressDrawableProfilePic.strokeWidth = 2f
+        circularProgressDrawableProfilePic.centerRadius = 15f
+        circularProgressDrawableProfilePic.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.blue))
+        circularProgressDrawableProfilePic.start()
 
         val circularProgressDrawableImage = CircularProgressDrawable(requireContext())
         circularProgressDrawableImage.strokeWidth = 5f
@@ -526,7 +545,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
         Glide.with(requireContext())
             .load(profilePicURL)
-            .placeholder(circularProgressDrawable)
+            .placeholder(circularProgressDrawableProfilePic)
             .skipMemoryCache(true)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(profileImageView!!)
@@ -562,8 +581,6 @@ class ViewCommunityBoardPostFragment : Fragment() {
                         isFirstResource: Boolean
                     ): Boolean {
                         imageView?.visibility = View.VISIBLE
-
-
                         return false
                     }
                 })
@@ -617,7 +634,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
                 .child((childrenCount + 1).toString()).child("uid")
                 .setValue(firebaseAuth.currentUser!!.uid)
             val formatter =
-                SimpleDateFormat("MMM/dd/yyyy HH:mm aa", Locale.ENGLISH)
+                SimpleDateFormat("MMM/dd/yyyy hh:mm aa", Locale.ENGLISH)
             val dateFormatted = formatter.format(Date())
             database.child("posts").child((childPosition))
                 .child("comments").child((childrenCount + 1).toString()).child("date")
@@ -642,7 +659,10 @@ class ViewCommunityBoardPostFragment : Fragment() {
     }
 
     fun setTextView() {
-        loadIntoList(childPosition.toString())
+        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+            View.GONE
+        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+            View.VISIBLE
     }
 
     fun loadIntoList(childPosition: String) {
@@ -700,10 +720,14 @@ class ViewCommunityBoardPostFragment : Fragment() {
                                         activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
                                             View.VISIBLE
                                     } else {
-                                        activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
-                                            View.VISIBLE
-                                        activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
-                                            View.GONE
+                                        try {
+                                            activity?.findViewById<RecyclerView>(R.id.commentRecyclerView)!!.visibility =
+                                                View.VISIBLE
+                                            activity?.findViewById<TextView>(R.id.noCommentsTextView)!!.visibility =
+                                                View.GONE
+                                        } catch (e: NullPointerException) {
+                                            e.printStackTrace()
+                                        }
 
                                             println("children " + i.toString())
                                             val map = java.util.HashMap<String, String>()

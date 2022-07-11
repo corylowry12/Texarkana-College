@@ -17,6 +17,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -282,9 +283,6 @@ class MainActivity : AppCompatActivity() {
 
         this.cacheDir.deleteRecursively()
 
-        if (savedInstanceState == null) {
-            replaceFragment(homeFragment)
-        }
         val extras = intent.extras
 
         if (extras != null) {
@@ -404,6 +402,40 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+        }
+
+        if (DefaultOpeningTabData(this).loadDefaultTab() == 0) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.home).isChecked = true
+            }
+            else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                 bottomNav.menu.findItem(R.id.home).isChecked = true
+            }
+            replaceFragment(homeFragment)
+        }
+        else if (DefaultOpeningTabData(this).loadDefaultTab() == 1) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.classes).isChecked = true
+            }
+            else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.classes).isChecked = true
+            }
+            replaceFragment(classesFragment)
+        }
+        else if (DefaultOpeningTabData(this).loadDefaultTab() == 2) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.assignments).isChecked = true
+            }
+            else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.assignments).isChecked = true
+            }
+            replaceFragment(assignmentFragment)
         }
     }
 
@@ -764,6 +796,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
         }
+    }
+
+    fun setCommunityBoardMenuText() {
+        communityBoardFragment.setMenuText()
     }
 
     override fun onStop() {

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -40,7 +41,7 @@ class GradesAdapter(
         var grade = itemView.findViewById<TextView>(R.id.row_grade)!!
         var weight = itemView.findViewById<TextView>(R.id.row_weight)!!
         var date = itemView.findViewById<TextView>(R.id.row_date)!!
-        var image = itemView.findViewById<ImageView>(R.id.image)
+        var image = itemView.findViewById<ImageView>(R.id.image)!!
 
         fun bind(position: Int) {
 
@@ -112,7 +113,7 @@ class GradesAdapter(
 
         }
 
-        holder.itemView.setOnLongClickListener {
+        holder.itemView.findViewById<ConstraintLayout>(R.id.gradesItemConstraintLayout).setOnLongClickListener {
 
             val dialog = BottomSheetDialog(context)
             val addGradeView =

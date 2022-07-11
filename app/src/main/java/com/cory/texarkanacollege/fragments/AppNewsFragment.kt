@@ -12,14 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cory.hourcalculator.adapters.KnownIssuesAdapter
-import com.cory.hourcalculator.adapters.RoadmapAdapter
-import com.cory.hourcalculator.adapters.UpdateAdapter
+import com.cory.texarkanacollege.adapters.KnownIssuesAdapter
+import com.cory.texarkanacollege.adapters.RoadmapAdapter
+import com.cory.texarkanacollege.adapters.UpdateAdapter
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.google.android.material.appbar.MaterialToolbar

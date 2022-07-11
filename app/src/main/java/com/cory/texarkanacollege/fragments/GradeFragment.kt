@@ -2,7 +2,7 @@ package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.*
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,7 +14,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
@@ -25,14 +27,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.GradesAdapter
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.ItemID
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.database.GradesDBHelper
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -41,23 +41,18 @@ import com.google.android.material.textfield.TextInputEditText
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class GradeFragment : Fragment() {
 
     private lateinit var gradesAdapter: GradesAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
-    private val imageDataList = ArrayList<HashMap<String, String>>()
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
     private lateinit var managePermissions: ManagePermissions
 
     private val permissionRequestCode = 1
-
-    private val chooseImageRequestCode = 99
 
     lateinit var image: String
 
@@ -496,45 +491,5 @@ class GradeFragment : Fragment() {
             noGradesStoredTextView?.visibility = View.VISIBLE
         }
     }
-
-    val takePhoto2 = registerForActivityResult(
-            StartActivityForResult()
-        ) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-
-                val ei = ExifInterface(currentPhotoPath)
-                val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
-
-                val m = Matrix()
-                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                    m.postRotate(90f)
-                }
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                    m.postRotate(180f)
-                }
-                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    m.postRotate(270f)
-                }
-
-                val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
-
-                val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
-                    .format(System.currentTimeMillis())
-                val storageDir = File(Environment
-                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/TexarkanaCollege/")
-
-                if (!storageDir.exists()) {
-                    storageDir.mkdirs()
-                }
-                val image = File.createTempFile(timeStamp, ".jpeg", storageDir)
-
-                val f = File(image.toString())
-                val fileOutputStream = FileOutputStream(f)
-                val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
-                val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-                MediaScannerConnection.scanFile(requireContext(), arrayOf(image.toString()), null, null)
-
-            }
-        }
 
 }

@@ -71,10 +71,10 @@ SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     fun getCount(id: String): Int {
         val db = this.readableDatabase
-        val query = db!!.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME WHERE $COLUMN_CLASS_ID = $id", null)
+        val query =
+            db!!.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME WHERE $COLUMN_CLASS_ID = $id", null)
         query.moveToFirst()
-        val count = query.getInt(0)
-        return count
+        return query.getInt(0)
     }
 
     fun deleteRow(row_id: String) {
@@ -106,12 +106,11 @@ SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     }
 
-    fun getImage(row_id: String): Cursor {
-
+    fun deleteAllImages() {
         val db = this.writableDatabase
+        db.execSQL("ALTER TABLE $TABLE_NAME RENAME $COLUMN_IMAGE TO image_old")
 
-        return db.rawQuery("SELECT $COLUMN_IMAGE FROM $TABLE_NAME WHERE $COLUMN_ID=$row_id ORDER BY $COLUMN_DATE DESC", null)
-
+        db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_IMAGE TEXT DEFAULT \"\" NOT NULL")
     }
 
     fun getImage(row_id: String, key: String): Cursor {
@@ -128,12 +127,6 @@ SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
         return db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID=$row_id", null)
 
-    }
-
-    fun getAllRow(context: Context): Cursor? {
-        val db = this.writableDatabase
-
-        return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_GRADE asc", null)
     }
 
     fun deleteAll() {

@@ -30,11 +30,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.suke.widget.SwitchButton
-import de.hdodenhof.circleimageview.CircleImageView
 import java.math.RoundingMode
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ClassesAdapter(
     val context: Context,
@@ -44,9 +40,9 @@ class ClassesAdapter(
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var title = itemView.findViewById<TextView>(R.id.row_class)!!
-        var classTime = itemView.findViewById<TextView>(R.id.row_class_time)
-        val classesIconImageView = itemView.findViewById<ImageView>(R.id.classesIconImageView)
-        val classesIconTextView = itemView.findViewById<TextView>(R.id.classesTitleImageViewText)
+        var classTime = itemView.findViewById<TextView>(R.id.row_class_time)!!
+        val classesIconImageView = itemView.findViewById<ImageView>(R.id.classesIconImageView)!!
+        val classesIconTextView = itemView.findViewById<TextView>(R.id.classesTitleImageViewText)!!
 
         fun bind(position: Int) {
 
@@ -213,7 +209,7 @@ class ClassesAdapter(
             classAverage.text = "Class Average: 0.0%"
         }
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<ConstraintLayout>(R.id.classesItemConstraintLayout).setOnClickListener {
 
             val itemPositionData = ItemID(context)
             itemPositionData.setPosition(dataItem["id"]!!.toInt())
@@ -229,7 +225,7 @@ class ClassesAdapter(
             manager.commit()
         }
 
-        holder.itemView.setOnLongClickListener {
+        holder.itemView.findViewById<ConstraintLayout>(R.id.classesItemConstraintLayout).setOnLongClickListener {
 
             val dialog = BottomSheetDialog(context)
             val addGradeView =

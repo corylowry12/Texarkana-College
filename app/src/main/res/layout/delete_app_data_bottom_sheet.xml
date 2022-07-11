@@ -80,19 +80,6 @@
         style="@style/Widget.Material3.Button"/>
 
     <Button
-        android:id="@+id/deleteEverythingButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/deleteImagesButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:text="Everything"
-        style="@style/Widget.Material3.Button"/>
-
-    <Button
         android:id="@+id/deleteSettingsButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -105,11 +92,25 @@
         android:text="Settings"
         style="@style/Widget.Material3.Button"/>
 
+
+    <Button
+        android:id="@+id/deleteEverythingButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/deleteSettingsButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:text="Everything"
+        style="@style/Widget.Material3.Button"/>
+
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/deleteSettingsButton"
+        app:layout_constraintTop_toBottomOf="@id/deleteEverythingButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"

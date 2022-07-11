@@ -1,4 +1,4 @@
-package com.cory.hourcalculator.adapters
+package com.cory.texarkanacollege.adapters
 
 import android.animation.LayoutTransition
 import android.content.Context
@@ -38,7 +38,7 @@ class KnownIssuesAdapter(val context: Context,
         val layoutTransition2 = layout2.layoutTransition
         layoutTransition2.enableTransitionType(LayoutTransition.CHANGING)
 
-        (holder as KnownIssuesAdapter.ViewHolder).bind(position)
+        (holder as ViewHolder).bind(position)
     }
 
     override fun getItemCount(): Int {

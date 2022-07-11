@@ -1,9 +1,7 @@
 package com.cory.texarkanacollege.fragments
 
-import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle

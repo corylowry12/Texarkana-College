@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -16,11 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cory.hourcalculator.adapters.PatchNotesBugFixesAdapter
 import com.cory.texarkanacollege.R
-import com.cory.texarkanacollege.adapters.ClassesAdapter
 import com.cory.texarkanacollege.adapters.DoneAdapter
 import com.cory.texarkanacollege.adapters.PastDueAdapter
 import com.cory.texarkanacollege.adapters.UpcomingAdapter
@@ -30,7 +26,6 @@ import com.cory.texarkanacollege.classes.RecyclerViewVisibility
 import com.cory.texarkanacollege.classes.RememberRecyclerViewVisibilityForAssignments
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

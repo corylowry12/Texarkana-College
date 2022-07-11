@@ -2,6 +2,7 @@ package com.cory.texarkanacollege.classes
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 
 class DarkWebViewData(context: Context) {
 
@@ -10,13 +11,16 @@ class DarkWebViewData(context: Context) {
     //this saves the break preference
     fun setDarkWebView(state: Boolean) {
         val editor = sharedPreferences.edit()
-        editor.putBoolean("darkWebView", state)
+        editor.putBoolean("darkWebView_data", state)
         editor.apply()
     }
 
     // this will load break state
     fun loadDarkWebView(): Boolean {
-        val state = sharedPreferences.getBoolean("darkWebView", false)
+        var state = sharedPreferences.getBoolean("darkWebView_data", false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            state = sharedPreferences.getBoolean("darkWebView_data", true)
+        }
         return (state)
     }
 

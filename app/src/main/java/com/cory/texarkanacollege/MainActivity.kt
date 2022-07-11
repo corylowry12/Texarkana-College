@@ -17,10 +17,6 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
-import android.provider.Settings
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -36,7 +32,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -45,7 +40,6 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.Dispatchers

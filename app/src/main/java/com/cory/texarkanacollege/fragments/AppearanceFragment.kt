@@ -3,13 +3,12 @@ package com.cory.texarkanacollege.fragments
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.cardview.widget.CardView
-import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData

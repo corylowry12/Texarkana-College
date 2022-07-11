@@ -1,6 +1,5 @@
 package com.cory.texarkanacollege.fragments
 
-import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.res.Configuration
@@ -14,19 +13,15 @@ import android.webkit.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.cory.texarkanacollege.MainActivity
-import com.cory.texarkanacollege.classes.ManagePermissions
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
+import com.cory.texarkanacollege.classes.ManagePermissions
 import com.google.android.material.snackbar.Snackbar
-import java.lang.IllegalStateException
 
 class HomeFragment : Fragment() {
 
@@ -74,7 +69,7 @@ class HomeFragment : Fragment() {
 
         refreshLayout = requireView().findViewById(R.id.refreshLayout)
         webView = requireView().findViewById(R.id.webView)
-        progressBar = requireView().findViewById<ProgressBar>(R.id.progressBar)
+        progressBar = requireView().findViewById(R.id.progressBar)
         val constraintLayout = requireView().findViewById<ConstraintLayout>(R.id.constraintLayout)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {

@@ -1,4 +1,4 @@
-package com.cory.hourcalculator.adapters
+package com.cory.texarkanacollege.adapters
 
 import android.animation.LayoutTransition
 import android.content.Context
@@ -55,7 +55,7 @@ private val dataList:  ArrayList<HashMap<String, String>>
             }
         }
 
-        (holder as UpdateAdapter.ViewHolder).bind(position)
+        (holder as ViewHolder).bind(position)
     }
 
     override fun getItemCount(): Int {

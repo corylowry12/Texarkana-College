@@ -3,13 +3,11 @@ package com.cory.texarkanacollege.fragments
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData

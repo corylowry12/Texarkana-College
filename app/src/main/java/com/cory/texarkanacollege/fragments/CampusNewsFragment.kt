@@ -1,7 +1,6 @@
 package com.cory.texarkanacollege.fragments
 
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -21,12 +20,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cory.texarkanacollege.MainActivity
-import com.cory.texarkanacollege.adapters.CampusNewsAdapter
 import com.cory.texarkanacollege.R
-import com.cory.texarkanacollege.adapters.ClassesAdapter
+import com.cory.texarkanacollege.adapters.CampusNewsAdapter
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import java.lang.NullPointerException
 
 @OptIn(DelicateCoroutinesApi::class)
 class CampusNewsFragment : Fragment() {
@@ -359,7 +354,7 @@ class CampusNewsFragment : Fragment() {
     private fun loadMore() {
 
         GlobalScope.launch(Dispatchers.Main) {
-            progressBar = requireActivity().findViewById<ProgressBar>(R.id.progress_circular)
+            progressBar = requireActivity().findViewById(R.id.progress_circular)
             progressBar.visibility = View.VISIBLE
 
         }

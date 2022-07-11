@@ -2,13 +2,6 @@ package com.cory.texarkanacollege.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -31,22 +23,19 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ViewCommunityBoardPostCommentsAdapter(val context: Context,
                                             private val dataList:  ArrayList<HashMap<String, String>>, private val likesDataList: ArrayList<HashMap<String, String>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private lateinit var firebaseAuth: FirebaseAuth
-
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var name = itemView.findViewById<TextView>(R.id.row_display_name)
-        var title = itemView.findViewById<TextView>(R.id.row_comment_title)
-        var dateTextView = itemView.findViewById<TextView>(R.id.dateTextView)
-        var profilePic = itemView.findViewById<CircleImageView>(R.id.profilePicComments)
-        val likesCountTextView = itemView.findViewById<TextView>(R.id.likesCountTextView)
+        var name = itemView.findViewById<TextView>(R.id.row_display_name)!!
+        var title = itemView.findViewById<TextView>(R.id.row_comment_title)!!
+        var dateTextView = itemView.findViewById<TextView>(R.id.dateTextView)!!
+        var profilePic = itemView.findViewById<CircleImageView>(R.id.profilePicComments)!!
+        val likesCountTextView = itemView.findViewById<TextView>(R.id.likesCountTextView)!!
 
         fun bind(position: Int) {
 

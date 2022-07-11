@@ -1,11 +1,9 @@
-package com.cory.hourcalculator.adapters
+package com.cory.texarkanacollege.adapters
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.R
@@ -33,7 +31,7 @@ class PatchNotesNewFeaturesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        (holder as PatchNotesNewFeaturesAdapter.ViewHolder).bind(position)
+        (holder as ViewHolder).bind(position)
     }
 
     override fun getItemCount(): Int {

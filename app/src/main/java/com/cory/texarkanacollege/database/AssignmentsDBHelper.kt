@@ -3,10 +3,8 @@ package com.cory.texarkanacollege.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
 import java.util.*
@@ -167,12 +165,6 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         val db = this.writableDatabase
 
         db.update(TABLE_NAME, values, "$COLUMN_ID=?", arrayOf(id))
-
-    }
-
-    fun getCount(): Int {
-        val db = this.readableDatabase
-        return DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM $TABLE_NAME", null).toInt()
 
     }
 

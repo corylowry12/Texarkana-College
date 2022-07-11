@@ -23,11 +23,13 @@
         app:cardBackgroundColor="@color/cardViewLightBlue">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/classesItemConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingTop="20dp"
             android:paddingEnd="20dp"
+            android:foreground="?attr/selectableItemBackground"
             android:paddingBottom="20dp">
 
             <com.google.android.material.card.MaterialCardView

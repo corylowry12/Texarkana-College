@@ -11,31 +11,21 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
-import com.cory.texarkanacollege.*
+import com.cory.texarkanacollege.MainActivity
+import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CategoryTextViewVisible
 import com.cory.texarkanacollege.classes.ColoredBackgroundsData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
-import com.cory.texarkanacollege.database.ClassesDBHelper
-import com.cory.texarkanacollege.database.GradesDBHelper
-import com.cory.texarkanacollege.fragments.GradeFragment
 import com.cory.texarkanacollege.fragments.ViewAssignmentFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import com.suke.widget.SwitchButton
-import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class DoneAdapter(val context: Context,
                       private val dataList:  ArrayList<HashMap<String, String>>

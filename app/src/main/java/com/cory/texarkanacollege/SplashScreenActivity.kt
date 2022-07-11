@@ -2,13 +2,12 @@ package com.cory.texarkanacollege
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.appcompat.app.AppCompatActivity
 
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -6,12 +6,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -25,16 +26,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CommentLikeCounter
 import com.cory.texarkanacollege.fragments.ViewCommunityBoardPostFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -42,8 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class CommunityBoardAdapter(val context: Context,
                             private val dataList:  ArrayList<HashMap<String, String>>, private val likesDataList:  ArrayList<HashMap<String, String>>
@@ -62,8 +58,8 @@ class CommunityBoardAdapter(val context: Context,
         val profileImage = itemView.findViewById<CircleImageView>(R.id.profilePic)!!
         val likedCountTextView = itemView.findViewById<TextView>(R.id.likesCountTextView)!!
         val commentCountTextView = itemView.findViewById<TextView>(R.id.commentCountTextView)!!
-        val likesCounterCardView = itemView.findViewById<CardView>(R.id.likesCardView)
-        val commentCounterCardView = itemView.findViewById<CardView>(R.id.commentsCardView)
+        val likesCounterCardView = itemView.findViewById<CardView>(R.id.likesCardView)!!
+        val commentCounterCardView = itemView.findViewById<CardView>(R.id.commentsCardView)!!
 
 
         fun bind(position: Int) {
@@ -95,7 +91,7 @@ class CommunityBoardAdapter(val context: Context,
             }
 
             contactName.text = dataItem["name"]
-            title.text = "Title: " + dataItem["title"]
+            title.text = dataItem["title"]
             date.text = diff
             likedCountTextView.text = dataItem["likedCount"]
             commentCountTextView.text = dataItem["commentCount"]
@@ -157,9 +153,18 @@ class CommunityBoardAdapter(val context: Context,
             holder.itemView.findViewById<CardView>(R.id.commentsCardView).setCardBackgroundColor(ContextCompat.getColor(context, R.color.communityBoardAccentBlue))
         }
 
+        holder.itemView.findViewById<TextView>(R.id.row_contact_name).setOnClickListener {
+            if (holder.itemView.findViewById<TextView>(R.id.row_contact_name).text.toString().isEmailValid()) {
+                holder.itemView.findViewById<TextView>(R.id.row_contact_name).text = dataItem["name"]
+            }
+            else {
+                holder.itemView.findViewById<TextView>(R.id.row_contact_name).text = dataItem["email"]
+            }
+        }
+
         firebaseAuth = FirebaseAuth.getInstance()
 
-            holder.itemView.setOnLongClickListener {
+        holder.itemView.findViewById<ConstraintLayout>(R.id.communityBoardItemConstraintLayout).setOnLongClickListener {
                 firebaseAuth.currentUser?.reload()
 
                 if (dataItem["uid"] == firebaseAuth.currentUser?.uid.toString()) {
@@ -301,7 +306,7 @@ class CommunityBoardAdapter(val context: Context,
                 false
         }
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<ConstraintLayout>(R.id.communityBoardItemConstraintLayout).setOnClickListener {
 
             val fragment = ViewCommunityBoardPostFragment()
             (context as MainActivity).viewPostCommunityBoardFragment = fragment
@@ -341,7 +346,6 @@ class CommunityBoardAdapter(val context: Context,
         super.setHasStableIds(true)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -360,5 +364,9 @@ class CommunityBoardAdapter(val context: Context,
             }
         }
         return false
+    }
+
+    fun String.isEmailValid(): Boolean {
+        return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 }

@@ -1,24 +1,13 @@
 package com.cory.texarkanacollege.fragments
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
-import android.opengl.Visibility
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -32,13 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.green
-import androidx.core.graphics.red
-import androidx.core.view.isGone
-import androidx.core.view.isInvisible
-import androidx.palette.graphics.Palette
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +37,6 @@ import com.bumptech.glide.request.target.Target
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.ViewImageCommunityBoardPostIntent
-import com.cory.texarkanacollege.adapters.CommunityBoardAdapter
 import com.cory.texarkanacollege.adapters.ViewCommunityBoardPostCommentsAdapter
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.SwipeGestures
@@ -65,7 +48,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -78,12 +60,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
-import java.lang.IllegalStateException
-import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ViewCommunityBoardPostFragment : Fragment() {
 
@@ -216,7 +194,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         communityBoardPostViewRecyclerView =
-            requireActivity().findViewById<RecyclerView>(R.id.commentRecyclerView)
+            requireActivity().findViewById(R.id.commentRecyclerView)
         communityBoardPostViewRecyclerView.visibility = View.GONE
 
         swipeGesture = object: SwipeGestures(requireContext()) {
@@ -512,17 +490,22 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val urgent = args?.getString("urgent", "")
 
         val postCardView = requireActivity().findViewById<CardView>(R.id.postCardView)
+        val contentCardView = requireActivity().findViewById<CardView>(R.id.viewCommunityBoardContentCardView)
 
         if (urgent == "true") {
             postCardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.urgentPostRed))
-        }
-
-        val pinnedChip = requireActivity().findViewById<Chip>(R.id.communityBoardPostPinnedChip)
-        if (pinned == "true") {
-            pinnedChip.visibility = View.VISIBLE
+            contentCardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.communityBoardAccentRed))
         }
         else {
-            pinnedChip.visibility = View.GONE
+            contentCardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.communityBoardAccentBlue))
+        }
+
+        val pinnedConstraintLayout = requireActivity().findViewById<ConstraintLayout>(R.id.pinnedConstraintLayout)
+        if (pinned == "true") {
+            pinnedConstraintLayout.visibility = View.VISIBLE
+        }
+        else {
+            pinnedConstraintLayout.visibility = View.GONE
         }
 
         val dateChip = activity?.findViewById<Chip>(R.id.dateChip)
@@ -607,7 +590,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
         val emailTextView = activity?.findViewById<TextView>(R.id.emailTextView)
 
         nameTextView!!.text = name
-        titleTextView!!.text = "Title: " + title
+        titleTextView!!.text = title
         contentTextView!!.text = content
         emailTextView!!.text = email
 

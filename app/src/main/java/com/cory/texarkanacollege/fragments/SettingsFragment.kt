@@ -2,11 +2,12 @@ package com.cory.texarkanacollege.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,10 +25,14 @@ import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.*
+import com.cory.texarkanacollege.database.AssignmentsDBHelper
+import com.cory.texarkanacollege.database.ClassesDBHelper
+import com.cory.texarkanacollege.database.GradesDBHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
 
 
 class SettingsFragment : Fragment() {
@@ -243,6 +247,127 @@ class SettingsFragment : Fragment() {
         versionInfoConstraint.setOnClickListener {
             openFragment(VersionInfoFragment())
         }
+
+        val deleteAppDataConstraint = view.findViewById<ConstraintLayout>(R.id.constraintDeleteData)
+        deleteAppDataConstraint.setOnClickListener {
+            val dialog = BottomSheetDialog(requireContext())
+            val deleteDataView = layoutInflater.inflate(R.layout.delete_app_data_bottom_sheet, null)
+            dialog.setContentView(deleteDataView)
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.skipCollapsed = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.isDraggable = false
+            }
+            val classes = deleteDataView.findViewById<Button>(R.id.deleteClassesButton)
+            val grades = deleteDataView.findViewById<Button>(R.id.deleteGradesButton)
+            val assignments = deleteDataView.findViewById<Button>(R.id.deleteAssignmentsButton)
+            val images = deleteDataView.findViewById<Button>(R.id.deleteImagesButton)
+            val settings = deleteDataView.findViewById<Button>(R.id.deleteSettingsButton)
+            val everything = deleteDataView.findViewById<Button>(R.id.deleteEverythingButton)
+            val cancel = deleteDataView.findViewById<Button>(R.id.cancelButton)
+
+            classes.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all classes, grades, and assignments. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    ClassesDBHelper(requireContext(), null).deleteAll()
+                    GradesDBHelper(requireContext(), null).deleteAll()
+                    AssignmentsDBHelper(requireContext(), null).deleteAll()
+                    dialog.dismiss()
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+            grades.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all grades. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    GradesDBHelper(requireContext(), null).deleteAll()
+                    dialog.dismiss()
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+            assignments.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all assignments. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    AssignmentsDBHelper(requireContext(), null).deleteAll()
+                    dialog.dismiss()
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+            images.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all images for grades. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    GradesDBHelper(requireContext(), null).deleteAllImages()
+                    dialog.dismiss()
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+            settings.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all saved preferences. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    requireContext().getSharedPreferences("file", 0).edit().clear().apply()
+                    FirebaseAuth.getInstance().signOut()
+                    Toast.makeText(requireContext(), "App Restarting...", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent =
+                            requireContext().packageManager.getLaunchIntentForPackage(requireContext().packageName)
+                        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        activity?.finish()
+                    }, 1500)
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+            everything.setOnClickListener {
+                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
+                materialAlertDialogBuilder.setTitle("Warning")
+                materialAlertDialogBuilder.setMessage("This will erase all saved data. Continue?")
+                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    ClassesDBHelper(requireContext(), null).deleteAll()
+                    GradesDBHelper(requireContext(), null).deleteAll()
+                    AssignmentsDBHelper(requireContext(), null).deleteAll()
+                    requireContext().getSharedPreferences("file", 0).edit().clear().apply()
+                    FirebaseAuth.getInstance().signOut()
+                    Toast.makeText(requireContext(), "App Restarting...", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent =
+                            requireContext().packageManager.getLaunchIntentForPackage(requireContext().packageName)
+                        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        activity?.finish()
+                    }, 1500)
+                }
+                materialAlertDialogBuilder.setNegativeButton("No", null)
+                materialAlertDialogBuilder.show()
+            }
+
+            cancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
 
     private fun openFragment(fragment: Fragment) {
@@ -252,11 +377,5 @@ class SettingsFragment : Fragment() {
         manager.replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
         manager.commit()
-    }
-
-    val openDefaultSettings = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-
     }
 }

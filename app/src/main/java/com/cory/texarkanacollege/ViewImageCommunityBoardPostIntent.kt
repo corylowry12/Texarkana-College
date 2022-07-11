@@ -1,13 +1,12 @@
 package com.cory.texarkanacollege
 
 import android.content.res.Configuration
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap

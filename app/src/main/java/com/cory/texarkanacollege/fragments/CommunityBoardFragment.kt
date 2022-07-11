@@ -1,3 +1,5 @@
+@file:Suppress("KotlinDeprecation", "KotlinDeprecation")
+
 package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
@@ -8,12 +10,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
-import android.text.TextUtils
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,11 +19,8 @@ import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.net.toFile
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.cory.texarkanacollege.R
@@ -58,9 +53,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -204,16 +200,28 @@ class CommunityBoardFragment : Fragment() {
         communityBoardAdapter = CommunityBoardAdapter(requireContext(), dataList, likesDataList)
         val communityBoardRecyclerView = view.findViewById<RecyclerView>(R.id.communityBoardRecyclerView)
 
+        communityBoardRecyclerView?.layoutManager =
+            gridLayoutManager
+
         if (dataList.isEmpty()) {
             loadIntoList()
         }
         else {
+            requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard).isRefreshing = false
             communityBoardAdapter =
                 CommunityBoardAdapter(requireContext(), sortedData, likesDataList)
 
-            communityBoardRecyclerView?.layoutManager =
-                gridLayoutManager
             communityBoardRecyclerView?.adapter = communityBoardAdapter
+
+            for (i in 0 until sortedData.count()) {
+                val dataItem = sortedData[i]
+                val count = Collections.frequency(sortedData, dataItem)
+                if (count > 1) {
+                    Toast.makeText(requireContext(), "Error encountered, reloading", Toast.LENGTH_SHORT).show()
+                    loadIntoList()
+                    break
+                }
+            }
         }
 
         val swipeRefreshLayout =
@@ -590,112 +598,124 @@ class CommunityBoardFragment : Fragment() {
             database.child("posts").orderByKey()
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot1: DataSnapshot) {
-                        dataList.clear()
-                        sortedData.clear()
-                        likesDataList.clear()
+                        try {
+                            dataList.clear()
+                            sortedData.clear()
+                            likesDataList.clear()
 
-                        for (i in snapshot1.children) {
-                            if (snapshot1.child(i.key.toString()).child("hidden").value.toString() != "true" || Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID) == "f56c8dfc9389a084") {
-                                println("children " + i.toString())
-                                var likedCount = 0
-                                var commentCount = 0
-                                database.child("posts").child(i.key.toString()).child("likes")
-                                    .orderByKey()
-                                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                                        override fun onDataChange(snapshot: DataSnapshot) {
-                                            for (z in snapshot.children) {
-                                                if (z.child("liked").value == true) {
-                                                    likedCount++
-                                                    val map = HashMap<String, String>()
-                                                    map["post_number"] = i.key.toString()
-                                                    map["name"] = z.child("name").value.toString()
-                                                    map["profilePicURL"] =
-                                                        z.child("profilePicURL").value.toString()
-                                                    likesDataList.add(map)
+                            for (i in snapshot1.children) {
+                                if (snapshot1.child(i.key.toString())
+                                        .child("hidden").value.toString() != "true" || Settings.Secure.getString(
+                                        activity?.contentResolver,
+                                        Settings.Secure.ANDROID_ID
+                                    ) == "f56c8dfc9389a084"
+                                ) {
+                                    println("children " + i.toString())
+                                    var likedCount = 0
+                                    var commentCount = 0
+                                    database.child("posts").child(i.key.toString()).child("likes")
+                                        .orderByKey()
+                                        .addListenerForSingleValueEvent(object :
+                                            ValueEventListener {
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                for (z in snapshot.children) {
+                                                    if (z.child("liked").value == true) {
+                                                        likedCount++
+                                                        val map = HashMap<String, String>()
+                                                        map["post_number"] = i.key.toString()
+                                                        map["name"] =
+                                                            z.child("name").value.toString()
+                                                        map["profilePicURL"] =
+                                                            z.child("profilePicURL").value.toString()
+                                                        likesDataList.add(map)
+                                                    }
                                                 }
+
+                                                commentCount = snapshot1.child(i.key.toString())
+                                                    .child("comments").childrenCount.toInt()
+
+                                                val map = HashMap<String, String>()
+                                                map["images"] = snapshot1.child(i.key.toString())
+                                                    .child("imagePath").value.toString()
+                                                map["profilePicURL"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("profile_photo").value.toString()
+                                                map["email"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("email").value.toString()
+                                                map["name"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("name").value.toString()
+                                                map["title"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("title").value.toString()
+                                                map["content"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("content").value.toString()
+                                                map["date"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("date").value.toString()
+                                                map["pinned"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("pinned").value.toString()
+                                                map["urgent"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("urgent").value.toString()
+                                                map["uid"] =
+                                                    snapshot1.child(i.key.toString())
+                                                        .child("uid").value.toString()
+
+                                                map["imageURL"] = snapshot1.child(i.key.toString())
+                                                    .child("images").value.toString()
+                                                map["childPosition"] = i.key.toString()
+                                                map["likedCount"] = likedCount.toString()
+                                                map["commentCount"] = commentCount.toString()
+                                                dataList.add(map)
+
+                                                val sortedDataList =
+                                                    dataList.sortedWith(
+                                                        compareBy(
+                                                            { it["pinned"] },
+                                                            { it["urgent"] },
+                                                            { it["date"] })
+                                                    )
+                                                        .reversed()
+
+                                                println("sorted data List " + sortedDataList)
+                                                sortedData.clear()
+                                                for (z in sortedDataList) {
+                                                    sortedData.add(z)
+                                                }
+
+                                                communityBoardAdapter =
+                                                    CommunityBoardAdapter(
+                                                        requireContext(),
+                                                        sortedData,
+                                                        likesDataList
+                                                    )
+
+                                                communityBoardRecyclerView?.adapter =
+                                                    communityBoardAdapter
+
+                                                swipeRefreshLayout.isRefreshing = false
+
+                                                println("children count " + childrenCount)
                                             }
 
-                                            commentCount = snapshot1.child(i.key.toString())
-                                                .child("comments").childrenCount.toInt()
-
-                                            val map = HashMap<String, String>()
-                                            map["images"] = snapshot1.child(i.key.toString())
-                                                .child("imagePath").value.toString()
-                                            map["profilePicURL"] = snapshot1.child(i.key.toString())
-                                                .child("profile_photo").value.toString()
-                                            map["email"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("email").value.toString()
-                                            map["name"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("name").value.toString()
-                                            map["title"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("title").value.toString()
-                                            map["content"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("content").value.toString()
-                                            map["date"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("date").value.toString()
-                                            map["pinned"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("pinned").value.toString()
-                                            map["urgent"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("urgent").value.toString()
-                                            map["uid"] =
-                                                snapshot1.child(i.key.toString())
-                                                    .child("uid").value.toString()
-
-                                            map["imageURL"] = snapshot1.child(i.key.toString())
-                                                .child("images").value.toString()
-                                            map["childPosition"] = i.key.toString()
-                                            map["likedCount"] = likedCount.toString()
-                                            map["commentCount"] = commentCount.toString()
-                                            dataList.add(map)
-
-                                            val sortedDataList =
-                                                dataList.sortedWith(
-                                                    compareBy(
-                                                        { it["pinned"] },
-                                                        { it["urgent"] },
-                                                        { it["date"] })
-                                                )
-                                                    .reversed()
-
-                                            println("sorted data List " + sortedDataList)
-                                            sortedData.clear()
-                                            for (z in sortedDataList) {
-                                                sortedData.add(z)
-                                            }
-
-                                            communityBoardAdapter =
-                                                CommunityBoardAdapter(
+                                            override fun onCancelled(error: DatabaseError) {
+                                                Toast.makeText(
                                                     requireContext(),
-                                                    sortedData,
-                                                    likesDataList
-                                                )
-
-                                            communityBoardRecyclerView?.layoutManager =
-                                                gridLayoutManager
-                                            communityBoardRecyclerView?.adapter =
-                                                communityBoardAdapter
-
-                                            swipeRefreshLayout.isRefreshing = false
-
-                                            println("children count " + childrenCount)
-                                        }
-
-                                        override fun onCancelled(error: DatabaseError) {
-                                            Toast.makeText(
-                                                requireContext(),
-                                                getString(R.string.there_was_an_error),
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    })
+                                                    getString(R.string.there_was_an_error),
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        })
+                                }
                             }
+                            swipeRefreshLayout.isRefreshing = false
+                        } catch (e : Exception) {
+                            e.printStackTrace()
+                            loadIntoList()
                         }
                     }
 

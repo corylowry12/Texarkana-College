@@ -2,9 +2,7 @@ package com.cory.texarkanacollege.classes
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import androidx.core.content.ContextCompat
-import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.R

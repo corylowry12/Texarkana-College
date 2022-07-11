@@ -2,8 +2,6 @@ package com.cory.texarkanacollege.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,35 +11,37 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cory.hourcalculator.adapters.PatchNotesBugFixesAdapter
-import com.cory.hourcalculator.adapters.PatchNotesEnhancementsAdapter
-import com.cory.hourcalculator.adapters.PatchNotesNewFeaturesAdapter
+import com.cory.texarkanacollege.adapters.PatchNotesBugFixesAdapter
+import com.cory.texarkanacollege.adapters.PatchNotesEnhancementsAdapter
+import com.cory.texarkanacollege.adapters.PatchNotesNewFeaturesAdapter
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.Version
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 
 class PatchNotesFragment : Fragment() {
 
-    private var bugFixesArray = arrayOf("Fixed issue where if you would edit an assignment and set the category to \"Other\", it wouldn't change the color", "Fixed some issues with assignments not being sorted " +
-                                        "to upcoming or past due properly if the assignment due date was in a different month than the current one", "Fixed issue with the date picker dialog not having the due date " +
-                                        "of the assignment preselected when editing assignments", "Fixed issue with the minimum date for the date picker dialog being set to the current time even though the assignment due date was in the past",
-                                        "Fixed issue where if you would edit a past due assignment and set the due date to current date or later, the updated assignment would not be removed from past due and inserted into upcoming",
-                                        "Fixed issue where the add class bottom sheet wouldn't be fully expanded on some devices", "Fixed issue where the add assignment bottom sheet wouldn't be full expanded on some devices",
-                                        "Fixed issue with the title bar in the classes view being slightly purple", "Fixed issue with the title bar in the grades view being slightly purple", "Fixed issue with the bottom nav bar being slightly purple, it is now a light blue",
-                                        "Made the background color for dialogs slightly lighter for better legibility", "Fixed issue with the title bar in settings be slightly purple when expanded", "Fixed issue with the community board having the wrong description",
-                                        "Fixed issue with the category text view section in the assignment settings having the wrong text", "Fixed issue with some bottom sheets in the assignments view not being expanded (tablets only)",
-                                        "Fixed issue where you could scroll and collapse the tool bar in the grades view if there was no grades stored", "Fixed issue where you could scroll and collapse the tool bar in the classes view if there was no classes stored",
-                                        "Fixed issue with the spinning circle when refreshing a post not respecting the theme", "Fixed issue with the spinning circle when refreshing the list of community board posts not respecting the theme",
-                                        "Fixed issue when crashing when pressing the back button (tablets only)", "Fixed issue with in app updater saying click restart, and the app wouldn't actually restart")
+    private var bugFixesArray = arrayOf("General Stability Improvements", "Fixed issue with the class options bottom sheet not expanding all the way (tablets only)", "Fixed issue with the grade options bottom sheet not expanding all the way (tablets only)",
+                                        "Fixed issue with the options bottom sheet not dismissing when clicking the View likes button in the community board", "Fixed issue where you could click outside the restart dialog after an update was downloaded to dismiss the dialog",
+                                        "Fixed issue where if you opened the campus map via the campus map widget and click the back arrow in the navigation bar, the active tab on the bottom navigation view wouldn't update",
+                                        "Fixed issue with app saying press restart to install update, and it wouldn't actually restart to install the update", "Fixed issue with the tool bar being to dark when its collapsed in the assignment settings view",
+                                        "Fixed issue with crashing when viewing a community board post and long pressing a comment if you were not signed in", "Fixed issue with showing the wrong people who liked a post in the community board under certain conditions",
+                                        "Fixed issue with crashing when viewing likes for a post in the community board under certain conditions", "Fixed issue where if you were not logged in in the community board and clicked on a post and commented, or liked and logged in and went back, the menu would still say \"Sign In\"",
+                                        "Fixed issue with the community board title bar being slightly off color", "Fixed issue with comments having the wrong date format when submitting them in the community board", "Fixed issue where if you swiped down to refresh a community board post, it would never stop \"refreshing\"",
+                                        "Fixed issue where you could scroll in the assignments view and collapse the tool bar even if there were no assignments stored", "Fixed issue with images being too tall and causing items to be too tall and text being off-centered in the grades view")
 
-    private var newFeaturesArray = arrayOf("Added the option to set a default category to be pre-selected when creating an assignment")
+    private var newFeaturesArray = arrayOf("Added an option in the settings to view other social media pages", "Added the ability to set the app theme to light, dark, or follow system in Settings->Appearance",
+                                            "Added the ability to like comments by swiping to the left in the community board", "Added the ability to set a default opening tab when you open the app",
+                                            "Added the option in the Assignment Settings view (Settings -> Assignment Settings) to remember the visibility of items in the assignments view, so if you were looking at something it will still be visible",
+                                            "Added a section in the settings where you can easily and conveniently delete app data")
 
-    private var enhancementsArray = arrayOf("Tweaked the design of the assignment settings view", "Assignments will now be sorted by the assignment due date", "Now when long pressing an assignment, the assignment name will show in the options bottom sheet so you know which assignment you are showing the options for",
-                                            "App will no longer say it marked an assignment as done if it didn't or there was an error", "Tweaked the green color for class average if you have an A in that class to make it more legible",
-                                            "A toast message will now be displayed when clicking to view likes if there are no likes for that post", "Changed the icon on the bottom nav bar for the classes tab", "Tweaked the design of the \"About the Community Board\" bottom sheet")
+    private var enhancementsArray = arrayOf("Moved community board to the bottom nav bar", "There will no longer be labels describing what tab you are on", "Tweaked the colors of the web class switch when adding a class",
+                                            "The heart icon when liking a post will always be white instead of red if its liked like before", "Tweaked the colors of the switch to mark a post as urgent", "Tweaked the design of the sign out menu in the community board",
+                                            "Migrated the dark webview switch to Settings->Appearance", "Tweaked the colors of the webview dark mode switch to set the webview to be dark", "When loading post in the community board it will no longer show the loading dialog",
+                                            "Redesigned the items in the community board", "The background of the card view when viewing an urgent post will now be red if its urgent in the view post view", "Community board posts will now show how long ago it was posted instead of the date and time",
+                                            "The web views within the app will now automatically be dark theme if you are on Android 10+", "Removed the email text view from the items in the community board, now to view email you have to click on the name text view",
+                                            "Items will now animate when clicked or long pressed in the community board", "Classes will now animate when clicked or long pressed")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

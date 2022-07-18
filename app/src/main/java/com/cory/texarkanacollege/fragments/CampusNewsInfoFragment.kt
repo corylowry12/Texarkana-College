@@ -1,13 +1,18 @@
 package com.cory.texarkanacollege.fragments
 
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.ImageView
@@ -32,11 +37,14 @@ import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 
 @OptIn(DelicateCoroutinesApi::class)
 class CampusNewsInfoFragment : Fragment() {
@@ -77,6 +85,7 @@ class CampusNewsInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val toolBar = activity?.findViewById<MaterialToolbar>(R.id.materialToolBarCampusNewsInfo)
         toolBar?.setNavigationOnClickListener {
+            hideKeyboard()
             activity?.supportFragmentManager?.popBackStack()
         }
 
@@ -103,8 +112,7 @@ class CampusNewsInfoFragment : Fragment() {
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT)
-                            .show()
+                        imageView.visibility = View.INVISIBLE
                         return false
                     }
 
@@ -143,11 +151,29 @@ class CampusNewsInfoFragment : Fragment() {
                 .into(imageView)
 
             GlobalScope.launch(Dispatchers.IO) {
-                val document = Jsoup.connect(link).get()
-                val name = document.select("article")
+                val webView = view.findViewById<WebView>(R.id.contents)
+                try {
 
+                    val document = Jsoup.connect(link).get()
+                    val name = document.select("article")
+                    GlobalScope.launch(Dispatchers.Main) {
+                        webView!!.loadDataWithBaseURL(
+                            null,
+                            "<style>img{display: inline;height: auto;max-width: 85%;}</style>$name",
+                            "text/html",
+                            "UTF-8",
+                            null
+                        )
+                    }
+                }
+                catch (e : Exception) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        activity?.supportFragmentManager?.popBackStack()
+                        Toast.makeText(requireContext(), getString(R.string.there_was_an_error_check_connection), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
                 GlobalScope.launch(Dispatchers.Main) {
-                    val webView = view.findViewById<WebView>(R.id.contents)
                     webView?.settings?.loadWithOverviewMode = true
 
                     val cardView = view.findViewById<CardView>(R.id.webViewCardView)
@@ -160,44 +186,124 @@ class CampusNewsInfoFragment : Fragment() {
                         }
                     }
 
-                    val darkThemeData = DarkThemeData(requireContext())
-                    when {
-                        darkThemeData.loadState() == 1 -> {
-                            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
-                        }
-                        darkThemeData.loadState() == 0 -> {
-                            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                        }
-                        darkThemeData.loadState() == 2 -> {
-                            when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
-                                Configuration.UI_MODE_NIGHT_NO -> {
-                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                                }
-                                Configuration.UI_MODE_NIGHT_YES -> {
-                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
-                                }
-                                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                                    cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                    try {
+                        val darkThemeData = DarkThemeData(requireContext())
+                        when {
+                            darkThemeData.loadState() == 1 -> {
+                                cardView.setCardBackgroundColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.darkWebViewCardBackgroundColor
+                                    )
+                                )
+                            }
+                            darkThemeData.loadState() == 0 -> {
+                                cardView.setCardBackgroundColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.white
+                                    )
+                                )
+                            }
+                            darkThemeData.loadState() == 2 -> {
+                                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                                    Configuration.UI_MODE_NIGHT_NO -> {
+                                        cardView.setCardBackgroundColor(
+                                            ContextCompat.getColor(
+                                                requireContext(),
+                                                R.color.white
+                                            )
+                                        )
+                                    }
+                                    Configuration.UI_MODE_NIGHT_YES -> {
+                                        cardView.setCardBackgroundColor(
+                                            ContextCompat.getColor(
+                                                requireContext(),
+                                                R.color.darkWebViewCardBackgroundColor
+                                            )
+                                        )
+                                    }
+                                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                                        cardView.setCardBackgroundColor(
+                                            ContextCompat.getColor(
+                                                requireContext(),
+                                                R.color.darkWebViewCardBackgroundColor
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-
-                    webView!!.loadDataWithBaseURL(
-                        null,
-                        "<style>img{display: inline;height: auto;max-width: 85%;}</style>" + name.toString(),
-                        "text/html",
-                        "UTF-8",
-                        null
-                    )
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {
-                        webView.settings.forceDark = WebSettings.FORCE_DARK_ON
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.darkWebViewCardBackgroundColor))
+                    catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                    else {
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(
+                                requireContext()
+                            ).loadDarkWebView()
+                        ) {
+                            webView.settings.forceDark = WebSettings.FORCE_DARK_ON
+                            cardView.setCardBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.darkWebViewCardBackgroundColor
+                                )
+                            )
+                        } else {
+                            cardView.setCardBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.white
+                                )
+                            )
+                        }
                     }
+                     catch (e: Exception) {
+                         e.printStackTrace()
+                     }
+
+                    val search = view.findViewById<TextInputEditText>(R.id.search)
+                    val searchLayout = view.findViewById<TextInputLayout>(R.id.outlinedTextFieldSearch)
+                    searchLayout.setEndIconOnClickListener {
+                        search.clearFocus()
+                        search.setText("")
+                        webView.clearMatches()
+                    }
+                    searchLayout.setStartIconOnClickListener {
+                        webView.findNext(true)
+                    }
+                    search?.setOnKeyListener(View.OnKeyListener { _, i, keyEvent ->
+                        if (i == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                            search.clearFocus()
+                            hideKeyboard()
+                            return@OnKeyListener true
+                        }
+                        if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                            webView.findNext(true)
+                            return@OnKeyListener true
+                        }
+                        false
+                    })
+                    search?.addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            webView.findAllAsync(search.text.toString())
+                        }
+
+
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                    })
                 }
             }
         }
@@ -206,8 +312,30 @@ class CampusNewsInfoFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    hideKeyboard()
                     activity?.supportFragmentManager?.popBackStack()
                 }
             })
+    }
+
+    fun hideKeyboard() {
+        try {
+            val inputManager: InputMethodManager =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val focusedView = activity?.currentFocus
+
+            if (view?.findViewById<TextInputEditText>(R.id.search)!!.hasFocus()) {
+                view?.findViewById<TextInputEditText>(R.id.search)!!.clearFocus()
+            }
+
+            if (focusedView != null) {
+                inputManager.hideSoftInputFromWindow(
+                    focusedView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+        }
     }
 }

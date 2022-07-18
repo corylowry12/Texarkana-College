@@ -14,7 +14,6 @@
         android:fitsSystemWindows="true"
         app:liftOnScroll="true"
         android:background="@color/transparent"
-        app:contentScrim="@color/toolBarScrimColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -22,7 +21,9 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="@color/toolBarScrimColor"
             app:expandedTitleMarginBottom="28dp"
+            app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar

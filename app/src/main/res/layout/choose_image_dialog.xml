@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="20dp">
 
     <ImageView
         android:id="@+id/iconImageView"
@@ -69,6 +69,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/takePhoto"
-        android:text="Cancel"/>
+        android:text="Cancel"
+        android:textColor="?attr/cancelButtonTextColor"
+        style="@style/Widget.Material3.Button.OutlinedButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

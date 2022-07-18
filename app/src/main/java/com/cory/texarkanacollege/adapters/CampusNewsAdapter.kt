@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.MainActivity
@@ -22,13 +23,30 @@ class CampusNewsAdapter(val context: Context,
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var name = itemView.findViewById<TextView>(R.id.row_campus_news_name)!!
+        val pageNumber = itemView.findViewById<TextView>(R.id.pageNumberTextView)
+        val separator = itemView.findViewById<View>(R.id.separator)
 
         fun bind(position: Int) {
 
             val dataItem = dataList[position]
 
             name.text = dataItem["name"]
-
+            if (position > 0) {
+            if (dataItem["pageNumber"]!!.toInt() > dataList[position - 1]["pageNumber"]!!.toInt()) {
+                pageNumber.visibility = View.VISIBLE
+                separator.visibility = View.VISIBLE
+                pageNumber.text = "Page Number: ${dataItem["pageNumber"]}"
+            }
+            else {
+                pageNumber.visibility = View.GONE
+                separator.visibility = View.GONE
+            }
+            }
+            else {
+                pageNumber.visibility = View.VISIBLE
+                separator.visibility = View.VISIBLE
+                pageNumber.text = "Page Number: ${dataItem["pageNumber"]}"
+            }
         }
     }
 
@@ -39,7 +57,7 @@ class CampusNewsAdapter(val context: Context,
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<CardView>(R.id.cardViewCampusNews).setOnClickListener {
             val runnable = Runnable {
                 (context as MainActivity).hideKeyboardCampusNews()
 
@@ -59,7 +77,12 @@ class CampusNewsAdapter(val context: Context,
 
                 val manager =
                     (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                manager.setCustomAnimations(
+                    R.anim.slide_in_fragment,
+                    R.anim.fade_out_fragment,
+                    R.anim.fade_in_fragment,
+                    R.anim.slide_out_fragment
+                )
                 manager.add(R.id.fragment_container, fragment)
                     .addToBackStack(null)
                 manager.commit()

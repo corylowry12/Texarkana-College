@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             app:expandedTitleMarginBottom="28dp"
             app:contentScrim="@color/toolBarScrimColor"
+            app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -57,6 +58,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 app:cardCornerRadius="28dp"
+                android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@color/cardViewLightBlue">
 
                 <LinearLayout

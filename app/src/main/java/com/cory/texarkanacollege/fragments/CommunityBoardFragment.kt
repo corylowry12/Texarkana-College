@@ -4,14 +4,18 @@ package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,10 +86,32 @@ class CommunityBoardFragment : Fragment() {
     var imagePath = ""
     lateinit var image: Uri
 
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
     fun setMenuText() {
         val toolBar =
             requireView().findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)
             toolBar.menu.findItem(R.id.signOut).title = "Sign Out"
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+        return false
     }
 
     override fun onCreateView(
@@ -200,14 +226,25 @@ class CommunityBoardFragment : Fragment() {
         communityBoardAdapter = CommunityBoardAdapter(requireContext(), dataList, likesDataList)
         val communityBoardRecyclerView = view.findViewById<RecyclerView>(R.id.communityBoardRecyclerView)
 
+        swipeRefreshLayout =
+            requireView().findViewById(R.id.swipeRefreshLayoutCommunityBoard)
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue)
+
         communityBoardRecyclerView?.layoutManager =
             gridLayoutManager
 
-        if (dataList.isEmpty()) {
+        swipeRefreshLayout.setOnRefreshListener {
             loadIntoList()
         }
+
+        if (dataList.isEmpty()) {
+                if (!isOnline(requireContext())) {
+                    Toast.makeText(requireContext(), getString(R.string.there_was_an_error_check_connection), Toast.LENGTH_SHORT).show()
+                }
+                loadIntoList()
+        }
         else {
-            requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard).isRefreshing = false
+           swipeRefreshLayout.isRefreshing = false
             communityBoardAdapter =
                 CommunityBoardAdapter(requireContext(), sortedData, likesDataList)
 
@@ -222,14 +259,6 @@ class CommunityBoardFragment : Fragment() {
                     break
                 }
             }
-        }
-
-        val swipeRefreshLayout =
-            requireView().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue)
-        swipeRefreshLayout.setOnRefreshListener {
-            loadIntoList()
-            swipeRefreshLayout.isRefreshing = false
         }
 
         val toolBar =
@@ -351,6 +380,10 @@ class CommunityBoardFragment : Fragment() {
                         }
                         else {
                             hiddenSwitch?.isChecked = true
+                        }
+
+                        hiddenSwitchConstraintLayout?.setOnClickListener {
+                            hiddenSwitch?.isChecked = !hiddenSwitch!!.isChecked
                         }
 
                         if (PinnedSwitchVisible(requireContext()).loadPinnedSwitchVisible()) {
@@ -574,7 +607,7 @@ class CommunityBoardFragment : Fragment() {
         try {
             dataList.clear()
             sortedData.clear()
-            val swipeRefreshLayout = requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutCommunityBoard)
+
             swipeRefreshLayout.isRefreshing = true
 
             val communityBoardRecyclerView =
@@ -716,17 +749,19 @@ class CommunityBoardFragment : Fragment() {
                         } catch (e : Exception) {
                             e.printStackTrace()
                             loadIntoList()
+                            swipeRefreshLayout.isRefreshing = false
                         }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         Toast.makeText(requireContext(), getString(R.string.there_was_an_error), Toast.LENGTH_SHORT).show()
+                        swipeRefreshLayout.isRefreshing = false
                     }
                 })
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), getString(R.string.there_was_an_error), Toast.LENGTH_SHORT).show()
-            activity?.supportFragmentManager?.popBackStack()
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 }

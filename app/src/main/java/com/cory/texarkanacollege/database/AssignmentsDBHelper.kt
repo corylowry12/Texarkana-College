@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -85,6 +86,12 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         val db = this.writableDatabase
 
         db.update(TABLE_NAME, values, "$COLUMN_CLASS_NAME=?", arrayOf(oldClassName))
+    }
+
+    fun getCount(): Int {
+        val db = this.readableDatabase
+        return DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM $TABLE_NAME", null).toInt()
+
     }
 
     fun upcomingMarkAsDone(
@@ -320,7 +327,7 @@ class AssignmentsDBHelper(context: Context, factory: SQLiteDatabase.CursorFactor
 
     }
 
-    fun getAllRow(context: Context): Cursor? {
+    fun getAllRow(): Cursor? {
         val db = this.writableDatabase
 
         return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_ASSIGNMENT_DUE_DATE asc", null)

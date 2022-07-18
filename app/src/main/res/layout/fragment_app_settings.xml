@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/toolBarScrimColor"
+            app:titleCollapseMode="scale"
             app:expandedTitleMarginBottom="28dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -87,32 +88,33 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:minHeight="48dp"
                         android:text="Home"
                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:theme="@style/RadioButton"/>
+                        android:theme="@style/RadioButton" />
 
                     <RadioButton
                         android:id="@+id/enableDefaultClasses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:minHeight="48dp"
                         android:text="Classes"
                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
-                        android:layout_marginBottom="10dp"
-                        android:theme="@style/RadioButton"/>
+                        android:theme="@style/RadioButton" />
 
                     <RadioButton
                         android:id="@+id/enableDefaultAssignments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:minHeight="48dp"
                         android:text="Assignments"
                         android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
-                        android:theme="@style/RadioButton"/>
+                        android:theme="@style/RadioButton" />
 
                 </RadioGroup>
             </androidx.cardview.widget.CardView>

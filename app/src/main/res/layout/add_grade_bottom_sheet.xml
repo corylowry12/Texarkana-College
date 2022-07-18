@@ -128,8 +128,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="5dp"
+        android:textColor="?attr/cancelButtonTextColor"
         app:layout_constraintEnd_toStartOf="@id/addGradeButton"
-        style="@style/Widget.Material3.Button"/>
+        style="@style/Widget.Material3.Button.OutlinedButton"/>
 
     <Button
         android:id="@+id/addGradeButton"

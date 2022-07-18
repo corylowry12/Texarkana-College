@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             app:expandedTitleMarginBottom="28dp"
             app:contentScrim="@color/toolBarScrimColor"
+            app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -187,6 +188,154 @@
 
                 <ImageView
                     android:id="@+id/appSettingschevronImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardViewClassSettings"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="28dp"
+            android:layout_marginBottom="5dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintClassSettings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/classSettingsImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_class_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    app:tint="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/classSettingsHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:text="Class Settings"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/classSettingsChevron"
+                    app:layout_constraintStart_toEndOf="@id/classSettingsImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/classSettingsHeading"
+                    android:layout_alignStart="@id/classSettingsHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Change and view the options for classes"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/classSettingsChevron"
+                    app:layout_constraintStart_toEndOf="@id/classSettingsImage"
+                    app:layout_constraintTop_toBottomOf="@id/classSettingsHeading" />
+
+                <ImageView
+                    android:id="@+id/classSettingsChevron"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardViewGradeSettings"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="28dp"
+            android:layout_marginBottom="5dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintGradeSettings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/gradeSettingsImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_grade_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    app:tint="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/gradeSettingsHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:text="Grade Settings"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/gradeSettingsChevron"
+                    app:layout_constraintStart_toEndOf="@id/gradeSettingsImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/gradeSettingsHeading"
+                    android:layout_alignStart="@id/gradeSettingsHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Change and view the options for grades"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/gradeSettingsChevron"
+                    app:layout_constraintStart_toEndOf="@id/gradeSettingsImage"
+                    app:layout_constraintTop_toBottomOf="@id/gradeSettingsHeading" />
+
+                <ImageView
+                    android:id="@+id/gradeSettingsChevron"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="12dp"
@@ -777,6 +926,79 @@
 
                 <ImageView
                     android:id="@+id/appNewsChevron"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="28dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/cardViewLightBlue">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintBackup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/backupImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_baseline_backup_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    app:tint="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/backupHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="5dp"
+                    android:text="Backup"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@id/backupChevron"
+                    app:layout_constraintStart_toEndOf="@id/backupImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/backupHeading"
+                    android:layout_alignStart="@id/backupHeading"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="4dp"
+                    android:textColor="?attr/alwaysDarkTextColor"
+                    android:text="Setup &amp; backup / restore"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@id/backupChevron"
+                    app:layout_constraintStart_toEndOf="@id/backupImage"
+                    app:layout_constraintTop_toBottomOf="@id/backupHeading" />
+
+                <ImageView
+                    android:id="@+id/backupChevron"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="12dp"

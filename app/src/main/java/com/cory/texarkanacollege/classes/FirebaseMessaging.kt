@@ -34,5 +34,4 @@ class FirebaseMessaging : FirebaseMessagingService() {
     private fun sendRegistrationToServer(p0: String?) {
         Log.d("token", "sendRegistrationTokenToServer($p0)")
     }
-
 }

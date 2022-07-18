@@ -80,6 +80,16 @@ class SettingsFragment : Fragment() {
             openFragment(AppSettingsFragment())
         }
 
+        val classSettingsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintClassSettings)
+        classSettingsConstraint.setOnClickListener {
+            openFragment(ClassSettingsFragment())
+        }
+
+        val gradesSettingsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintGradeSettings)
+        gradesSettingsConstraint.setOnClickListener {
+            openFragment(GradeSettingsFragment())
+        }
+
         val assignmentSettingsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAssignmentSettings)
         assignmentSettingsConstraint?.setOnClickListener {
             openFragment(AssignmentSettingsFragment())
@@ -147,6 +157,11 @@ class SettingsFragment : Fragment() {
         val appNewsConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAppNews)
         appNewsConstraint.setOnClickListener {
             openFragment(AppNewsFragment())
+        }
+
+        val backupConstraint = view.findViewById<ConstraintLayout>(R.id.constraintBackup)
+        backupConstraint.setOnClickListener {
+            openFragment(BackupRestoreFragment())
         }
 
         val manageLinksConstraint = view.findViewById<ConstraintLayout>(R.id.constraintManageLinks)
@@ -373,7 +388,12 @@ class SettingsFragment : Fragment() {
     private fun openFragment(fragment: Fragment) {
         val manager =
             (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-        manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        manager.setCustomAnimations(
+            R.anim.slide_in_fragment,
+            R.anim.fade_out_fragment,
+            R.anim.fade_in_fragment,
+            R.anim.slide_out_fragment
+        )
         manager.replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
         manager.commit()

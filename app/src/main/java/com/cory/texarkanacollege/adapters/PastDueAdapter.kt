@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.FragmentTransaction
@@ -116,7 +118,7 @@ class PastDueAdapter(val context: Context,
             }
         }
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<CardView>(R.id.cardViewAssignmentItem).setOnClickListener {
             val viewAssignmentFragment = ViewAssignmentFragment()
 
             val manager =
@@ -126,7 +128,12 @@ class PastDueAdapter(val context: Context,
             args.putString("type", "pastDue")
             args.putString("category", dataItem["category"])
             viewAssignmentFragment.arguments = args
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            manager.setCustomAnimations(
+                R.anim.slide_in_fragment,
+                R.anim.fade_out_fragment,
+                R.anim.fade_in_fragment,
+                R.anim.slide_out_fragment
+            )
             manager.add(R.id.fragment_container, viewAssignmentFragment).addToBackStack(null)
             manager.commit()
         }
@@ -164,7 +171,7 @@ class PastDueAdapter(val context: Context,
                 classesArray.clear()
                 val dbHandler = ClassesDBHelper(context.applicationContext, null)
 
-                val cursor = dbHandler.getAllRow(context)
+                val cursor = dbHandler.getAllRow()
                 cursor!!.moveToFirst()
 
                 if (dbHandler.getCount() > 0) {

@@ -23,5 +23,4 @@ class DarkWebViewData(context: Context) {
         }
         return (state)
     }
-
 }

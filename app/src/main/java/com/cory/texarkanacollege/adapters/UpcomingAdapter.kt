@@ -128,7 +128,12 @@ class UpcomingAdapter(val context: Context,
             args.putString("type", "upcoming")
             args.putString("category", dataItem["category"])
             viewAssignmentFragment.arguments = args
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            manager.setCustomAnimations(
+                R.anim.slide_in_fragment,
+                R.anim.fade_out_fragment,
+                R.anim.fade_in_fragment,
+                R.anim.slide_out_fragment
+            )
             manager.add(R.id.fragment_container, viewAssignmentFragment).addToBackStack(null)
             manager.commit()
         }
@@ -166,7 +171,7 @@ class UpcomingAdapter(val context: Context,
                 classesArray.clear()
                 val dbHandler = ClassesDBHelper(context.applicationContext, null)
 
-                val cursor = dbHandler.getAllRow(context)
+                val cursor = dbHandler.getAllRow()
                 cursor!!.moveToFirst()
 
                 if (dbHandler.getCount() > 0) {

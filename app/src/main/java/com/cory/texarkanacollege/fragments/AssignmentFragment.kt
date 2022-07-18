@@ -90,7 +90,7 @@ class AssignmentFragment : Fragment() {
         classesArray.clear()
         val dbHandler = ClassesDBHelper(requireActivity().applicationContext, null)
 
-        val cursor = dbHandler.getAllRow(requireContext())
+        val cursor = dbHandler.getAllRow()
         cursor!!.moveToFirst()
 
         if (dbHandler.getCount() > 0) {
@@ -368,7 +368,7 @@ class AssignmentFragment : Fragment() {
                 pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
 
-            if (RecyclerViewVisibility(requireContext()).loadPastDue()) {
+            if (RecyclerViewVisibility(requireContext()).loadDone()) {
                 doneRecyclerView.visibility = View.VISIBLE
                 doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
             }

@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/toolBarScrimColor"
             app:expandedTitleMarginBottom="28dp"
+            app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -124,7 +125,7 @@
                         android:paddingStart="20dp"
                         android:paddingTop="8dp"
                         android:paddingEnd="5dp"
-                        android:text="Build Number:"
+                        android:text="@string/build_number_heading"
                         android:textSize="18sp"
                          android:textColor="?attr/alwaysDarkTextColor"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +141,7 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-                        android:text="123"
+                        android:text="@string/build_number"
                          android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -190,7 +191,7 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-                        android:text="07/01/2022"
+                        android:text="@string/date_updated"
                          android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"

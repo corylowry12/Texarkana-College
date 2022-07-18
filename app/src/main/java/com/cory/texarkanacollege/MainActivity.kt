@@ -17,16 +17,20 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.cory.texarkanacollege.adapters.GradesAdapter
 import com.cory.texarkanacollege.classes.*
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
+import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.fragments.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -48,6 +52,7 @@ import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONObject
 import java.io.*
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,6 +72,8 @@ class MainActivity : AppCompatActivity() {
     var campusNewsFragment = CampusNewsFragment()
     val communityBoardFragment = CommunityBoardFragment()
     var viewPostCommunityBoardFragment = ViewCommunityBoardPostFragment()
+
+    lateinit var gradesAdapter: GradesAdapter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -161,6 +168,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability()
+                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
+                    // If an in-app update is already running, resume the update.
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        this,
+                        123
+                    );
+                }
+            }
+    }
+
     @SuppressLint("Range")
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,7 +217,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val dbHandler = AssignmentsDBHelper(this, null)
-        val cursor = dbHandler.getAllRow(this)
+        val cursor = dbHandler.getAllRow()
         cursor!!.moveToFirst()
 
         while (!cursor.isAfterLast) {
@@ -210,6 +237,25 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             cursor.moveToNext()
+        }
+
+        val classDBHandler = ClassesDBHelper(this, null)
+        val classesCursor = classDBHandler.getAllRow()
+        classesCursor!!.moveToFirst()
+
+        while (!classesCursor.isAfterLast) {
+
+            try {
+
+                val id = classesCursor.getString(classesCursor.getColumnIndex(ClassesDBHelper.COLUMN_ID))
+
+                classDBHandler.classIDUpdate(id,
+                    classesCursor.getString(classesCursor.getColumnIndex(ClassesDBHelper.COLUMN_ID)),
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            classesCursor.moveToNext()
         }
 
         checkUpdate()
@@ -465,29 +511,39 @@ class MainActivity : AppCompatActivity() {
         campusNewsFragment.hideKeyboard()
     }
 
+    fun hideKeyboardClasses() {
+        classesFragment.hideKeyboard()
+    }
+
     val showImagePicker = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            ImagePathData(this).setPath("")
-            val data = result.data
-            val selectedImage =
-                Objects.requireNonNull(data)!!.data
-            var imageStream: InputStream? = null
             try {
-                imageStream =
-                    this.contentResolver?.openInputStream(
-                        selectedImage!!
-                    )
-            } catch (e: FileNotFoundException) {
+                ImagePathData(this).setPath("")
+                val data = result.data
+                val selectedImage =
+                    Objects.requireNonNull(data)!!.data
+                var imageStream: InputStream? = null
+                try {
+                    imageStream =
+                        this.contentResolver?.openInputStream(
+                            selectedImage!!
+                        )
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+                val imageBitmap = BitmapFactory.decodeStream(imageStream)
+                val stream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                //val byteArray = stream.toByteArray()
+                val selectedFile = File(getRealPathFromURI(selectedImage!!))
+                ImagePathData(this).setPath(selectedFile.toString())// To display selected image in image view
+                gradesAdapter.addImageButton.text = "View Image"
+            } catch (e : NullPointerException) {
                 e.printStackTrace()
+                Toast.makeText(this, "Error selecting image", Toast.LENGTH_SHORT).show()
             }
-            val imageBitmap = BitmapFactory.decodeStream(imageStream)
-            val stream = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            val byteArray = stream.toByteArray()
-            val selectedFile = File(getRealPathFromURI(selectedImage!!))
-            ImagePathData(this).setPath(selectedFile.toString())// To display selected image in image view
         }
     }
 
@@ -507,6 +563,10 @@ class MainActivity : AppCompatActivity() {
 
     fun deleteAll() {
         classesFragment.deleteAll()
+    }
+
+    fun deleteAllGrades() {
+        gradeFragment.deleteAll()
     }
 
     fun assignmentLoadIntoList() {
@@ -564,6 +624,7 @@ class MainActivity : AppCompatActivity() {
             MediaScannerConnection.scanFile(this, arrayOf(image.toString()), null, null)
 
             ImagePathData(this).setPath(image.toString())
+            gradesAdapter.addImageButton.text = "View Image"
         }
     }
 
@@ -733,30 +794,36 @@ class MainActivity : AppCompatActivity() {
 
     fun setNavBarBackgroundColor() {
         val darkThemeData = DarkThemeData(this)
+        val mainConstraint = findViewById<ConstraintLayout>(R.id.mainConstraint)
         if (resources.getBoolean(R.bool.isTablet)) {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
             when {
                 darkThemeData.loadState() == 1 -> {
                     bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                     bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                    mainConstraint.setBackgroundColor(Color.BLACK)
                 }
                 darkThemeData.loadState() == 0 -> {
                     bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
                     bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                    mainConstraint.setBackgroundColor(Color.WHITE)
                 }
                 darkThemeData.loadState() == 2 -> {
                     when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
                         Configuration.UI_MODE_NIGHT_NO -> {
                             bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                            mainConstraint.setBackgroundColor(Color.WHITE)
                         }
                         Configuration.UI_MODE_NIGHT_YES -> {
                             bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                            mainConstraint.setBackgroundColor(Color.BLACK)
                         }
                         Configuration.UI_MODE_NIGHT_UNDEFINED -> {
                             bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                            mainConstraint.setBackgroundColor(Color.BLACK)
                         }
                     }
                 }
@@ -767,24 +834,29 @@ class MainActivity : AppCompatActivity() {
             darkThemeData.loadState() == 1 -> {
                 bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                 bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                mainConstraint.setBackgroundColor(Color.BLACK)
             }
             darkThemeData.loadState() == 0 -> {
                 bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
                 bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                mainConstraint.setBackgroundColor(Color.WHITE)
             }
             darkThemeData.loadState() == 2 -> {
                 when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
                         bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
+                        mainConstraint.setBackgroundColor(Color.WHITE)
                     }
                     Configuration.UI_MODE_NIGHT_YES -> {
                         bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                         bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                        mainConstraint.setBackgroundColor(Color.BLACK)
                     }
                     Configuration.UI_MODE_NIGHT_UNDEFINED -> {
                         bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
                         bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
+                        mainConstraint.setBackgroundColor(Color.BLACK)
                     }
                 }
             }
@@ -794,6 +866,23 @@ class MainActivity : AppCompatActivity() {
 
     fun setCommunityBoardMenuText() {
         communityBoardFragment.setMenuText()
+    }
+
+    fun requestPermissions() {
+        val list = listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        val managePermissions = ManagePermissions(this, list, 123)
+        if (!managePermissions.checkPermissions(this)) {
+            managePermissions.showAlert(this)
+        }
+    }
+
+    fun checkPermissions(): Boolean {
+
+        val list = listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        val managePermissions = ManagePermissions(this, list, 123)
+        return managePermissions.checkPermissions(this)
     }
 
     override fun onStop() {

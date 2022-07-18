@@ -41,44 +41,85 @@
                 android:background="@android:color/transparent"
                 android:elevation="0dp"
                 app:layout_collapseMode="parallax"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                app:navigationIconTint="?attr/backArrowColor"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollViewCampusNewsInfo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:overScrollMode="always"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<com.google.android.material.card.MaterialCardView
-    android:id="@+id/webViewCardView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="28dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    style="?attr/materialCardViewElevatedStyle"
-    app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="true"
-    tools:ignore="WebViewLayout">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextFieldSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="2dp"
+            app:endIconMode="clear_text"
+            android:textColorHint="#939090"
+            app:boxCornerRadiusBottomEnd="28dp"
+            app:boxCornerRadiusBottomStart="28dp"
+            app:boxCornerRadiusTopEnd="28dp"
+            app:boxCornerRadiusTopStart="28dp"
+            app:boxStrokeColor="@color/cardViewLightBlue"
+            app:hintTextColor="@color/cardViewLightBlue"
+            app:startIconTint="?attr/backArrowColor"
+            app:startIconDrawable="@drawable/ic_baseline_search_24"
+            app:layout_constraintTop_toBottomOf="@id/headingTextView">
 
-    <ProgressBar
-        android:id="@+id/webViewProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search..."
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:theme="@style/BlueBGTextView"
+                android:inputType="text|textCapWords" />
 
-    <WebView
-        android:id="@+id/contents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"/>
-</com.google.android.material.card.MaterialCardView>
-    </androidx.core.widget.NestedScrollView>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollViewCampusNewsInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="always">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/webViewCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="28dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            style="?attr/materialCardViewElevatedStyle"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            tools:ignore="WebViewLayout">
+
+            <ProgressBar
+                android:id="@+id/webViewProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"/>
+
+            <WebView
+                android:id="@+id/contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:isScrollContainer="false"
+                android:nestedScrollingEnabled="false"/>
+        </com.google.android.material.card.MaterialCardView>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

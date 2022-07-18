@@ -19,5 +19,4 @@ class ColoredBackgroundsData(context: Context) {
         val state = sharedPreferences.getBoolean("coloredBackgrounds", true)
         return (state)
     }
-
 }

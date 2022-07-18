@@ -10,13 +10,12 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
+import android.os.*
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
@@ -27,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.adapters.GradesAdapter
 import com.cory.texarkanacollege.classes.DarkThemeData
@@ -53,6 +53,8 @@ class GradeFragment : Fragment() {
     private lateinit var managePermissions: ManagePermissions
 
     private val permissionRequestCode = 1
+
+    private lateinit var addImage : Button
 
     lateinit var image: String
 
@@ -99,6 +101,7 @@ class GradeFragment : Fragment() {
         }
 
         gradesAdapter = GradesAdapter(requireContext(), dataList)
+        (context as MainActivity).gradesAdapter = gradesAdapter
 
         loadIntoList()
 
@@ -135,7 +138,7 @@ class GradeFragment : Fragment() {
                     val nameEditText = dialog.findViewById<TextInputEditText>(R.id.name)
                     val gradeEditText = dialog.findViewById<TextInputEditText>(R.id.grade)
                     val weightEditText = dialog.findViewById<TextInputEditText>(R.id.weight)
-                    val addImage = dialog.findViewById<Button>(R.id.addImage)
+                    addImage = dialog.findViewById<Button>(R.id.addImage)!!
 
                     addGradeButton!!.setOnClickListener {
                         if (nameEditText!!.text.toString() == "") {
@@ -177,7 +180,7 @@ class GradeFragment : Fragment() {
                         }
                     }
 
-                    addImage!!.setOnClickListener {
+                    addImage.setOnClickListener {
                         if (addImage.text == "View Image") {
                             addImage.setOnLongClickListener {
                                 addImage.text = "Add Image"
@@ -185,15 +188,19 @@ class GradeFragment : Fragment() {
                                 image = ""
                                 return@setOnLongClickListener true
                             }
-                            val viewImageDialog = MaterialAlertDialogBuilder(requireContext())
+                            val viewImageDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle).create()
                             val layout = layoutInflater.inflate(R.layout.view_image_layout, null)
                             val imageView = layout.findViewById<ImageView>(R.id.viewImageImageView)
+
+                            val okButton = layout.findViewById<Button>(R.id.okButton)
                             Glide.with(requireContext())
                                 .load(image)
                                 .centerCrop()
                                 .into(imageView)
 
-                            viewImageDialog.setPositiveButton("OK", null)
+                            okButton.setOnClickListener {
+                                viewImageDialog.dismiss()
+                            }
 
                             viewImageDialog.setView(layout)
                             viewImageDialog.show()
@@ -242,7 +249,6 @@ class GradeFragment : Fragment() {
 
                                         showImagePicker.launch(pickerIntent)
 
-                                        addImage.text = "View Image"
                                         chooseImageDialog.dismiss()
                                     }
                                     takePhotoButton.setOnClickListener {
@@ -265,8 +271,6 @@ class GradeFragment : Fragment() {
                                                     showCamera.launch(intent)
                                                 }
                                             }
-
-                                            addImage.text = "View Image"
                                             chooseImageDialog.dismiss()
                                         }
                                         else {
@@ -278,11 +282,6 @@ class GradeFragment : Fragment() {
                                     }
                                     chooseImageDialog.show()
                                 } else {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Permission Denied",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
                                     managePermissions.showAlert(requireContext())
 
                                 }
@@ -295,11 +294,6 @@ class GradeFragment : Fragment() {
                     }
 
                     dialog.show()
-
-                   /* val runnable = Runnable {
-                        (context as MainActivity).showBottomSheet()
-                    }
-                    MainActivity().runOnUiThread(runnable)*/
 
                     true
                 }
@@ -337,9 +331,10 @@ class GradeFragment : Fragment() {
             val imageBitmap = BitmapFactory.decodeStream(imageStream)
             val stream = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            val byteArray = stream.toByteArray()
+           // val byteArray = stream.toByteArray()
             val selectedFile = File(getRealPathFromURI(selectedImage!!))
             this.image = selectedFile.toString()// To display selected image in image view
+            addImage.text = "View Image"
         }
     }
 
@@ -363,12 +358,6 @@ class GradeFragment : Fragment() {
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
 
-            /*val imageBitmap = result.data!!.extras!!.get("data") as Bitmap
-            val stream = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            val byteArray = stream.toByteArray()
-            image = byteArray*/
-
             val ei = ExifInterface(currentPhotoPath)
             val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
 
@@ -385,7 +374,7 @@ class GradeFragment : Fragment() {
                 }
             }
 
-            val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            //val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
 
            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                .format(System.currentTimeMillis())
@@ -397,13 +386,14 @@ class GradeFragment : Fragment() {
             }
             val image = File.createTempFile(timeStamp, ".jpeg", storageDir)
 
-            val f = File(image.toString())
-            val fileOutputStream = FileOutputStream(f)
-            val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
-            val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            //val f = File(image.toString())
+            //val fileOutputStream = FileOutputStream(f)
+            //val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
+            //val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
             MediaScannerConnection.scanFile(requireContext(), arrayOf(image.toString()), null, null)
 
             this.image = image.toString()
+            addImage.text = "View Image"
         }
     }
 
@@ -442,14 +432,14 @@ class GradeFragment : Fragment() {
 
     @SuppressLint("Range")
     fun loadIntoList() {
-        val context = requireContext()
-        val dbHandler = GradesDBHelper(context, null)
+
+        val dbHandler = GradesDBHelper(requireContext(), null)
 
         textViewVisibility()
 
         dataList.clear()
 
-        val cursor = dbHandler.getGrades(ItemID(context).loadPosition().toString())
+        val cursor = dbHandler.getGrades(ItemID(requireContext()).loadPosition().toString())
         cursor.moveToFirst()
 
         while (!cursor.isAfterLast) {
@@ -476,8 +466,22 @@ class GradeFragment : Fragment() {
 
         val recyclerView = activity?.findViewById<RecyclerView>(R.id.gradesRecyclerView)
         recyclerView?.layoutManager = gridLayoutManager
-        recyclerView?.adapter = GradesAdapter(context, dataList)
+        recyclerView?.adapter = gradesAdapter
 
+    }
+
+    fun deleteAll() {
+        val animation = AlphaAnimation(1f, 0f)
+        animation.duration = 500
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.gradesRecyclerView)
+
+        recyclerView?.startAnimation(animation)
+
+        textViewVisibility()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            loadIntoList()
+        }, 500)
     }
 
     fun textViewVisibility() {
@@ -491,5 +495,4 @@ class GradeFragment : Fragment() {
             noGradesStoredTextView?.visibility = View.VISIBLE
         }
     }
-
 }

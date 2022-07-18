@@ -270,5 +270,4 @@ class AppNewsFragment : Fragment() {
             }
         })
     }
-
 }

@@ -120,7 +120,12 @@ class DoneAdapter(val context: Context,
             args.putString("type", "done")
             args.putString("category", dataItem["category"])
             viewAssignmentFragment.arguments = args
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            manager.setCustomAnimations(
+                R.anim.slide_in_fragment,
+                R.anim.fade_out_fragment,
+                R.anim.fade_in_fragment,
+                R.anim.slide_out_fragment
+            )
             manager.add(R.id.fragment_container, viewAssignmentFragment).addToBackStack(null)
             manager.commit()
         }

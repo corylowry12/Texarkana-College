@@ -17,6 +17,9 @@
         <item name="viewCommunityBoardTransparency">#E6FFFFFF</item>
         <item name="bottomNavColor">@color/bottomNavBarBackground</item>
         <item name="bottomNavIconTint">#000000</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="iconTint">#000000</item>
+        <item name="cancelButtonTextColor">#013b63</item>
     </style>
 
     <style name="Dark" parent="ThemeOverlay.MaterialComponents.Dark">
@@ -33,16 +36,14 @@
         <item name="viewCommunityBoardTransparency">#E6000000</item>
         <item name="bottomNavColor">@color/bottomNavBarBackgroundDark</item>
         <item name="bottomNavIconTint">#ffffff</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="cancelButtonTextColor">#0D629C</item>
     </style>
 
     <style name="RadioButton" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/blue</item>
         <item name="android:textColorSecondary">#a9a9a9</item>
         <item name="colorControlNormal">#000000</item>
-    </style>
-
-    <style name="toggleButton" parent="Widget.Material3.Button.OutlinedButton" >
-        <item name="colorControlActivated">@color/blue</item>
     </style>
 
     <style name="OverFlowDark">
@@ -106,6 +107,10 @@
         <item name="android:windowBackground">@drawable/date_picker</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.70</item>
+    </style>
+
+    <style name="BlueBGTextView">
+        <item name="colorControlActivated">@color/cardViewLightBlue</item>
     </style>
 
 </resources>

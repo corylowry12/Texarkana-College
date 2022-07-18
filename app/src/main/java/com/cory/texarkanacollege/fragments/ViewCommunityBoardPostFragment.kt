@@ -18,8 +18,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -577,7 +579,8 @@ class ViewCommunityBoardPostFragment : Fragment() {
                 val b: Bitmap = imageView.drawable.toBitmap()
                 b.compress(Bitmap.CompressFormat.PNG, 100, bs)
                 intent.putExtra("image", bs.toByteArray())
-                startActivity(intent)
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation((context as AppCompatActivity), imageView, "transition_image")
+                startActivity(intent, options.toBundle())
             }
             catch (e: Exception) {
                 Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()

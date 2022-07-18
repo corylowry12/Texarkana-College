@@ -19,5 +19,4 @@ class ImageViewIntentData(context: Context) {
         val state = sharedPreferences.getBoolean("imageViewIntent", false)
         return (state)
     }
-
 }

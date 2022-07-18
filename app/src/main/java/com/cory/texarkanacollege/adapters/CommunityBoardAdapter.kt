@@ -45,6 +45,8 @@ class CommunityBoardAdapter(val context: Context,
                             private val dataList:  ArrayList<HashMap<String, String>>, private val likesDataList:  ArrayList<HashMap<String, String>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    val dateType =  ArrayList<Boolean>()
+
     private lateinit var firebaseAuth: FirebaseAuth
 
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -73,6 +75,8 @@ class CommunityBoardAdapter(val context: Context,
             val difference = currentTime - timeInMil
             var diff = ""
 
+            dateType.add(position, false)
+
             if (difference > 86400000) {
                 val dateFormatter2 = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
                 val daysFormatter = SimpleDateFormat("MMM dd", Locale.ENGLISH)
@@ -80,7 +84,7 @@ class CommunityBoardAdapter(val context: Context,
                 val days = daysFormatter.format(daysDate!!)
                 diff = days.toString()
             }
-            else if (difference >= 3600000 && difference < 86400000) {
+            else if (difference in 3600000..86399999) {
                 diff = TimeUnit.MILLISECONDS.toHours(difference).toString() + "h"
             }
             else if (difference < 86400000) {
@@ -159,6 +163,41 @@ class CommunityBoardAdapter(val context: Context,
             }
             else {
                 holder.itemView.findViewById<TextView>(R.id.row_contact_name).text = dataItem["email"]
+            }
+        }
+
+        holder.itemView.findViewById<TextView>(R.id.row_date).setOnClickListener {
+            if (!dateType.elementAt(holder.adapterPosition)) {
+                holder.itemView.findViewById<TextView>(R.id.row_date).text = dataItem["date"]
+                dateType[holder.adapterPosition] = true
+            }
+            else {
+                val dateFormatter = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
+                val dateFormatted = dateFormatter.parse(dataItem["date"]!!)!!
+                val timeInMil = dateFormatted.time
+                val currentTime = System.currentTimeMillis()
+                val difference = currentTime - timeInMil
+                var diff = ""
+
+                if (difference > 86400000) {
+                    val dateFormatter2 = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
+                    val daysFormatter = SimpleDateFormat("MMM dd", Locale.ENGLISH)
+                    val daysDate = dateFormatter2.parse(dataItem["date"]!!)
+                    val days = daysFormatter.format(daysDate!!)
+                    diff = days.toString()
+                }
+                else if (difference in 3600000..86399999) {
+                    diff = TimeUnit.MILLISECONDS.toHours(difference).toString() + "h"
+                }
+                else if (difference < 86400000) {
+                    diff = TimeUnit.MILLISECONDS.toMinutes(difference).toString() + " Min"
+                }
+                else {
+                    diff = dataItem["date"].toString()
+                }
+
+                holder.itemView.findViewById<TextView>(R.id.row_date).text = diff
+                dateType[holder.adapterPosition] = false
             }
         }
 
@@ -326,7 +365,7 @@ class CommunityBoardAdapter(val context: Context,
 
             val manager =
                 (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            manager.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            manager.setCustomAnimations(R.anim.slide_in_fragment, R.anim.fade_out_fragment, R.anim.fade_in_fragment, R.anim.slide_out_fragment)
             manager.add(R.id.fragment_container, fragment)
                 .addToBackStack(null)
             manager.commit()

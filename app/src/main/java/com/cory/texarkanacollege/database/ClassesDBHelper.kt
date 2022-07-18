@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -15,12 +16,26 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
             "CREATE TABLE " + TABLE_NAME + " ("
                     + COLUMN_ID + " INTEGER PRIMARY KEY, "
                     + COLUMN_CLASS_NAME + " TEXT, "
+                    + COLUMN_CLASS_ID + " TEXT, "
                     + COLUMN_CLASS_TIME + " TEXT );")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_CLASS_NAME TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_CLASS_TIME TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
+        try {
+            db.execSQL("ALTER TABLE $TABLE_NAME ADD COLUMN $COLUMN_CLASS_ID TEXT DEFAULT \"\" NOT NULL")
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -41,6 +56,21 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
         db.close()
     }
 
+    fun insertRestoreRow(
+        classID: String,
+        className: String,
+        classTime: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_CLASS_NAME, className)
+        values.put(COLUMN_CLASS_TIME, classTime)
+        values.put(COLUMN_CLASS_ID, classID)
+
+        val db = this.writableDatabase
+        db.insert(TABLE_NAME, null, values)
+        db.close()
+    }
+
     fun update(
         id: String,
         className: String,
@@ -53,6 +83,19 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
         val db = this.writableDatabase
 
         db.update(TABLE_NAME, values, "$COLUMN_ID=?", arrayOf(id))
+
+    }
+
+    fun classIDUpdate(
+        id: String,
+        primaryKey: String
+    ) {
+        val values = ContentValues()
+        values.put(COLUMN_CLASS_ID, id)
+
+        val db = this.writableDatabase
+
+        db.update(TABLE_NAME, values, "$COLUMN_ID=?", arrayOf(primaryKey))
 
     }
 
@@ -77,7 +120,7 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
 
     }
 
-    fun getAllRow(context: Context): Cursor? {
+    fun getAllRow(): Cursor? {
         val db = this.writableDatabase
 
        // return db.rawQuery("SELECT $COLUMN_ID, $COLUMN_CLASS_NAME, $COLUMN_CLASS_TIME FROM $TABLE_NAME ORDER BY $COLUMN_CLASS_NAME asc", null)
@@ -105,11 +148,12 @@ class ClassesDBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     }
 
     companion object {
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "classes.db"
         const val TABLE_NAME = "classes"
 
         const val COLUMN_ID = "id"
+        const val COLUMN_CLASS_ID = "classID"
         const val COLUMN_CLASS_NAME = "className"
         const val COLUMN_CLASS_TIME = "classTime"
     }

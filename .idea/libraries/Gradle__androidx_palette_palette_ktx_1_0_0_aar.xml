@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.palette:palette-ktx:1.0.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/90461a8538e40aead2699caf57cfa810/transformed/jetified-palette-ktx-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/90461a8538e40aead2699caf57cfa810/transformed/jetified-palette-ktx-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/90461a8538e40aead2699caf57cfa810/transformed/jetified-palette-ktx-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/972c3c27a8f41fa613ba6e0fc79413ac/transformed/jetified-palette-ktx-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bc9403b6e55f7869280394cff2a14211/transformed/jetified-palette-ktx-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bc9403b6e55f7869280394cff2a14211/transformed/jetified-palette-ktx-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bc9403b6e55f7869280394cff2a14211/transformed/jetified-palette-ktx-1.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

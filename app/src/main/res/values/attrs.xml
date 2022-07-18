@@ -21,5 +21,7 @@
 
     <attr name="radioButtonColor" format="color" />
 
+    <attr name="cancelButtonTextColor" format="color" />
+
     <bool name="isTablet">false</bool>
 </resources>

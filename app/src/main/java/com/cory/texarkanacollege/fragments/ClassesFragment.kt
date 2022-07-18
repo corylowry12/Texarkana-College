@@ -1,14 +1,20 @@
 package com.cory.texarkanacollege.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -19,9 +25,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.R
+import com.cory.texarkanacollege.adapters.CampusNewsAdapter
 import com.cory.texarkanacollege.adapters.ClassesAdapter
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.database.ClassesDBHelper
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,6 +43,9 @@ class ClassesFragment: Fragment() {
 
     private lateinit var classesAdapter: ClassesAdapter
     private val dataList = ArrayList<HashMap<String, String>>()
+    private val selectedItems = ArrayList<HashMap<String, String>>()
+
+    private lateinit var recyclerViewState: Parcelable
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
@@ -79,6 +91,127 @@ class ClassesFragment: Fragment() {
         classesAdapter = ClassesAdapter(requireContext(), dataList)
 
         loadIntoList()
+
+        val search = requireView().findViewById<TextInputEditText>(R.id.searchClasses)
+        val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.classesRecyclerView)
+
+        recyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()!!
+            }
+        })
+
+        search?.setOnKeyListener(View.OnKeyListener { _, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                search.clearFocus()
+                hideKeyboard()
+                return@OnKeyListener true
+            }
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                search.clearFocus()
+                return@OnKeyListener true
+            }
+            false
+        })
+
+        search?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                selectedItems.clear()
+                try {
+                    if (s.toString() != "") {
+                        for (i in 0 until dataList.count()) {
+                            if (dataList[i]["className"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else if (dataList[i]["classTime"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
+
+                                classesAdapter = ClassesAdapter(requireContext(), selectedItems)
+
+                                recyclerView.adapter = classesAdapter
+                                recyclerView.invalidate()
+                            }
+                        }
+                    }
+                    else {
+                        classesAdapter = ClassesAdapter(requireContext(), dataList)
+
+                        recyclerView.adapter = classesAdapter
+                        recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                selectedItems.clear()
+                try {
+                    if (s.toString() != "") {
+                        for (i in 0 until dataList.count()) {
+                            if (dataList[i]["className"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else if (dataList[i]["classTime"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
+                                classesAdapter = ClassesAdapter(requireContext(), selectedItems)
+
+                                recyclerView.adapter = classesAdapter
+                                recyclerView.invalidate()
+                            }
+                        }
+                    }
+                    else {
+                        classesAdapter = ClassesAdapter(requireContext(), dataList)
+
+                        recyclerView.adapter = classesAdapter
+                        recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                selectedItems.clear()
+                try {
+                    if (s.toString() != "") {
+                        for (i in 0 until dataList.count()) {
+                            if (dataList[i]["className"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else if (dataList[i]["classTime"]!!.lowercase().contains(s.toString().lowercase())) {
+                                selectedItems.add(dataList[i])
+                            }
+                            else {
+                                recyclerView.adapter?.notifyItemRemoved(i)
+                                classesAdapter = ClassesAdapter(requireContext(), selectedItems)
+
+                                recyclerView.adapter = classesAdapter
+                                recyclerView.invalidate()
+                            }
+                        }
+                    }
+                    else {
+                        classesAdapter = ClassesAdapter(requireContext(), dataList)
+
+                        recyclerView.adapter = classesAdapter
+                        recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        })
 
         val topAppBar = activity?.findViewById<MaterialToolbar>(R.id.materialToolBarClasses)
 
@@ -329,6 +462,13 @@ class ClassesFragment: Fragment() {
         val animation = AlphaAnimation(1f, 0f)
         animation.duration = 500
         val listView = view?.findViewById<RecyclerView>(R.id.classesRecyclerView)
+        val noClassesStoredTextView = activity?.findViewById<TextView>(R.id.noClassesStoredTextView)
+
+        val textViewAnimation = AlphaAnimation(0f, 1f)
+        textViewAnimation.duration = 500
+        noClassesStoredTextView?.startAnimation(textViewAnimation)
+
+        noClassesStoredTextView?.visibility = View.VISIBLE
 
         listView?.startAnimation(animation)
 
@@ -352,7 +492,7 @@ class ClassesFragment: Fragment() {
 
         dataList.clear()
 
-            val cursor = dbHandler.getAllRow(requireContext())
+            val cursor = dbHandler.getAllRow()
             cursor?.moveToFirst()
 
             while (!cursor!!.isAfterLast) {
@@ -370,21 +510,6 @@ class ClassesFragment: Fragment() {
         recyclerView?.adapter = classesAdapter
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val recyclerView = activity?.findViewById<RecyclerView>(R.id.classesRecyclerView)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridLayoutManager = GridLayoutManager(requireContext(), 2)
-            recyclerView?.layoutManager = gridLayoutManager
-            recyclerView?.invalidate()
-        }
-        else {
-            gridLayoutManager = GridLayoutManager(requireContext(), 1)
-            recyclerView?.layoutManager = gridLayoutManager
-            recyclerView?.invalidate()
-        }
-    }
-
     fun textViewVisibility() {
         val dbHandler = ClassesDBHelper(requireActivity().applicationContext, null)
 
@@ -395,6 +520,23 @@ class ClassesFragment: Fragment() {
             val noClassesStoredTextView = activity?.findViewById<TextView>(R.id.noClassesStoredTextView)
             noClassesStoredTextView?.visibility = View.VISIBLE
 
+        }
+    }
+
+    fun hideKeyboard() {
+        try {
+            val inputManager: InputMethodManager =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val focusedView = activity?.currentFocus
+
+            if (focusedView != null) {
+                inputManager.hideSoftInputFromWindow(
+                    focusedView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
         }
     }
 }

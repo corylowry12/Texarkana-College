@@ -244,5 +244,4 @@ class HomeFragment : Fragment() {
 
         webView.restoreState(webViewState)
     }
-
 }

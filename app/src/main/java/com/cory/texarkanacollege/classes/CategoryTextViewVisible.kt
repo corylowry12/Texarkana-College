@@ -19,5 +19,4 @@ class CategoryTextViewVisible(context: Context) {
         val state = sharedPreferences.getBoolean("categoryTextView", true)
         return (state)
     }
-
 }

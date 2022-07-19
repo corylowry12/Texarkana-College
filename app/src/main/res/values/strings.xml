@@ -10,7 +10,7 @@
     <string name="assignment_deleted">Assignment Deleted</string>
     <string name="mark_as_not_done">Mark as not Done</string>
     <string name="there_was_an_error_check_connection">There was an error, check data connection</string>
-    <string name="versionNumber">3.0.9.1</string>
+    <string name="versionNumber">3.0.9</string>
     <string name="some_error_was_encountered">Some error was encountered</string>
     <string name="everything_is_already_loaded">Everything is already loaded</string>
     <string name="there_is_no_more_news">There is no more news</string>
@@ -53,7 +53,7 @@
     <string name="delete_all_classes_title">Delete All Classes?</string>
     <string name="would_you_like_to_delete_all_classes_this_will_delete_all_classes_grades_and_assignments">Would you like to delete all classes? This will delete all classes, grades and assignments.</string>
     <string name="there_are_no_classes_stored">There are no classes stored</string>
-    <string name="build_number">32</string>
+    <string name="build_number">33</string>
     <string name="build_number_heading">Build Number:</string>
-    <string name="date_updated">07/18/2022</string>
+    <string name="date_updated">07/19/2022</string>
 </resources>

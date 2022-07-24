@@ -20,6 +20,12 @@
         />
 
     <item
+        android:id="@+id/communityBoard"
+        android:title="Community Board"
+        android:icon="@drawable/community_board_selector"
+        />
+
+    <item
         android:id="@+id/settings"
         android:title="Settings"
         android:icon="@drawable/settings_selector"

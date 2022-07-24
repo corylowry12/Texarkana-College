@@ -40,5 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:labelVisibilityMode="unlabeled"
         android:background="?attr/bottomNavColor"
+        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="?attr/bottomNavIconTint"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

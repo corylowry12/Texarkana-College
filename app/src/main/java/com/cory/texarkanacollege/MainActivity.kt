@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cory.texarkanacollege.adapters.GradesAdapter
@@ -71,44 +72,47 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+
         val extras = intent.extras
 
         if (extras != null) {
             if (resources.getBoolean(R.bool.isTablet)) {
                 val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
-                if (extras.getString("widget") == "Widget") {
+                bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
+                if (intent.getStringExtra("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else if (extras.getString("view_classes") == "view_classes") {
+                } else if (intent.getStringExtra("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                } else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                } else if (extras.getString("view_map") == "view_map") {
+                } else if (intent.getStringExtra("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             } else {
                 val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-                if (extras.getString("widget") == "Widget") {
+                bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
+                if (intent.getStringExtra("widget") == "Widget") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else if (extras.getString("view_classes") == "view_classes") {
+                } else if (intent.getStringExtra("view_classes") == "view_classes") {
                     bottomNav.menu.findItem(R.id.classes).isChecked = true
-                } else if (extras.getString("view_assignments") == "view_assignments") {
+                } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
                     bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                } else if (extras.getString("view_map") == "view_map") {
+                } else if (intent.getStringExtra("view_map") == "view_map") {
                     bottomNav.menu.findItem(R.id.settings).isChecked = true
                 } else {
                     bottomNav.menu.findItem(R.id.home).isChecked = true
                 }
             }
 
-            if (extras.getString("widget") == "Widget") {
+            if (intent.getStringExtra("widget") == "Widget") {
                 replaceFragment(CampusMapFragment())
-            } else if (extras.getString("view_classes") == "view_classes") {
+            } else if (intent.getStringExtra("view_classes") == "view_classes") {
                 replaceFragment(classesFragment)
-            } else if (extras.getString("view_assignments") == "view_assignments") {
+            } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
                 replaceFragment(assignmentFragment)
-            } else if (extras.getString("view_map") == "view_map") {
+            } else if (intent.getStringExtra("view_map") == "view_map") {
                 replaceFragment(CampusMapFragment())
             } else if (intent.action == Intent.ACTION_VIEW) {
                 val args = Bundle()
@@ -202,33 +206,42 @@ class MainActivity : AppCompatActivity() {
         mapIntent.action = Intent.ACTION_VIEW
         mapIntent.putExtra("view_map", "view_map")
 
-        val shortcutManager = getSystemService(ShortcutManager::class.java) as ShortcutManager
-        val classesShortCut = ShortcutInfo.Builder(this, "classes")
-            .setShortLabel("Classes")
-            .setLongLabel("View Classes")
-            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_class_24_shortcut))
-            .setIntent(classesIntent)
-            .build()
-        val assignmentsShortcut = ShortcutInfo.Builder(this, "assignments")
-            .setShortLabel("Assignments")
-            .setLongLabel("View Assignments")
-            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_assignment_24_shortcut))
-            .setIntent(assignmentIntent)
-            .build()
-        val mapShortcut = ShortcutInfo.Builder(this, "map")
-            .setShortLabel("Map")
-            .setLongLabel("View Campus Map")
-            .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_map_24_shortcut))
-            .setIntent(mapIntent)
-            .build()
-        GlobalScope.launch(Dispatchers.Main) {
-            shortcutManager.dynamicShortcuts =
-                listOf(classesShortCut, assignmentsShortcut, mapShortcut)
+        try {
+            val shortcutManager = getSystemService(ShortcutManager::class.java) as ShortcutManager
+            val classesShortCut = ShortcutInfo.Builder(this, "classes")
+                .setShortLabel("Classes")
+                .setLongLabel("View Classes")
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_class_24_shortcut))
+                .setIntent(classesIntent)
+                .build()
+            val assignmentsShortcut = ShortcutInfo.Builder(this, "assignments")
+                .setShortLabel("Assignments")
+                .setLongLabel("View Assignments")
+                .setIcon(
+                    Icon.createWithResource(
+                        this,
+                        R.drawable.ic_baseline_assignment_24_shortcut
+                    )
+                )
+                .setIntent(assignmentIntent)
+                .build()
+            val mapShortcut = ShortcutInfo.Builder(this, "map")
+                .setShortLabel("Map")
+                .setLongLabel("View Campus Map")
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_baseline_map_24_shortcut))
+                .setIntent(mapIntent)
+                .build()
+            GlobalScope.launch(Dispatchers.Main) {
+                shortcutManager.dynamicShortcuts =
+                    listOf(classesShortCut, assignmentsShortcut, mapShortcut)
+            }
+        }
+        catch (e : NoClassDefFoundError) {
+            e.printStackTrace()
         }
 
-
         setSmallSettingsBadge()
-        fetchTOSJsonBadge()
+        //fetchTOSJsonBadge()
 
         val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = remoteConfigSettings {
@@ -247,58 +260,9 @@ class MainActivity : AppCompatActivity() {
             PinnedSwitchVisible(this).setPinnedSwitchVisible(pinnedSwitchVisible)
             val commentLikeCounter = remoteConfig.getBoolean("comment_and_like_counter")
             CommentLikeCounter(this).setCounterVisibility(commentLikeCounter)
-            val communityBoardInBottomNav = remoteConfig.getBoolean("show_community_board_in_bottom_nav")
-            BottomNavWithCommunityBoard(this).setState(communityBoardInBottomNav)
         }
 
         this.cacheDir.deleteRecursively()
-
-        val extras = intent.extras
-
-        if (extras != null) {
-            if (resources.getBoolean(R.bool.isTablet)) {
-                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
-                if (extras.getString("widget") == "Widget") {
-                    bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else if (extras.getString("view_classes") == "view_classes") {
-                    bottomNav.menu.findItem(R.id.classes).isChecked = true
-                } else if (extras.getString("view_assignments") == "view_assignments") {
-                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                } else if (extras.getString("view_map") == "view_map") {
-                    bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else {
-                    bottomNav.menu.findItem(R.id.home).isChecked = true
-                }
-            } else {
-                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-                if (extras.getString("widget") == "Widget") {
-                    bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else if (extras.getString("view_classes") == "view_classes") {
-                    bottomNav.menu.findItem(R.id.classes).isChecked = true
-                } else if (extras.getString("view_assignments") == "view_assignments") {
-                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
-                } else if (extras.getString("view_map") == "view_map") {
-                    bottomNav.menu.findItem(R.id.settings).isChecked = true
-                } else {
-                    bottomNav.menu.findItem(R.id.home).isChecked = true
-                }
-            }
-
-            if (extras.getString("widget") == "Widget") {
-                replaceFragment(CampusMapFragment())
-            } else if (extras.getString("view_classes") == "view_classes") {
-                replaceFragment(classesFragment)
-            } else if (extras.getString("view_assignments") == "view_assignments") {
-                replaceFragment(assignmentFragment)
-            } else if (extras.getString("view_map") == "view_map") {
-                replaceFragment(CampusMapFragment())
-            } else if (intent.action == Intent.ACTION_VIEW) {
-                val args = Bundle()
-                args.putString("deepLink", intent.dataString)
-                homeFragment.arguments = args
-                replaceFragment(homeFragment)
-            }
-        }
 
         MobileAds.initialize(this)
         val adView = AdView(this)
@@ -312,14 +276,7 @@ class MainActivity : AppCompatActivity() {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
             bottomNav.itemActiveIndicatorColor =
                 ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
-            if (BottomNavWithCommunityBoard(this).loadState() && CommunityBoardVisibileData(this).loadCommunityBoardVisible()) {
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu_with_community_board)
-                BottomNavContainsCommunityBoard(this).setState(true)
-            }
-            else {
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu)
-                BottomNavContainsCommunityBoard(this).setState(false)
-            }
+            bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
@@ -342,14 +299,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
-            if (BottomNavWithCommunityBoard(this).loadState() && CommunityBoardVisibileData(this).loadCommunityBoardVisible()) {
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu_with_community_board)
-                BottomNavContainsCommunityBoard(this).setState(true)
-            }
-            else {
-                bottomNav.inflateMenu(R.menu.bottom_nav_menu)
-                BottomNavContainsCommunityBoard(this).setState(false)
-            }
+            bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
             bottomNav.itemActiveIndicatorColor =
                 ContextCompat.getColorStateList(this, R.color.itemIndicatorColor)
             bottomNav.setOnItemSelectedListener {
@@ -406,6 +356,54 @@ class MainActivity : AppCompatActivity() {
                 bottomNav.menu.findItem(R.id.assignments).isChecked = true
             }
             replaceFragment(assignmentFragment)
+        }
+
+        val extras = intent.extras
+
+        if (extras != null) {
+            if (resources.getBoolean(R.bool.isTablet)) {
+                val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
+                if (intent.getStringExtra("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                } else if (intent.getStringExtra("view_classes") == "view_classes") {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (intent.getStringExtra("view_map") == "view_map") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                } else {
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+                }
+            } else {
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+                bottomNav.menu.findItem(R.id.communityBoard).isVisible = CommunityBoardVisibileData(this).loadCommunityBoardVisible()
+
+                if (intent.getStringExtra("widget") == "Widget") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                } else if (intent.getStringExtra("view_classes") == "view_classes") {
+                    bottomNav.menu.findItem(R.id.classes).isChecked = true
+                } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
+                    bottomNav.menu.findItem(R.id.assignments).isChecked = true
+                } else if (intent.getStringExtra("view_map") == "view_map") {
+                    bottomNav.menu.findItem(R.id.settings).isChecked = true
+                }
+            }
+
+            if (intent.getStringExtra("widget") == "Widget") {
+                replaceFragment(CampusMapFragment())
+            } else if (intent.getStringExtra("view_classes") == "view_classes") {
+                replaceFragment(classesFragment)
+            } else if (intent.getStringExtra("view_assignments") == "view_assignments") {
+                replaceFragment(assignmentFragment)
+            } else if (intent.getStringExtra("view_map") == "view_map") {
+                replaceFragment(CampusMapFragment())
+            }else if (intent.action == Intent.ACTION_VIEW) {
+                val args = Bundle()
+                args.putString("deepLink", intent.dataString)
+                homeFragment.arguments = args
+                replaceFragment(homeFragment)
+            }
         }
     }
 

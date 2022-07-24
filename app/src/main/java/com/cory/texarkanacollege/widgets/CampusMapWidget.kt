@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.widget.RemoteViews
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
@@ -49,17 +48,14 @@ internal fun updateAppWidget(
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-fun getPendingSelfIntent(context: Context) : PendingIntent {
+fun getPendingSelfIntent(context: Context): PendingIntent {
 
     /*val pendingIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java
     ).putExtra("widget", true).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP), PendingIntent.FLAG_IMMUTABLE)*/
     val intent = Intent(context, MainActivity::class.java)
     intent.putExtra("widget", "Widget")
-    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-    val pendingIntent : PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    } else {
-        PendingIntent.getActivity(context, 0, intent, 0)
-    }
-    return pendingIntent
+    intent.flags =
+        Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+
+    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 }

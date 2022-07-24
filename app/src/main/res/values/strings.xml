@@ -53,7 +53,7 @@
     <string name="delete_all_classes_title">Delete All Classes?</string>
     <string name="would_you_like_to_delete_all_classes_this_will_delete_all_classes_grades_and_assignments">Would you like to delete all classes? This will delete all classes, grades and assignments.</string>
     <string name="there_are_no_classes_stored">There are no classes stored</string>
-    <string name="build_number">37</string>
+    <string name="build_number">38</string>
     <string name="build_number_heading">Build Number:</string>
     <string name="date_updated">07/24/2022</string>
     <string name="view_image">View Image</string>

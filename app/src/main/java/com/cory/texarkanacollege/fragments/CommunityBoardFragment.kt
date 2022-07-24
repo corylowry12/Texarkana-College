@@ -264,10 +264,6 @@ class CommunityBoardFragment : Fragment() {
         val toolBar =
             requireView().findViewById<MaterialToolbar>(R.id.materialToolBarCommunityBoard)
 
-        if (BottomNavWithCommunityBoard(requireContext()).loadState()) {
-            toolBar.navigationIcon = null
-        }
-
         toolBar.setNavigationOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }

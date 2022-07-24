@@ -117,17 +117,6 @@ class SettingsFragment : Fragment() {
             openFragment(campusNewsFragment)
         }
 
-        val communityBoardConstraint = view.findViewById<ConstraintLayout>(R.id.communityBoardConstraint)
-        val communityBoardCardView = view.findViewById<MaterialCardView>(R.id.communityBoardCardView)
-
-        if (BottomNavWithCommunityBoard(requireContext()).loadState() || !CommunityBoardVisibileData(requireContext()).loadCommunityBoardVisible() || BottomNavContainsCommunityBoard(requireContext()).loadState()) {
-            communityBoardCardView!!.visibility = View.GONE
-        }
-
-        communityBoardConstraint!!.setOnClickListener {
-            openFragment(CommunityBoardFragment())
-        }
-
         val patchNotesConstraint = view.findViewById<ConstraintLayout>(R.id.constraintPatchNotes)
         val patchNotesChevron = view.findViewById<ImageView>(R.id.patchNotesChevron)
         patchNotesConstraint?.setOnClickListener {

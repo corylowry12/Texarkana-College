@@ -48,8 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Class Name"
-            android:maxLines="1"
-            android:inputType="text|textCapWords" />
+            android:inputType="text|textCapWords"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

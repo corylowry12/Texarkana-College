@@ -61,7 +61,7 @@ class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
 
         val viewImageMaterialToolbar = findViewById<MaterialToolbar>(R.id.viewImageCommunityBoardPostToolBar)
         viewImageMaterialToolbar.setNavigationOnClickListener {
-            finish()
+            finishAfterTransition()
         }
 
         val image = BitmapFactory.decodeByteArray(intent.getByteArrayExtra("image"), 0, intent.getByteArrayExtra("image")!!.size)

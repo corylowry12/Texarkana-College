@@ -18,6 +18,7 @@ import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.CategoryTextViewVisible
 import com.cory.texarkanacollege.classes.ColoredBackgroundsData
+import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.database.AssignmentsDBHelper
 import com.cory.texarkanacollege.database.ClassesDBHelper
 import com.cory.texarkanacollege.fragments.ViewAssignmentFragment
@@ -320,8 +321,7 @@ class UpcomingAdapter(val context: Context,
                 var dateFormattedSimple2 = dateFormattedStored
                 dueDateChip.setOnClickListener {
                     val datePicker = DatePickerDialog(
-                        context, R.style.datePickerLight
-                    )
+                        context, DarkThemeData(context).dateDialogTheme(context))
                     datePicker.setCancelable(false)
 
                     val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)

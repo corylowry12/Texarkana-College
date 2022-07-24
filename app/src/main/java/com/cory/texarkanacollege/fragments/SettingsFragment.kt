@@ -134,7 +134,7 @@ class SettingsFragment : Fragment() {
             openFragment(PatchNotesFragment())
         }
 
-        if (Version(requireContext()).loadVersion() != getString(R.string.versionNumber)) {
+        if (Version(requireContext()).loadVersion() != getString(R.string.build_number)) {
             patchNotesChevron?.setImageResource(R.drawable.redcircle)
             patchNotesChevron?.setColorFilter(
                 ContextCompat.getColor(

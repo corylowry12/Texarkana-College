@@ -9,8 +9,8 @@ android {
         applicationId "com.cory.texarkanacollege"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 33
-        versionName "3.0.9"
+        versionCode 37
+        versionName "3.0.9.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,8 +1,11 @@
 package com.cory.texarkanacollege.classes
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,20 +40,25 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
     }
 
     // Show alert dialog to request permissions
+    @SuppressLint("InflateParams")
     fun showAlert(context: Context) {
-        val builder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
-        builder.setTitle(R.string.need_permissions)
-        builder.setMessage(R.string.some_permissions_are_required_to_do_the_task)
+        val builder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle).create()
+        val layout =
+            LayoutInflater.from(context).inflate(R.layout.need_app_permissions_dialog_layout, null)
+        builder.setView(layout)
         builder.setCancelable(false)
-        builder.setPositiveButton(R.string.ok) { _, _ ->
+        val okButton = layout.findViewById<Button>(R.id.needPermissionsDialogOKButton)
+        val cancelButton = layout.findViewById<Button>(R.id.cancelNeedPermissionsDialog)
+        okButton.setOnClickListener {
+            builder.dismiss()
             requestPermissions(context)
         }
-        builder.setNeutralButton(R.string.cancel) { _, _ ->
+        cancelButton.setOnClickListener {
+            builder.dismiss()
             Toast.makeText(context, context.getString(R.string.permission_not_granted), Toast.LENGTH_SHORT)
                     .show()
         }
-        val dialog = builder.create()
-        dialog.show()
+        builder.show()
         }
 
     // Request the permissions at run time

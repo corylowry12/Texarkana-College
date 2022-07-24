@@ -95,8 +95,6 @@ class BackupRestoreFragment : Fragment() {
                         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm")
                         val formatted = current.format(formatter)
 
-                     Toast.makeText(requireContext(), path.toString(), Toast.LENGTH_SHORT).show()
-
                     val backupFile = Environment.DIRECTORY_DOWNLOADS+"/Texarkana College backups/tc_backup_$formatted.txt"
 
                     if (Build.VERSION.SDK_INT < 31) {

@@ -6,7 +6,6 @@
     <color name="cardViewLightBackgroundColor">#D8EFFF</color>
     <color name="toggleButtonCheckedBackground">#CAE9FF</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_launcher_background">#FFFFFF</color>
     <color name="itemIndicatorColor">#519ACC</color>
     <color name="patchNotesBadgeColor">#807F7F</color>
     <color name="toolBarScrimColor">#4281AC</color>

@@ -50,7 +50,7 @@ class PatchNotesFragment : Fragment() {
                                             "Added the ability to backup and restore data within the app (Settings -> Backup)", "Added the ability to search for classes via a search bar in the classes view", "Added the ability to search by page number in the campus news view",
                                             "Added the ability to search for text within the content in the campus news info view")
 
-    private var enhancementsArray = arrayOf("Moved community board to the bottom nav bar", "There will no longer be labels describing what tab you are on", "Tweaked the colors of the web class switch when adding a class",
+    private var enhancementsArray = arrayOf("Added support for themed icons on Android 13+", "Redesigned the need permissions dialog", "Moved community board to the bottom nav bar", "There will no longer be labels describing what tab you are on", "Tweaked the colors of the web class switch when adding a class",
                                             "The heart icon when liking a post will always be white instead of red if its liked like before", "Tweaked the colors of the switch to mark a post as urgent", "Tweaked the design of the sign out menu in the community board",
                                             "Migrated the dark webview switch to Settings->Appearance", "Tweaked the colors of the webview dark mode switch to set the webview to be dark", "When loading post in the community board it will no longer show the loading dialog",
                                             "Redesigned the items in the community board", "The background of the card view when viewing an urgent post will now be red if its urgent in the view post view", "Community board posts will now show how long ago it was posted instead of the date and time",
@@ -165,7 +165,7 @@ class PatchNotesFragment : Fragment() {
             }
         }
 
-        Version(requireContext()).setVersion(getString(R.string.versionNumber))
+        Version(requireContext()).setVersion(getString(R.string.build_number))
 
         val runnable = Runnable {
             (context as MainActivity).setSmallSettingsBadge()

@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package com.cory.texarkanacollege
 
 import android.annotation.SuppressLint
@@ -12,7 +14,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.Icon
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
@@ -36,23 +38,16 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
-import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONObject
 import java.io.*
-import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,17 +55,15 @@ class MainActivity : AppCompatActivity() {
 
     private val client = OkHttpClient()
 
-    private lateinit var appUpdateManager : AppUpdateManager
-
     var path = ""
 
-    val homeFragment = HomeFragment()
-    val classesFragment = ClassesFragment()
-    val settingsFragment = SettingsFragment()
+    private val homeFragment = HomeFragment()
+    private val classesFragment = ClassesFragment()
+    private val settingsFragment = SettingsFragment()
     var gradeFragment = GradeFragment()
-    val assignmentFragment = AssignmentFragment()
+    private val assignmentFragment = AssignmentFragment()
     var campusNewsFragment = CampusNewsFragment()
-    val communityBoardFragment = CommunityBoardFragment()
+    private val communityBoardFragment = CommunityBoardFragment()
     var viewPostCommunityBoardFragment = ViewCommunityBoardPostFragment()
 
     lateinit var gradesAdapter: GradesAdapter
@@ -124,68 +117,6 @@ class MainActivity : AppCompatActivity() {
                 replaceFragment(homeFragment)
             }
         }
-    }
-
-    private val listener = InstallStateUpdatedListener { installState ->
-        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-            val materialAlertDialogBuilder =
-                MaterialAlertDialogBuilder(this, R.style.AlertDialogStyle)
-            materialAlertDialogBuilder.setCancelable(false)
-            materialAlertDialogBuilder.setTitle("Update Downloaded")
-            materialAlertDialogBuilder.setMessage("App Update Downloaded, click restart to install")
-            materialAlertDialogBuilder.setPositiveButton("Restart") { _, _ ->
-                appUpdateManager.completeUpdate()
-                val intent =
-                    packageManager.getLaunchIntentForPackage(packageName)
-                intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
-            }
-            materialAlertDialogBuilder.show()
-        }
-        else if (installState.installStatus() == InstallStatus.INSTALLED) {
-            unregister()
-        }
-    }
-
-    private fun unregister() {
-        appUpdateManager.unregisterListener(listener)
-    }
-
-    private fun checkUpdate() {
-        appUpdateManager = AppUpdateManagerFactory.create(this)
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-        appUpdateManager.registerListener(listener)
-        appUpdateInfoTask.addOnSuccessListener {
-            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
-                    AppUpdateType.IMMEDIATE
-                )
-            ) {
-                appUpdateManager.startUpdateFlowForResult(it, AppUpdateType.IMMEDIATE, this, 123)
-                appUpdateManager.completeUpdate()
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        appUpdateManager
-            .appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-                if (appUpdateInfo.updateAvailability()
-                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                ) {
-                    // If an in-app update is already running, resume the update.
-                    appUpdateManager.startUpdateFlowForResult(
-                        appUpdateInfo,
-                        AppUpdateType.IMMEDIATE,
-                        this,
-                        123
-                    );
-                }
-            }
     }
 
     @SuppressLint("Range")
@@ -249,7 +180,8 @@ class MainActivity : AppCompatActivity() {
 
                 val id = classesCursor.getString(classesCursor.getColumnIndex(ClassesDBHelper.COLUMN_ID))
 
-                classDBHandler.classIDUpdate(id,
+                classDBHandler.classIDUpdate(
+                    id,
                     classesCursor.getString(classesCursor.getColumnIndex(ClassesDBHelper.COLUMN_ID)),
                 )
             } catch (e: Exception) {
@@ -257,8 +189,6 @@ class MainActivity : AppCompatActivity() {
             }
             classesCursor.moveToNext()
         }
-
-        checkUpdate()
 
         val classesIntent = Intent(this, MainActivity::class.java)
         classesIntent.action = Intent.ACTION_VIEW
@@ -539,16 +469,16 @@ class MainActivity : AppCompatActivity() {
                 //val byteArray = stream.toByteArray()
                 val selectedFile = File(getRealPathFromURI(selectedImage!!))
                 ImagePathData(this).setPath(selectedFile.toString())// To display selected image in image view
-                gradesAdapter.addImageButton.text = "View Image"
+                gradesAdapter.addImageButton.text = getString(R.string.view_image)
             } catch (e : NullPointerException) {
                 e.printStackTrace()
-                Toast.makeText(this, "Error selecting image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_selecting_image), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun getRealPathFromURI(contentURI: Uri): String {
-        var result = ""
+        val result: String
         val cursor = this.contentResolver?.query(contentURI, null, null, null, null)
         if (cursor == null) {
             result = contentURI.path.toString()
@@ -624,7 +554,7 @@ class MainActivity : AppCompatActivity() {
             MediaScannerConnection.scanFile(this, arrayOf(image.toString()), null, null)
 
             ImagePathData(this).setPath(image.toString())
-            gradesAdapter.addImageButton.text = "View Image"
+            gradesAdapter.addImageButton.text = getString(R.string.view_image)
         }
     }
 
@@ -669,7 +599,7 @@ class MainActivity : AppCompatActivity() {
         if (resources.getBoolean(R.bool.isTablet)) {
             val badge =
                 findViewById<NavigationRailView>(R.id.bottomNav).getOrCreateBadge(R.id.settings)
-            if (Version(this).loadVersion() != getString(R.string.versionNumber)) {
+            if (Version(this).loadVersion() != getString(R.string.build_number)) {
                 badge.isVisible = true
 
                 badge.backgroundColor = ContextCompat.getColor(this, R.color.redBadgeColor)
@@ -883,11 +813,5 @@ class MainActivity : AppCompatActivity() {
 
         val managePermissions = ManagePermissions(this, list, 123)
         return managePermissions.checkPermissions(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        appUpdateManager.unregisterListener(listener)
     }
 }

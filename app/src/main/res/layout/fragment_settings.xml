@@ -22,7 +22,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:contentScrim="@color/toolBarScrimColor"
             app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -35,6 +34,7 @@
                 android:background="@android:color/transparent"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
+                app:buttonGravity="center_vertical"
                 app:title="Settings"
                 app:titleCentered="true" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -90,7 +90,7 @@
                 android:paddingStart="12dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="5dp"
-                android:text="Appearance"
+                android:text="@string/appearance"
                 android:textColor="?attr/alwaysDarkTextColor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
@@ -106,7 +106,7 @@
                 android:paddingEnd="5dp"
                 android:paddingBottom="4dp"
                 android:textColor="?attr/alwaysDarkTextColor"
-                android:text="Customize the appearance settings of the app"
+                android:text="@string/customize_the_appearance_of_the_app"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@id/chevronImage"
                 app:layout_constraintStart_toEndOf="@id/appearanceImage"
@@ -644,79 +644,6 @@
                 tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewElevatedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="28dp"
-            app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true"
-            app:cardBackgroundColor="@color/cardViewLightBlue">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintWhyChooseTC"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground">
-
-                <ImageView
-                    android:id="@+id/reasonsImage"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_baseline_question_answer_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription"
-                    app:tint="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/reasonsHeading"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="12dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="5dp"
-                    android:text="Why Choose TC"
-                    android:textColor="?attr/alwaysDarkTextColor"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toStartOf="@id/reasonsChevron"
-                    app:layout_constraintStart_toEndOf="@id/reasonsImage"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/reasonsHeading"
-                    android:layout_alignStart="@id/reasonsHeading"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="5dp"
-                    android:paddingBottom="4dp"
-                    android:textColor="?attr/alwaysDarkTextColor"
-                    android:text="View reasons to see why YOU might want to go to TC"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@id/reasonsChevron"
-                    app:layout_constraintStart_toEndOf="@id/reasonsImage"
-                    app:layout_constraintTop_toBottomOf="@id/reasonsHeading" />
-
-                <ImageView
-                    android:id="@+id/reasonsChevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             style="?attr/materialCardViewElevatedStyle"

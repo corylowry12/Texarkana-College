@@ -21,6 +21,7 @@
         app:navigationIconTint="@color/white"
         app:title="View Post"
         app:titleCentered="true"
+        app:buttonGravity="center_vertical"
         app:titleTextColor="@color/white"
         app:menu="@menu/view_post_community_board_menu"/>
 

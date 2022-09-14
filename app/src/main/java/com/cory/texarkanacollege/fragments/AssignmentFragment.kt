@@ -3,6 +3,7 @@ package com.cory.texarkanacollege.fragments
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -249,7 +250,7 @@ class AssignmentFragment : Fragment() {
                         }
 
                         val cancelButton = addAssignmentView.findViewById<Button>(R.id.cancelButton)
-                        val dueDateChip = addAssignmentView.findViewById<Chip>(R.id.dueDateChip)
+                        val dueDateChip = addAssignmentView.findViewById<Button>(R.id.dueDateButton)
                         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
                         val dateFormatted = formatter.format(Date())
                         val dateFormatted2 = formatter.parse(dateFormatted)
@@ -260,6 +261,29 @@ class AssignmentFragment : Fragment() {
                             ArrayAdapter(requireContext(), R.layout.list_item, classesArray)
                         classesMenu.setAdapter(adapter)
                         classesMenu.setText(classesArray.elementAt(0), false)
+
+                        val darkThemeData = DarkThemeData(requireContext())
+                        when {
+                            darkThemeData.loadState() == 1 -> {
+                                classesMenu.setDropDownBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.darkMenuBackground)))
+                            }
+                            darkThemeData.loadState() == 0 -> {
+                                classesMenu.setDropDownBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.lightMenuBackground)))
+                            }
+                            darkThemeData.loadState() == 2 -> {
+                                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                                    Configuration.UI_MODE_NIGHT_NO -> {
+                                        classesMenu.setDropDownBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.lightMenuBackground)))
+                                    }
+                                    Configuration.UI_MODE_NIGHT_YES -> {
+                                        classesMenu.setDropDownBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.darkMenuBackground)))
+                                    }
+                                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                                        classesMenu.setDropDownBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.darkMenuBackground)))
+                                    }
+                                }
+                            }
+                        }
 
                         var date = dateFormatted
 
@@ -338,43 +362,43 @@ class AssignmentFragment : Fragment() {
 
         val upcomingRecyclerView =
             requireView().findViewById<RecyclerView>(R.id.upcomingRecyclerView)
-        val upcomingChevron =
-            requireView().findViewById<ImageView>(R.id.upcomingChevronImage)
+        val upcomingChip =
+            requireView().findViewById<Chip>(R.id.upcomingChip)
 
         val pastDueRecyclerView =
             requireView().findViewById<RecyclerView>(R.id.pastDueRecyclerView)
-        val pastDueChevron = requireView().findViewById<ImageView>(R.id.pastDueChevronImage)
+        val pastDueChip = requireView().findViewById<Chip>(R.id.pastDueChip)
 
         val doneRecyclerView =
             requireView().findViewById<RecyclerView>(R.id.doneRecyclerView)
-        val doneChevron = requireView().findViewById<ImageView>(R.id.doneChevronImage)
+        val doneChip = requireView().findViewById<Chip>(R.id.doneChip)
 
         if (RememberRecyclerViewVisibilityForAssignments(requireContext()).loadState()) {
             if (RecyclerViewVisibility(requireContext()).loadUpcoming()) {
                 upcomingRecyclerView.visibility = View.VISIBLE
-                upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                upcomingChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
             }
             else {
                 upcomingRecyclerView.visibility = View.GONE
-                upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                upcomingChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
 
             if (RecyclerViewVisibility(requireContext()).loadPastDue()) {
                 pastDueRecyclerView.visibility = View.VISIBLE
-                pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                pastDueChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
             }
             else {
                 pastDueRecyclerView.visibility = View.GONE
-                pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                pastDueChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
 
             if (RecyclerViewVisibility(requireContext()).loadDone()) {
                 doneRecyclerView.visibility = View.VISIBLE
-                doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                doneChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
             }
             else {
                 doneRecyclerView.visibility = View.GONE
-                doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                doneChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             }
         }
 
@@ -385,15 +409,15 @@ class AssignmentFragment : Fragment() {
                 if (upcomingRecyclerView.visibility == View.GONE) {
                     RecyclerViewVisibility(requireContext()).setUpcoming(true)
                     upcomingRecyclerView.visibility = View.VISIBLE
-                    upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                    upcomingChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
                     RecyclerViewVisibility(requireContext()).setUpcoming(false)
                     upcomingRecyclerView.visibility = View.GONE
-                    upcomingChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                    upcomingChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
             }
             else {
-                Toast.makeText(requireContext(), "There is no upcoming assignments", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.there_are_no_upcoming_assignments), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -404,15 +428,15 @@ class AssignmentFragment : Fragment() {
                 if (pastDueRecyclerView.visibility == View.GONE) {
                     RecyclerViewVisibility(requireContext()).setPastDue(true)
                     pastDueRecyclerView.visibility = View.VISIBLE
-                    pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                    pastDueChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
                     RecyclerViewVisibility(requireContext()).setPastDue(false)
                     pastDueRecyclerView.visibility = View.GONE
-                    pastDueChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                    pastDueChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
             }
             else {
-                Toast.makeText(requireContext(), "There is no past due assignments", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.there_are_no_past_due_assignments), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -423,15 +447,15 @@ class AssignmentFragment : Fragment() {
                 if (doneRecyclerView.visibility == View.GONE) {
                     RecyclerViewVisibility(requireContext()).setDone(true)
                     doneRecyclerView.visibility = View.VISIBLE
-                    doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                    doneChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_up_24)
                 } else {
                     RecyclerViewVisibility(requireContext()).setDone(false)
                     doneRecyclerView.visibility = View.GONE
-                    doneChevron.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                    doneChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
                 }
             }
             else {
-                Toast.makeText(requireContext(), "There are no finished assignments", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.there_are_no_finished_assignments), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -447,8 +471,8 @@ class AssignmentFragment : Fragment() {
     fun loadIntoList() {
         val dbHandler = AssignmentsDBHelper(requireActivity().applicationContext, null)
 
-        val upcomingChevron =
-            requireView().findViewById<ImageView>(R.id.upcomingChevronImage)
+        val upcomingChip =
+            requireView().findViewById<Chip>(R.id.upcomingChip)
         val upcomingRecyclerView = requireView().findViewById<RecyclerView>(R.id.upcomingRecyclerView)
 
         upcomingDataList.clear()
@@ -485,13 +509,13 @@ class AssignmentFragment : Fragment() {
             }
 
         if (upcomingDataList.isEmpty()) {
-            upcomingChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            upcomingChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             upcomingRecyclerView.visibility = View.GONE
             RecyclerViewVisibility(requireContext()).setUpcoming(false)
         }
 
-        val pastDueChevron =
-            requireView().findViewById<ImageView>(R.id.pastDueChevronImage)
+        val pastDueChip =
+            requireView().findViewById<Chip>(R.id.pastDueChip)
         val pastDueRecyclerView = requireView().findViewById<RecyclerView>(R.id.pastDueRecyclerView)
 
         pastDueDataList.clear()
@@ -521,13 +545,13 @@ class AssignmentFragment : Fragment() {
             }
 
         if (pastDueDataList.isEmpty()) {
-            pastDueChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            pastDueChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             pastDueRecyclerView.visibility = View.GONE
             RecyclerViewVisibility(requireContext()).setPastDue(false)
         }
 
-        val doneChevron =
-            requireView().findViewById<ImageView>(R.id.doneChevronImage)
+        val doneChip =
+            requireView().findViewById<Chip>(R.id.doneChip)
         val doneRecyclerView = requireView().findViewById<RecyclerView>(R.id.doneRecyclerView)
 
         doneDataList.clear()
@@ -556,7 +580,7 @@ class AssignmentFragment : Fragment() {
             }
 
         if (doneDataList.isEmpty()) {
-            doneChevron.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24))
+            doneChip.closeIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_keyboard_arrow_down_24)
             doneRecyclerView.visibility = View.GONE
             RecyclerViewVisibility(requireContext()).setDone(false)
         }
@@ -570,8 +594,8 @@ class AssignmentFragment : Fragment() {
         doneRecyclerView?.layoutManager = doneGridLayoutManager
         doneRecyclerView?.adapter = doneAdapter
 
-        activity?.findViewById<TextView>(R.id.upcomingCounterTextView)?.text = upcomingDataList.count().toString()
-        activity?.findViewById<TextView>(R.id.pastDueCounterTextView)?.text = pastDueDataList.count().toString()
-        activity?.findViewById<TextView>(R.id.doneCounterTextView)?.text = doneDataList.count().toString()
+        activity?.findViewById<Chip>(R.id.upcomingChip)?.text = upcomingDataList.count().toString()
+        activity?.findViewById<Chip>(R.id.pastDueChip)?.text = pastDueDataList.count().toString()
+        activity?.findViewById<Chip>(R.id.doneChip)?.text = doneDataList.count().toString()
     }
 }

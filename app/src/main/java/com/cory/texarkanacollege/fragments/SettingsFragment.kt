@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -131,11 +132,6 @@ class SettingsFragment : Fragment() {
                     R.color.redAccent
                 )
             )
-        }
-
-        val whyChooseTCConstraint = view.findViewById<ConstraintLayout>(R.id.constraintWhyChooseTC)
-        whyChooseTCConstraint?.setOnClickListener {
-            openFragment(WhyChoooseTCFragment())
         }
 
         val campusMapConstraint = view.findViewById<ConstraintLayout>(R.id.constraintCampusMap)
@@ -275,56 +271,128 @@ class SettingsFragment : Fragment() {
             val cancel = deleteDataView.findViewById<Button>(R.id.cancelButton)
 
             classes.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all classes, grades, and assignments. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Delete All Classes?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all classes, grades, and assignments. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     ClassesDBHelper(requireContext(), null).deleteAll()
                     GradesDBHelper(requireContext(), null).deleteAll()
                     AssignmentsDBHelper(requireContext(), null).deleteAll()
-                    dialog.dismiss()
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
             grades.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all grades. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Delete All Grades?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all grades. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     GradesDBHelper(requireContext(), null).deleteAll()
-                    dialog.dismiss()
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
             assignments.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all assignments. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Delete All Assignments?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all assignments. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     AssignmentsDBHelper(requireContext(), null).deleteAll()
-                    dialog.dismiss()
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
             images.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all images for grades. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Delete All Images?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all images for grades. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     GradesDBHelper(requireContext(), null).deleteAllImages()
-                    dialog.dismiss()
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
             settings.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all saved preferences. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Clear all settings?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all settings. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     requireContext().getSharedPreferences("file", 0).edit().clear().apply()
                     FirebaseAuth.getInstance().signOut()
                     Toast.makeText(requireContext(), "App Restarting...", Toast.LENGTH_LONG).show()
@@ -337,15 +405,31 @@ class SettingsFragment : Fragment() {
                         startActivity(intent)
                         activity?.finish()
                     }, 1500)
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
             everything.setOnClickListener {
-                val materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogStyle)
-                materialAlertDialogBuilder.setTitle("Warning")
-                materialAlertDialogBuilder.setMessage("This will erase all saved data. Continue?")
-                materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                val materialAlertDialogBuilder =
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogStyle
+                    ).create()
+
+                val layout =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.delete_app_data_dialog_layout, null)
+
+                layout.findViewById<TextView>(R.id.deleteAppDataHeadline).text = "Delete Everything?"
+                layout.findViewById<TextView>(R.id.deleteAppDataDescription).text = "This will erase all data stored within the app. Continue?"
+                materialAlertDialogBuilder.setView(layout)
+
+                layout.findViewById<Button>(R.id.deleteAppDataDialogButton).setOnClickListener {
                     ClassesDBHelper(requireContext(), null).deleteAll()
                     GradesDBHelper(requireContext(), null).deleteAll()
                     AssignmentsDBHelper(requireContext(), null).deleteAll()
@@ -361,11 +445,14 @@ class SettingsFragment : Fragment() {
                         startActivity(intent)
                         activity?.finish()
                     }, 1500)
+                    materialAlertDialogBuilder.dismiss()
                 }
-                materialAlertDialogBuilder.setNegativeButton("No", null)
+                layout.findViewById<Button>(R.id.deleteAppDataDialogCancelButton).setOnClickListener {
+                    materialAlertDialogBuilder.dismiss()
+                }
+
                 materialAlertDialogBuilder.show()
             }
-
             cancel.setOnClickListener {
                 dialog.dismiss()
             }

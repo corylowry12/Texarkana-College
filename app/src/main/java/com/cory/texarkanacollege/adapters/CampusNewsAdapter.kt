@@ -1,11 +1,17 @@
 package com.cory.texarkanacollege.adapters
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.fragments.CampusNewsInfoFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class CampusNewsAdapter(val context: Context,
                         private val dataList:  ArrayList<HashMap<String, String>>
@@ -56,6 +64,64 @@ class CampusNewsAdapter(val context: Context,
 
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val dataItem = dataList[holder.adapterPosition]
+
+        holder.itemView.findViewById<CardView>(R.id.cardViewCampusNews).setOnLongClickListener {
+
+            val dialog = BottomSheetDialog(context)
+            val campusNewsOptionLayout =
+                LayoutInflater.from(context).inflate(R.layout.campus_news_bottom_sheet, null)
+            dialog.setContentView(campusNewsOptionLayout)
+
+            if (context.resources.getBoolean(R.bool.isTablet)) {
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.skipCollapsed = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.isDraggable = false
+            }
+
+            val copyButton = campusNewsOptionLayout.findViewById<Button>(R.id.copyButton)
+            val shareButton = campusNewsOptionLayout.findViewById<Button>(R.id.shareButton)
+            val openButton = campusNewsOptionLayout.findViewById<Button>(R.id.openButton)
+            val cancelButton = campusNewsOptionLayout.findViewById<Button>(R.id.cancelButton)
+
+            copyButton.setOnClickListener {
+                val clipBoard =
+                    context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("URL", dataItem["link"])
+                clipBoard.setPrimaryClip(clip)
+                Toast.makeText(
+                    context,
+                    "Link Copied to Clipboard",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            shareButton.setOnClickListener {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, dataItem["name"])
+                shareIntent.putExtra(Intent.EXTRA_TEXT, dataItem["link"])
+                context.startActivity(Intent.createChooser(shareIntent, "Share Link"))
+            }
+
+            openButton.setOnClickListener {
+                val openIntent = Intent(Intent.ACTION_VIEW)
+                openIntent.data = Uri.parse(dataItem["link"])
+                context.startActivity(openIntent)
+            }
+
+            cancelButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+
+            true
+        }
 
         holder.itemView.findViewById<CardView>(R.id.cardViewCampusNews).setOnClickListener {
             val runnable = Runnable {

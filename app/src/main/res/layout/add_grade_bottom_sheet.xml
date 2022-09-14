@@ -18,13 +18,15 @@
 
     <TextView
         android:id="@+id/headingTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="5dp"
-        android:text="Add Grade"
+        android:text="@string/add_grade"
         android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
@@ -32,8 +34,8 @@
         android:id="@+id/outlinedTextFieldName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
         app:endIconMode="clear_text"
         android:textColorHint="#939090"
@@ -47,7 +49,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Grade Name"
+            android:hint="@string/grade_name_e_g_exam_1"
             android:maxLines="1"
             android:inputType="text|textCapWords" />
 
@@ -57,8 +59,8 @@
         android:id="@+id/outlinedTextFieldGrade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         app:endIconMode="clear_text"
         android:textColorHint="#939090"
@@ -72,7 +74,7 @@
             android:id="@+id/grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Grade"
+            android:hint="@string/grade_e_g_95"
             android:maxLines="1"
             android:maxLength="5"
             android:inputType="number|numberDecimal" />
@@ -83,8 +85,8 @@
         android:id="@+id/outlinedTextFieldWeight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         app:endIconMode="clear_text"
         android:textColorHint="#939090"
@@ -98,7 +100,7 @@
             android:id="@+id/weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Weight"
+            android:hint="@string/grade_weight_e_g_50"
             android:maxLines="1"
             android:maxLength="5"
             android:inputType="number|numberDecimal" />
@@ -112,10 +114,11 @@
         app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldWeight"
         app:layout_constraintStart_toEndOf="@id/cancelButton"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:text="Add Image"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/add_image"
+        app:tint="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button"/>
 
     <Button
@@ -126,8 +129,8 @@
         app:layout_constraintTop_toBottomOf="@id/addImage"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="20dp"
         android:textColor="?attr/cancelButtonTextColor"
         app:layout_constraintEnd_toStartOf="@id/addGradeButton"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
@@ -140,8 +143,10 @@
         app:layout_constraintStart_toEndOf="@id/cancelButton"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
-        android:text="Add Grade"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/add_grade"
+        app:tint="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

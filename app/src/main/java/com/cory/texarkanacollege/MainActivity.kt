@@ -20,6 +20,8 @@ import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -27,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.os.BuildCompat
 import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -40,6 +43,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigationrail.NavigationRailView
+import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -475,6 +479,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    val showImagePickerAndroid13 = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            try {
+                ImagePathData(this).setPath("")
+                var imageStream: InputStream? = null
+                try {
+                    imageStream =
+                        this.contentResolver?.openInputStream(
+                            uri!!
+                        )
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+                val imageBitmap = BitmapFactory.decodeStream(imageStream)
+                val stream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                //val byteArray = stream.toByteArray()
+                val selectedFile = File(getRealPathFromURI(uri!!))
+                ImagePathData(this).setPath(selectedFile.toString())// To display selected image in image view
+                gradesAdapter.addImageButton.text = getString(R.string.view_image)
+            } catch (e : Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, getString(R.string.error_selecting_image), Toast.LENGTH_SHORT).show()
+                gradesAdapter.addImageButton.text = "Add Image"
+            }
+        }
+
     private fun getRealPathFromURI(contentURI: Uri): String {
         val result: String
         val cursor = this.contentResolver?.query(contentURI, null, null, null, null)
@@ -607,7 +637,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             val badge =
                 findViewById<BottomNavigationView>(R.id.bottomNav).getOrCreateBadge(R.id.settings)
-            if (Version(this).loadVersion() != getString(R.string.versionNumber)) {
+            if (Version(this).loadVersion() != getString(R.string.build_number)) {
                 badge.isVisible = true
 
                 badge.backgroundColor = ContextCompat.getColor(this, R.color.redBadgeColor)
@@ -797,9 +827,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun requestPermissions() {
-        val list = listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        var list = listOf<String>()
+        list = if (Build.VERSION.SDK_INT >= 33) {
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.READ_MEDIA_IMAGES
+            )
+        } else {
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
 
         val managePermissions = ManagePermissions(this, list, 123)
+
         if (!managePermissions.checkPermissions(this)) {
             managePermissions.showAlert(this)
         }
@@ -807,9 +850,21 @@ class MainActivity : AppCompatActivity() {
 
     fun checkPermissions(): Boolean {
 
-        val list = listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        var list = listOf<String>()
+        list = if (Build.VERSION.SDK_INT >= 33) {
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.READ_MEDIA_IMAGES
+            )
+        } else {
+            listOf(
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
 
-        val managePermissions = ManagePermissions(this, list, 123)
+        val managePermissions = ManagePermissions(this, list, 111)
         return managePermissions.checkPermissions(this)
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -12,15 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -73,7 +69,7 @@ class CommunityBoardAdapter(val context: Context,
             val timeInMil = dateFormatted.time
             val currentTime = System.currentTimeMillis()
             val difference = currentTime - timeInMil
-            var diff = ""
+            var diff: String
 
             dateType.add(position, false)
 
@@ -177,7 +173,7 @@ class CommunityBoardAdapter(val context: Context,
                 val timeInMil = dateFormatted.time
                 val currentTime = System.currentTimeMillis()
                 val difference = currentTime - timeInMil
-                var diff = ""
+                val diff: String
 
                 if (difference > 86400000) {
                     val dateFormatter2 = SimpleDateFormat("MMM/dd/yyyy hh:mm a", Locale.ENGLISH)
@@ -220,7 +216,7 @@ class CommunityBoardAdapter(val context: Context,
                     val likesDataListPost = ArrayList<HashMap<String, String>>()
                     for (i in 0 until likesDataList.count()) {
                         if (likesDataList[i]["post_number"] == dataItem["childPosition"]) {
-                            val map = java.util.HashMap<String, String>()
+                            val map = HashMap<String, String>()
                             map["name"] = likesDataList[i]["name"].toString()
                             map["profilePicURL"] = likesDataList[i]["profilePicURL"].toString()
                             likesDataListPost.add(map)
@@ -249,10 +245,22 @@ class CommunityBoardAdapter(val context: Context,
                 editPostEditButton?.visibility = View.GONE
 
                 editPostDeleteButton?.setOnClickListener {
-                    val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle)
-                    materialAlertDialogBuilder.setTitle("Delete Post?")
-                    materialAlertDialogBuilder.setMessage("Would you like to delete this post? It can not be undone.")
-                    materialAlertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+
+                    val deletePostMaterialAlertDialogBuilder =
+                        MaterialAlertDialogBuilder(
+                            context,
+                            R.style.AlertDialogStyle
+                        ).create()
+
+                    val layout =
+                        LayoutInflater.from(context)
+                            .inflate(R.layout.delete_post_dialog_layout, null)
+                    deletePostMaterialAlertDialogBuilder.setView(layout)
+
+                    val deleteButton = layout.findViewById<Button>(R.id.deletePostButton)
+                    val cancelButton = layout.findViewById<Button>(R.id.cancelDeletePostDialog)
+
+                    deleteButton.setOnClickListener {
                         if (dataItem["imageURL"] != "" && dataItem["imageURL"] != null) {
                             if (isOnline(context)) {
                                 FirebaseStorage.getInstance()
@@ -265,6 +273,7 @@ class CommunityBoardAdapter(val context: Context,
                                         notifyItemRemoved(holder.adapterPosition)
                                         Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
                                             .show()
+                                        deletePostMaterialAlertDialogBuilder.dismiss()
                                         dialog.dismiss()
                                     }
                                     .addOnFailureListener {
@@ -275,6 +284,7 @@ class CommunityBoardAdapter(val context: Context,
                                         notifyItemRemoved(holder.adapterPosition)
                                         Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
                                             .show()
+                                        deletePostMaterialAlertDialogBuilder.dismiss()
                                         dialog.dismiss()
                                     }
                             }
@@ -289,13 +299,15 @@ class CommunityBoardAdapter(val context: Context,
                             notifyItemRemoved(holder.adapterPosition)
                             Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT)
                                 .show()
+                            deletePostMaterialAlertDialogBuilder.dismiss()
                             dialog.dismiss()
                         }
                     }
-                    materialAlertDialogBuilder.setNegativeButton("No") {_, _ ->
-                        dialog.dismiss()
+                    cancelButton.setOnClickListener {
+                        deletePostMaterialAlertDialogBuilder.dismiss()
                     }
-                    materialAlertDialogBuilder.show()
+
+                    deletePostMaterialAlertDialogBuilder.show()
                 }
                 editPostCancelButton?.setOnClickListener {
                     dialog.dismiss()
@@ -342,7 +354,6 @@ class CommunityBoardAdapter(val context: Context,
                     dialog.show()
                     return@setOnLongClickListener true
                 }
-                false
         }
 
         holder.itemView.findViewById<ConstraintLayout>(R.id.communityBoardItemConstraintLayout).setOnClickListener {
@@ -385,7 +396,7 @@ class CommunityBoardAdapter(val context: Context,
         super.setHasStableIds(true)
     }
 
-    fun isOnline(context: Context): Boolean {
+    private fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -405,7 +416,7 @@ class CommunityBoardAdapter(val context: Context,
         return false
     }
 
-    fun String.isEmailValid(): Boolean {
+    private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 }

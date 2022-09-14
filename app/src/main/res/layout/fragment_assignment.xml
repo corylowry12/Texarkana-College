@@ -20,7 +20,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:titleCollapseMode="scale"
             app:contentScrim="@color/toolBarScrimColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -35,6 +34,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Assignments"
                 app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:menu="@menu/classes_menu"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -86,35 +86,29 @@
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/upcomingCounterTextView"
+                        app:layout_constraintEnd_toStartOf="@id/upcomingChip"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/upcomingCounterTextView"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/upcomingChip"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        app:chipStrokeWidth="0dp"
                         android:layout_width="wrap_content"
+                        app:closeIconVisible="true"
+                        app:chipCornerRadius="28dp"
                         android:layout_height="wrap_content"
-                        android:text="1"
-                        android:background="@drawable/rounded_text_view"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toStartOf="@id/upcomingChevronImage"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <ImageView
-                        android:id="@+id/upcomingChevronImage"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        app:closeIcon="@drawable/ic_baseline_keyboard_arrow_down_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-
-                        tools:ignore="ContentDescription" />
+                        android:text="1"
+                        android:layout_marginEnd="10dp"
+                        android:clickable="false"
+                        android:textColor="@color/white"
+                        app:closeIconTint="@color/white"
+                        app:chipBackgroundColor="@color/patchNotesBadgeColor"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -160,35 +154,29 @@
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/pastDueCounterTextView"
+                        app:layout_constraintEnd_toStartOf="@id/pastDueChip"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/pastDueCounterTextView"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/pastDueChip"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        app:chipStrokeWidth="0dp"
                         android:layout_width="wrap_content"
+                        app:closeIconVisible="true"
+                        app:chipCornerRadius="28dp"
                         android:layout_height="wrap_content"
-                        android:text="1"
-                        android:background="@drawable/rounded_text_view"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toStartOf="@id/pastDueChevronImage"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <ImageView
-                        android:id="@+id/pastDueChevronImage"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        app:closeIcon="@drawable/ic_baseline_keyboard_arrow_down_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-
-                        tools:ignore="ContentDescription" />
+                        android:text="1"
+                        android:layout_marginEnd="10dp"
+                        android:clickable="false"
+                        android:textColor="@color/white"
+                        app:closeIconTint="@color/white"
+                        app:chipBackgroundColor="@color/patchNotesBadgeColor"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -234,34 +222,29 @@
                         android:textSize="18sp"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/doneCounterTextView"
+                        app:layout_constraintEnd_toStartOf="@id/doneChip"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/doneCounterTextView"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/doneChip"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        app:chipStrokeWidth="0dp"
                         android:layout_width="wrap_content"
+                        app:closeIconVisible="true"
+                        app:chipCornerRadius="28dp"
                         android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textColor="@color/white"
-                        android:textAlignment="center"
-                        android:background="@drawable/rounded_text_view"
-                        app:layout_constraintEnd_toStartOf="@id/doneChevronImage"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <ImageView
-                        android:id="@+id/doneChevronImage"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        app:closeIcon="@drawable/ic_baseline_keyboard_arrow_down_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        android:text="1"
+                        android:layout_marginEnd="10dp"
+                        android:clickable="false"
+                        android:textColor="@color/white"
+                        app:closeIconTint="@color/white"
+                        app:chipBackgroundColor="@color/patchNotesBadgeColor"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

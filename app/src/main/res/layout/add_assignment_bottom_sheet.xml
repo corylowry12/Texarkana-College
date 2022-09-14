@@ -18,13 +18,15 @@
 
     <TextView
         android:id="@+id/headingTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:text="Add Assignment"
+        android:text="@string/add_assignment"
         android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
@@ -32,8 +34,8 @@
         android:id="@+id/outlinedTextFieldName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
         app:endIconMode="clear_text"
         android:textColorHint="#939090"
@@ -47,7 +49,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="@string/assignment_name"
             android:maxLines="1"
             android:inputType="text|textCapWords" />
 
@@ -60,9 +62,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10sp"
+        app:boxCornerRadiusTopStart="14dp"
+        app:boxCornerRadiusTopEnd="14dp"
+        app:boxCornerRadiusBottomStart="14dp"
+        app:boxCornerRadiusBottomEnd="14dp"
+        android:layout_marginEnd="20sp"
+        app:boxStrokeWidth="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/outlinedTextFieldName">
@@ -71,16 +78,17 @@
             android:id="@+id/classesAutoComplete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Select Class"
-            android:inputType="none" />
+            android:hint="@string/select_class"
+            android:inputType="none"
+            android:background="@null"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/outlinedTextFieldNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
         app:endIconMode="clear_text"
         android:textColorHint="#939090"
@@ -94,7 +102,7 @@
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Notes..."
+            android:hint="@string/notes"
             android:inputType="text|textCapWords|textMultiLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -146,18 +154,18 @@
         </com.google.android.material.button.MaterialButtonToggleGroup>
     </HorizontalScrollView>
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/dueDateChip"
+    <Button
+        android:id="@+id/dueDateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:textAlignment="center"
         android:textColor="@color/white"
-        app:chipBackgroundColor="?attr/colorPrimary"
+        app:chipBackgroundColor="?attr/cancelButtonTextColor"
         app:chipCornerRadius="28dp"
         app:chipStrokeWidth="@null"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/horizontalScrollViewCategory"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -165,12 +173,12 @@
         android:id="@+id/cancelButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Cancel"
-        app:layout_constraintTop_toBottomOf="@id/dueDateChip"
+        android:text="@string/cancel"
+        app:layout_constraintTop_toBottomOf="@id/dueDateButton"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="20dp"
         android:textColor="?attr/cancelButtonTextColor"
         app:layout_constraintEnd_toStartOf="@id/addAssignmentButton"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
@@ -179,12 +187,14 @@
         android:id="@+id/addAssignmentButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/dueDateChip"
+        app:layout_constraintTop_toBottomOf="@id/dueDateButton"
         app:layout_constraintStart_toEndOf="@id/cancelButton"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="20dp"
         android:text="Add Assignment"
+        app:tint="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

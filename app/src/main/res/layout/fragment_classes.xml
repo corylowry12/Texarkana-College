@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/toolBarScrimColor"
-            app:expandedTitleMarginBottom="28dp"
             app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -36,7 +35,7 @@
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:title="Classes"
-                app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:menu="@menu/classes_menu" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -61,7 +60,6 @@
         app:boxCornerRadiusBottomStart="28dp"
         app:boxCornerRadiusTopEnd="28dp"
         app:boxCornerRadiusTopStart="28dp"
-        app:startIconTint="?attr/backArrowColor"
         app:startIconDrawable="@drawable/ic_baseline_search_24"
         app:layout_constraintTop_toBottomOf="@id/headingTextView">
 
@@ -71,7 +69,6 @@
             android:layout_height="wrap_content"
             android:hint="Search classes"
             android:maxLines="1"
-            android:textStyle="bold"
             android:inputType="text|textCapWords" />
 
     </com.google.android.material.textfield.TextInputLayout>

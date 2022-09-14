@@ -17,13 +17,15 @@
 
     <TextView
         android:id="@+id/headingTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="5dp"
-        android:text="Options"
+        android:text="@string/options"
         android:textColor="?attr/textColor"
         style="@style/TextAppearance.Material3.DisplaySmall"/>
 
@@ -31,13 +33,14 @@
         android:id="@+id/editButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Edit"
+        android:text="@string/edit"
+        app:tint="?attr/cancelButtonTextColor"
         app:layout_constraintTop_toBottomOf="@id/headingTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         style="@style/Widget.Material3.Button" />
 
     <Button
@@ -48,9 +51,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:text="Mark as Done"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/mark_as_done"
+        app:tint="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button"/>
 
     <Button
@@ -61,9 +65,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:text="Delete"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/delete"
+        app:tint="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button"/>
 
     <Button
@@ -74,9 +79,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:text="Cancel"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/cancel"
         android:textColor="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
 

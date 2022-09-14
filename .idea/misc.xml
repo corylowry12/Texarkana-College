@@ -31,6 +31,7 @@
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/settings_selector.xml" value="0.2125" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/snackbar_corners.xml" value="0.241" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/spinner_bg.xml" value="0.2205" />
+        <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/text_box_outline_dark.xml" value="0.232" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/toggle_button_background.xml" value="0.2165" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/toolbarbackground.xml" value="0.2155" />
         <entry key="..\:/TexarkanaCollegeKotlin/Texarkana-College/app/src/main/res/drawable/view_corner_radius.xml" value="0.218" />
@@ -122,7 +123,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

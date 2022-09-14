@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cory.texarkanacollege.MainActivity
 import com.cory.texarkanacollege.R
@@ -15,7 +17,7 @@ import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
-import com.suke.widget.SwitchButton
+import com.google.android.material.materialswitch.MaterialSwitch
 
 class AppearanceFragment : Fragment() {
 
@@ -101,21 +103,23 @@ class AppearanceFragment : Fragment() {
                 (context as MainActivity).setNavBarBackgroundColor()
 
             }
-
             MainActivity().runOnUiThread(runnable)
         }
 
-        val darkWebViewSwitch = activity?.findViewById<SwitchButton>(R.id.darkWebViewSwitch)
+        val darkWebViewSwitch = activity?.findViewById<MaterialSwitch>(R.id.darkWebViewSwitch)
         val darkWebViewCardView = activity?.findViewById<CardView>(R.id.darkWebViewCardView)
+        val webViewAppearanceText = activity?.findViewById<TextView>(R.id.webviewAppearanceTextView)
+        val darkWebViewConstraint = activity?.findViewById<ConstraintLayout>(R.id.darkWebViewConstraint)
         val darkWebViewData = DarkWebViewData(requireContext())
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            webViewAppearanceText?.visibility = View.GONE
             darkWebViewCardView?.visibility = View.GONE
         }
 
         darkWebViewSwitch?.isChecked = darkWebViewData.loadDarkWebView()
 
-        darkWebViewCardView?.setOnClickListener {
+        darkWebViewConstraint?.setOnClickListener {
             darkWebViewSwitch!!.isChecked = !darkWebViewSwitch.isChecked
         }
         darkWebViewSwitch?.setOnCheckedChangeListener { view, isChecked ->

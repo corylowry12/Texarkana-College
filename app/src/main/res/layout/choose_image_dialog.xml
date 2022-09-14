@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/iconImageView"
-        android:text="Choose"
+        android:text="@string/choose"
         android:textColor="?attr/alwaysDarkTextColor"
         android:textAlignment="center"
         style="@style/TextAppearance.Material3.HeadlineSmall"/>
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/headline"
-        android:text="Choose what you would like to do."
+        android:text="@string/choose_what_you_would_like_to_do"
         style="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="?attr/alwaysDarkTextColor"
         />
@@ -47,9 +47,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
+        app:tint="?attr/cancelButtonTextColor"
         app:layout_constraintTop_toBottomOf="@id/description"
-        android:text="Choose Image"/>
+        android:text="@string/choose_image"/>
 
     <Button
         android:id="@+id/takePhoto"
@@ -58,6 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
+        app:tint="?attr/cancelButtonTextColor"
         app:layout_constraintTop_toBottomOf="@id/chooseImage"
         android:text="Take a photo"/>
 

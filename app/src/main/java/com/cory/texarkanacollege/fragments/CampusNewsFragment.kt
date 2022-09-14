@@ -95,6 +95,7 @@ class CampusNewsFragment : Fragment() {
         val topAppBar = view.findViewById<MaterialToolbar>(R.id.materialToolBarCampusNews)
 
         topAppBar.setNavigationOnClickListener {
+            hideKeyboard()
             activity?.supportFragmentManager?.popBackStack()
         }
 
@@ -196,7 +197,11 @@ class CampusNewsFragment : Fragment() {
                                     loadPosition++
                                     recyclerViewState =
                                         recyclerView.layoutManager?.onSaveInstanceState()!!
-                                    loadMore()
+                                    try {
+                                        loadMore()
+                                    } catch (e: Exception) {
+                                        Toast.makeText(requireContext(), "There was some error when loading more news", Toast.LENGTH_SHORT).show()
+                                    }
 
                                 } else {
                                     Toast.makeText(
@@ -371,7 +376,7 @@ class CampusNewsFragment : Fragment() {
 
             for (i in (loadPosition + 1)..pageNumber) {
                 if (stop) {
-                    loadPosition = i
+                    loadPosition = i - 1
                     GlobalScope.launch(Dispatchers.Main) {
                         Toast.makeText(
                             requireContext(),
@@ -381,39 +386,40 @@ class CampusNewsFragment : Fragment() {
                             .show()
                     }
                     break
-                }
-                val url = "https://www.texarkanacollege.edu/news/page/${i}/"
+                } else {
+                    val url = "https://www.texarkanacollege.edu/news/page/${i}/"
 
-                val document = Jsoup.connect(url).get()
-                val name = document.select("p.text-xl")
-                val linkClass = document.select("div.flex-1")
-                val link = linkClass.select("a.block.mt-2")
-                val img = document.select("img")
-                val hidden = document.select("div.hidden")
-                pageNumber = hidden.select("a.-mt-px").last().text().trim().toInt()
+                    val document = Jsoup.connect(url).get()
+                    val name = document.select("p.text-xl")
+                    val linkClass = document.select("div.flex-1")
+                    val link = linkClass.select("a.block.mt-2")
+                    val img = document.select("img")
+                    val hidden = document.select("div.hidden")
+                    pageNumber = hidden.select("a.-mt-px").last().text().trim().toInt()
 
-                for (z in 1 until name.count()) {
-                    val map = HashMap<String, String>()
-                    map["name"] = name[z].text()
-                    try {
-                        map["link"] = link[z - 1].attr("href").toString()
-                        map["imgLink"] = img[z - 1].attr("src").toString()
-                        map["pageNumber"] = i.toString()
-                        map["pageNumberString"] = "Page Number: $loadPosition"
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    for (z in 1 until name.count()) {
+                        val map = HashMap<String, String>()
+                        map["name"] = name[z].text()
+                        try {
+                            map["link"] = link[z - 1].attr("href").toString()
+                            map["imgLink"] = img[z - 1].attr("src").toString()
+                            map["pageNumber"] = i.toString()
+                            map["pageNumberString"] = "Page Number: $loadPosition"
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        dataList.add(map)
                     }
-                    dataList.add(map)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val recyclerView =
+                            activity?.findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
+                        recyclerView?.layoutManager = gridLayoutManager
+                        recyclerView?.adapter = campusNewsAdapter
+                        layout.findViewById<TextView>(R.id.body).text =
+                            "Fetching page ${i + 1} of $pageNumber"
+                    }
+                    loadPosition = pageNumber
                 }
-                GlobalScope.launch(Dispatchers.Main) {
-                    val recyclerView =
-                        activity?.findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
-                    recyclerView?.layoutManager = gridLayoutManager
-                    recyclerView?.adapter = campusNewsAdapter
-                    layout.findViewById<TextView>(R.id.body).text =
-                        "Fetching page ${i + 1} of $pageNumber"
-                }
-                loadPosition = pageNumber
             }
             loadAllMaterialDialog.dismiss()
             search()

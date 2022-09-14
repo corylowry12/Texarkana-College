@@ -22,7 +22,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:contentScrim="@color/toolBarScrimColor"
             app:titleCollapseMode="scale"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -37,6 +36,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Community Board"
                 app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:menu="@menu/community_board_menu" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

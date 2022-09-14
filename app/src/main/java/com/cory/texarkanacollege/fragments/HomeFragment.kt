@@ -17,6 +17,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
@@ -32,7 +34,7 @@ class HomeFragment : Fragment() {
     private lateinit var progressBar : ProgressBar
 
     private var isLoaded: Boolean = false
-    private val permissionRequestCode = 1
+    private val permissionRequestCode = 191
     private lateinit var managePermissions: ManagePermissions
 
     override fun onCreateView(
@@ -72,7 +74,7 @@ class HomeFragment : Fragment() {
         progressBar = requireView().findViewById(R.id.progressBar)
         val constraintLayout = requireView().findViewById<ConstraintLayout>(R.id.constraintLayout)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && DarkWebViewData(requireContext()).loadDarkWebView()) {
             constraintLayout.setBackgroundColor(Color.BLACK)
         }
         else {
@@ -84,11 +86,12 @@ class HomeFragment : Fragment() {
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
-        managePermissions = ManagePermissions(requireActivity(), list, permissionRequestCode)
-
-        if (!managePermissions.checkPermissions(requireContext())) {
-            managePermissions.showAlert(requireContext())
-        }
+        managePermissions =
+            ManagePermissions(
+                requireActivity(),
+                list,
+                permissionRequestCode
+            )
 
         var url = "https://my.texarkanacollege.edu/ICS/"
 
@@ -141,7 +144,7 @@ class HomeFragment : Fragment() {
         }
 
         webView.setDownloadListener { url1, userAgent, contentDisposition, mimeType, _ ->
-            if (managePermissions.checkPermissions(requireContext())) {
+            if (managePermissions.checkPermissions(requireContext()) && Build.VERSION.SDK_INT < 29) {
                 val request = DownloadManager.Request(Uri.parse(url1))
                 request.setMimeType(mimeType)
                 val cookies = CookieManager.getInstance().getCookie(url1)
@@ -166,15 +169,21 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
         val settings = webView.settings
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
         webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(requireContext()).loadDarkWebView()) {
-            settings.forceDark = WebSettings.FORCE_DARK_ON
+
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+            if (Build.VERSION.SDK_INT >= 29 && DarkWebViewData(requireContext()).loadDarkWebView()) {
+                WebSettingsCompat.setAlgorithmicDarkeningAllowed(webView.settings, true)
+            }
+        } else {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && DarkWebViewData(requireContext()).loadDarkWebView()) {
+                @Suppress("DEPRECATION")
+                WebSettingsCompat.setForceDark(webView.settings, WebSettingsCompat.FORCE_DARK_ON)
+            }
         }
 
         refreshLayout.setOnRefreshListener { webView.reload() }

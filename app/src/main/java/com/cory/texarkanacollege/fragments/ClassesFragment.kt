@@ -36,8 +36,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
-import com.suke.widget.SwitchButton
 
 class ClassesFragment: Fragment() {
 
@@ -238,7 +238,7 @@ class ClassesFragment: Fragment() {
                     val cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
                     val addClassButton = dialog.findViewById<Button>(R.id.addClassButton)
                     dialog.show()
-                    val netClassSwitch = dialog.findViewById<SwitchButton>(R.id.netClassSwitch)
+                    val netClassSwitch = dialog.findViewById<MaterialSwitch>(R.id.netClassSwitch)
                     val netClassSwitchConstraint = dialog.findViewById<ConstraintLayout>(R.id.switchConstraintLayout)
 
                     val toggleGroup = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleGroup)

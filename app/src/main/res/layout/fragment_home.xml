@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:id="@+id/constraintLayout"
     android:background="?attr/backgroundColor"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:forceDarkAllowed="true">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -26,14 +27,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:forceDarkAllowed="true">
 
         <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hardwareAccelerated="true">
-
+            android:hardwareAccelerated="true"
+            android:forceDarkAllowed="true">
         </WebView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

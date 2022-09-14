@@ -12,7 +12,7 @@ import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
 import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.google.android.material.appbar.MaterialToolbar
-import com.suke.widget.SwitchButton
+import com.google.android.material.materialswitch.MaterialSwitch
 
 class ExperimentalFragment : Fragment() {
 
@@ -53,7 +53,7 @@ class ExperimentalFragment : Fragment() {
             activity?.supportFragmentManager?.popBackStack()
         }
 
-        val darkWebViewSwitch = activity?.findViewById<SwitchButton>(R.id.darkWebViewSwitch)
+        val darkWebViewSwitch = activity?.findViewById<MaterialSwitch>(R.id.darkWebViewSwitch)
         val darkWebViewCardView = activity?.findViewById<CardView>(R.id.darkWebViewCardView)
         val darkWebViewData = DarkWebViewData(requireContext())
 

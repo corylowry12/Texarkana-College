@@ -21,7 +21,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:titleCollapseMode="scale"
             app:contentScrim="@color/toolBarScrimColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -36,6 +35,7 @@
                 app:layout_collapseMode="pin"
                 app:title="Campus News"
                 app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:menu="@menu/campus_news_menu"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
                 app:navigationIconTint="?attr/backArrowColor"/>
@@ -61,7 +61,6 @@
             app:boxCornerRadiusBottomStart="28dp"
             app:boxCornerRadiusTopEnd="28dp"
             app:boxCornerRadiusTopStart="28dp"
-            app:startIconTint="?attr/backArrowColor"
             app:startIconDrawable="@drawable/ic_baseline_search_24"
             app:layout_constraintTop_toBottomOf="@id/headingTextView">
 
@@ -71,7 +70,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/search_campus_news"
                 android:maxLines="1"
-                android:textStyle="bold"
                 android:inputType="text|textCapWords" />
 
         </com.google.android.material.textfield.TextInputLayout>

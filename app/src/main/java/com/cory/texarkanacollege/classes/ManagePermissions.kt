@@ -64,10 +64,7 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
     // Request the permissions at run time
     private fun requestPermissions(context: Context) {
         val permission = deniedPermission(context)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-            ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
-        } else {
-            ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
-        }
+        ActivityCompat.requestPermissions(activity, list.toTypedArray(), code)
+
     }
 }

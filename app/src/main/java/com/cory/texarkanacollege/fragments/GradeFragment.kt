@@ -19,6 +19,8 @@ import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
@@ -39,6 +41,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.*
+import java.security.Permissions
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -218,7 +221,19 @@ class GradeFragment : Fragment() {
                                     return@setOnLongClickListener true
                                 }
                             } else {
-                                val list = listOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                                var list = listOf<String>()
+                                list = if (Build.VERSION.SDK_INT >= 33) {
+                                    listOf(
+                                        android.Manifest.permission.CAMERA,
+                                        android.Manifest.permission.READ_MEDIA_IMAGES
+                                    )
+                                } else {
+                                    listOf(
+                                        android.Manifest.permission.CAMERA,
+                                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                                    )
+                                }
 
                                 managePermissions =
                                     ManagePermissions(
@@ -247,7 +262,15 @@ class GradeFragment : Fragment() {
                                         val pickerIntent = Intent(Intent.ACTION_PICK)
                                         pickerIntent.type = "image/*"
 
-                                        showImagePicker.launch(pickerIntent)
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                            showImagePickerAndroid13.launch(
+                                                PickVisualMediaRequest(
+                                                ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            )
+                                        }
+                                        else {
+                                            showImagePicker.launch(pickerIntent)
+                                        }
 
                                         chooseImageDialog.dismiss()
                                     }
@@ -256,17 +279,20 @@ class GradeFragment : Fragment() {
 
                                             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                                             if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                                                var photFile : File? = null
+                                                var photFile: File? = null
 
                                                 try {
                                                     photFile = createImageFile()
-                                                }
-                                                catch (e : IOException) {
+                                                } catch (e: IOException) {
                                                     e.printStackTrace()
                                                 }
 
                                                 if (photFile != null) {
-                                                    val photoUri = FileProvider.getUriForFile(requireActivity().applicationContext, "com.cory.texarkanacollege.FileProvider", photFile)
+                                                    val photoUri = FileProvider.getUriForFile(
+                                                        requireContext(),
+                                                        "com.cory.texarkanacollege.FileProvider",
+                                                        photFile
+                                                    )
                                                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                                                     showCamera.launch(intent)
                                                 }
@@ -338,6 +364,28 @@ class GradeFragment : Fragment() {
         }
     }
 
+    val showImagePickerAndroid13 = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
+            var imageStream: InputStream? = null
+            try {
+                imageStream =
+                    activity?.contentResolver?.openInputStream(
+                        uri!!
+                    )
+                val imageBitmap = BitmapFactory.decodeStream(imageStream)
+                val stream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                // val byteArray = stream.toByteArray()
+                val selectedFile = File(getRealPathFromURI(uri!!))
+                this.image = selectedFile.toString()
+                addImage.text = "View Image"
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+                addImage.text = "Add Image"
+            }
+        }
+
     fun getRealPathFromURI(contentURI: Uri) : String {
         var result = ""
         val cursor = requireActivity().contentResolver?.query(contentURI, null, null, null, null)
@@ -374,7 +422,7 @@ class GradeFragment : Fragment() {
                 }
             }
 
-            //val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            val originalBitmap = BitmapFactory.decodeFile(currentPhotoPath)
 
            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH)
                .format(System.currentTimeMillis())
@@ -386,10 +434,10 @@ class GradeFragment : Fragment() {
             }
             val image = File.createTempFile(timeStamp, ".jpeg", storageDir)
 
-            //val f = File(image.toString())
-            //val fileOutputStream = FileOutputStream(f)
-            //val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
-            //val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            val f = File(image.toString())
+            val fileOutputStream = FileOutputStream(f)
+            val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, m, true)
+            val bitmap = rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
             MediaScannerConnection.scanFile(requireContext(), arrayOf(image.toString()), null, null)
 
             this.image = image.toString()

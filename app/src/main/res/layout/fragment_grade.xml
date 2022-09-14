@@ -22,7 +22,6 @@
             android:id="@+id/collapsingToolBarGrades"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:titleCollapseMode="scale"
             app:contentScrim="@color/toolBarScrimColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -35,9 +34,10 @@
                 android:background="@android:color/transparent"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
-                app:title="Grades"
+                app:title="@string/grades"
                 app:titleCentered="true"
                 app:menu="@menu/classes_menu"
+                app:buttonGravity="center_vertical"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
                 app:navigationIconTint="?attr/navigationIconTintTheme"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -61,7 +61,7 @@
         android:id="@+id/noGradesStoredTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="There are currently no grades stored for this class. Hit the + if you would like to add some."
+        android:text="@string/there_are_currently_no_grades_stored_for_this_class_hit_the_if_you_would_like_to_add_some"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

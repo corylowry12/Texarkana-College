@@ -47,10 +47,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/dontOverwriteButton"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintTop_toBottomOf="@id/description"
         android:text="@string/overwrite"
-        android:layout_marginStart="5dp"/>
+        app:tint="?attr/cancelButtonTextColor"
+        android:layout_marginStart="15dp"/>
 
     <Button
         android:id="@+id/dontOverwriteButton"
@@ -58,11 +59,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/overwriteButton"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintTop_toBottomOf="@id/description"
         android:text="@string/don_t_overwrite"
         android:textColor="?attr/cancelButtonTextColor"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="15dp"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
 
 

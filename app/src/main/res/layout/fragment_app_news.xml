@@ -19,7 +19,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:titleCollapseMode="scale"
             app:contentScrim="@color/toolBarScrimColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
@@ -34,6 +33,7 @@
                 app:layout_collapseMode="pin"
                 app:title="App News"
                 app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:navigationIconTint="?attr/backArrowColor"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>

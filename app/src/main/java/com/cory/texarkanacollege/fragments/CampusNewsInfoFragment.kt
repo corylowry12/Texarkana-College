@@ -177,7 +177,7 @@ class CampusNewsInfoFragment : Fragment() {
                     webView?.settings?.loadWithOverviewMode = true
 
                     val cardView = view.findViewById<CardView>(R.id.webViewCardView)
-                    cardView!!.addOnLayoutChangeListener { v, left, top, right, bottom, leftWas, topWas, rightWas, bottomWas ->
+                    cardView!!.addOnLayoutChangeListener { v, _, _, _, _, _, topWas, _, bottomWas ->
                         val heightWas = bottomWas - topWas
                         if (v.height != heightWas) {
                             val progressBar =
@@ -187,49 +187,51 @@ class CampusNewsInfoFragment : Fragment() {
                     }
 
                     try {
-                        val darkThemeData = DarkThemeData(requireContext())
-                        when {
-                            darkThemeData.loadState() == 1 -> {
-                                cardView.setCardBackgroundColor(
-                                    ContextCompat.getColor(
-                                        requireContext(),
-                                        R.color.darkWebViewCardBackgroundColor
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                            val darkThemeData = DarkThemeData(requireContext())
+                            when {
+                                darkThemeData.loadState() == 1 -> {
+                                    cardView.setCardBackgroundColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.darkWebViewCardBackgroundColor
+                                        )
                                     )
-                                )
-                            }
-                            darkThemeData.loadState() == 0 -> {
-                                cardView.setCardBackgroundColor(
-                                    ContextCompat.getColor(
-                                        requireContext(),
-                                        R.color.white
+                                }
+                                darkThemeData.loadState() == 0 -> {
+                                    cardView.setCardBackgroundColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.white
+                                        )
                                     )
-                                )
-                            }
-                            darkThemeData.loadState() == 2 -> {
-                                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
-                                    Configuration.UI_MODE_NIGHT_NO -> {
-                                        cardView.setCardBackgroundColor(
-                                            ContextCompat.getColor(
-                                                requireContext(),
-                                                R.color.white
+                                }
+                                darkThemeData.loadState() == 2 -> {
+                                    when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                                        Configuration.UI_MODE_NIGHT_NO -> {
+                                            cardView.setCardBackgroundColor(
+                                                ContextCompat.getColor(
+                                                    requireContext(),
+                                                    R.color.white
+                                                )
                                             )
-                                        )
-                                    }
-                                    Configuration.UI_MODE_NIGHT_YES -> {
-                                        cardView.setCardBackgroundColor(
-                                            ContextCompat.getColor(
-                                                requireContext(),
-                                                R.color.darkWebViewCardBackgroundColor
+                                        }
+                                        Configuration.UI_MODE_NIGHT_YES -> {
+                                            cardView.setCardBackgroundColor(
+                                                ContextCompat.getColor(
+                                                    requireContext(),
+                                                    R.color.darkWebViewCardBackgroundColor
+                                                )
                                             )
-                                        )
-                                    }
-                                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                                        cardView.setCardBackgroundColor(
-                                            ContextCompat.getColor(
-                                                requireContext(),
-                                                R.color.darkWebViewCardBackgroundColor
+                                        }
+                                        Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                                            cardView.setCardBackgroundColor(
+                                                ContextCompat.getColor(
+                                                    requireContext(),
+                                                    R.color.darkWebViewCardBackgroundColor
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }
@@ -242,7 +244,7 @@ class CampusNewsInfoFragment : Fragment() {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && DarkWebViewData(
                                 requireContext()
-                            ).loadDarkWebView()
+                            ).loadDarkWebView() && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                         ) {
                             webView.settings.forceDark = WebSettings.FORCE_DARK_ON
                             cardView.setCardBackgroundColor(

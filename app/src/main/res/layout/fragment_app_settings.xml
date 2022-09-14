@@ -19,7 +19,6 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/toolBarScrimColor"
             app:titleCollapseMode="scale"
-            app:expandedTitleMarginBottom="28dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -33,6 +32,7 @@
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
                 app:title="App Settings"
                 app:titleCentered="true"
+                app:buttonGravity="center_vertical"
                 app:navigationIconTint="?attr/backArrowColor"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -78,10 +78,7 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="0dp">
+                    android:padding="10dp">
 
                     <RadioButton
                         android:id="@+id/enableDefaultHome"

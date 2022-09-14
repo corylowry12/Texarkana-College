@@ -304,7 +304,7 @@ class UpcomingAdapter(val context: Context,
                 assignmentNotes.setText(dataItem["notes"].toString())
 
                 val cancelButtonEditAssignment = addAssignmentView.findViewById<Button>(R.id.cancelButton)
-                val dueDateChip = addAssignmentView.findViewById<Chip>(R.id.dueDateChip)
+                val dueDateChip = addAssignmentView.findViewById<Button>(R.id.dueDateButton)
 
                 val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
                 val dateFormatted2 = formatter.parse(dataItem["dueDate"]!!)

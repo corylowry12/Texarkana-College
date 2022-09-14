@@ -32,9 +32,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
-import com.suke.widget.SwitchButton
 import java.math.RoundingMode
 
 class ClassesAdapter(
@@ -51,7 +52,14 @@ class ClassesAdapter(
         fun bind(position: Int) {
 
             val dataItem = dataList[position]
-            title.text = "Class Name: " + dataItem["className"]
+
+            if (dataItem["className"]!!.length < 30) {
+                title.text = "Class Name: " + dataItem["className"]!!.trim()
+            }
+            else {
+                val contentSubstring = dataItem["className"]!!.substring(0, 30)
+                title.text = "Class Name: " + contentSubstring.trim() + "..."
+            }
             classTime.text = "Class Time: " + dataItem["classTime"]
         }
     }
@@ -64,9 +72,18 @@ class ClassesAdapter(
 
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-
         val dataItem = dataList[holder.adapterPosition]
+
+        holder.itemView.findViewById<TextView>(R.id.row_class).setOnClickListener {
+
+            if (holder.itemView.findViewById<TextView>(R.id.row_class).length() > 45) {
+                val contentSubstring = dataItem["className"]!!.substring(0, 30)
+                holder.itemView.findViewById<TextView>(R.id.row_class).text = "Class Name: " + contentSubstring.trim() + "..."
+            }
+            else {
+                holder.itemView.findViewById<TextView>(R.id.row_class).text = "Class Name: " + dataItem["className"]!!.trim()
+            }
+        }
 
         val classesIconImageView = holder.itemView.findViewById<ImageView>(R.id.classesIconImageView)!!
         val classesIconTextView = holder.itemView.findViewById<TextView>(R.id.classesTitleImageViewText)!!
@@ -181,7 +198,7 @@ class ClassesAdapter(
 
         var cursor = GradesDBHelper(context, null).getGrades(dataItem["id"].toString())
 
-        holder.itemView.findViewById<TextView>(R.id.gradeCountTextView).text = cursor.count.toString()
+        holder.itemView.findViewById<Chip>(R.id.gradeCountTextChip).text = cursor.count.toString()
         cursor.moveToFirst()
 
         while (!cursor.isAfterLast) {
@@ -340,7 +357,7 @@ class ClassesAdapter(
                     val addClassButtonAddClass =
                         bottomSheetDialog.findViewById<Button>(R.id.addClassButton)
                     val netClassSwitchAddClass =
-                        bottomSheetDialog.findViewById<SwitchButton>(R.id.netClassSwitch)
+                        bottomSheetDialog.findViewById<MaterialSwitch>(R.id.netClassSwitch)
                     val netClassSwitchConstraint =
                         bottomSheetDialog.findViewById<ConstraintLayout>(R.id.switchConstraintLayout)
                     val toggleGroupAddClass =

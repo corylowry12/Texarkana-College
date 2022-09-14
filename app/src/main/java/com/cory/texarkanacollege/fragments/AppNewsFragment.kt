@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -93,16 +94,17 @@ class AppNewsFragment : Fragment() {
 
         val dialog = MaterialAlertDialogBuilder(
             requireContext(),
-            R.style.AlertDialogStyle)
+            R.style.AlertDialogStyle).create()
         val dialogLayout = layoutInflater.inflate(R.layout.fetching_dialog_layout, null)
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelFetchingButton)
         dialog.setCancelable(false)
         dialog.setView(dialogLayout)
-        dialog.setNegativeButton("Cancel") { d, _ ->
-            d.dismiss()
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
             activity?.supportFragmentManager?.popBackStack()
         }
-        val d = dialog.create()
-        d.show()
+
+        dialog.show()
 
 
         val topAppBar = activity?.findViewById<MaterialToolbar>(R.id.materialToolBarUpdate)
@@ -116,7 +118,7 @@ class AppNewsFragment : Fragment() {
         }, 100)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            d.dismiss()
+            dialog.dismiss()
         }, 1000)
 
         val updatesConstraint = requireView().findViewById<ConstraintLayout>(R.id.updatesConstraint)

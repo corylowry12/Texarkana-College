@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -13,6 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
@@ -52,7 +55,14 @@ class GradesAdapter(
             val formatter = SimpleDateFormat("MMM/dd/yyyy", Locale.ENGLISH)
             val dateFormatted = formatter.format(formatter.parse(dataItem["date"]!!)!!)
 
-            itemView.findViewById<TextView>(R.id.row_name)!!.text = "Name: " + dataItem["name"]
+            if (dataItem["name"]!!.length < 30) {
+                itemView.findViewById<TextView>(R.id.row_name)!!.text = "Name: " + dataItem["name"]!!.trim()
+            }
+            else {
+                val contentSubstring = dataItem["name"]!!.substring(0, 30)
+                itemView.findViewById<TextView>(R.id.row_name)!!.text = "Name: " + contentSubstring.trim() + "..."
+            }
+
             itemView.findViewById<TextView>(R.id.row_weight)!!.text =
                 "Weight: " + dataItem["weight"] + "%"
             itemView.findViewById<TextView>(R.id.row_date)!!.text =
@@ -69,6 +79,17 @@ class GradesAdapter(
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val dataItem = dataList[holder.adapterPosition]
+
+        holder.itemView.findViewById<TextView>(R.id.row_name).setOnClickListener {
+
+            if (holder.itemView.findViewById<TextView>(R.id.row_name).length() > 45) {
+                val contentSubstring = dataItem["name"]!!.substring(0, 30)
+                holder.itemView.findViewById<TextView>(R.id.row_name)!!.text = "Name: " + contentSubstring.trim() + "..."
+            }
+            else {
+                holder.itemView.findViewById<TextView>(R.id.row_name)!!.text = "Name: " + dataItem["name"]!!.trim()
+            }
+        }
 
         GlobalScope.launch(Dispatchers.Main) {
             val imgFile = File(dataItem["image"]!!)
@@ -242,19 +263,20 @@ class GradesAdapter(
                     val addGradeCancelButton =
                         editGradeBottomSheetView.findViewById<Button>(R.id.cancelButton)
 
-                    ImagePathData(context).setPath(dataItem["image"].toString())
+                    //ImagePathData(context).setPath(dataItem["image"].toString())
 
                     addGradeButton.text = "Update Grade"
                     nameEditText.setText(dataItem["name"])
                     gradeEditText.setText(dataItem["grade"])
                     weightEditText.setText(dataItem["weight"])
 
-                    if (dataItem["image"] != "") {
+                    if (dataItem["image"] != "" && File(dataItem["image"]!!).exists()) {
+                        ImagePathData(context).setPath("")
                         addImageButton.text = "View Image"
                     }
 
                     addImageButton.setOnLongClickListener LongClickListener@{
-                        if (ImagePathData(context).loadPath() != "") {
+                        if (ImagePathData(context).loadPath() != "" || dataItem["image"] != "") {
                             addImageButton.text = "Add Image"
                             ImagePathData(context).setPath("")
                             Toast.makeText(context, "Image Removed", Toast.LENGTH_SHORT).show()
@@ -264,12 +286,9 @@ class GradesAdapter(
                     }
 
                     addImageButton.setOnClickListener {
-
                         if (!(context as MainActivity).checkPermissions()) {
-
                             val requestPermissions = Runnable {
                                 context.requestPermissions()
-
                             }
 
                             MainActivity().runOnUiThread(requestPermissions)
@@ -299,7 +318,8 @@ class GradesAdapter(
 
                                 viewImageDialog.setView(layout)
                                 viewImageDialog.show()
-                            } else if (ImagePathData(context).loadPath() == "" && addImageButton.text == "Add Image") {
+                            } else if ((ImagePathData(context).loadPath() == "" && addImageButton.text == "Add Image" && dataItem["image"] == "")
+                                || ImagePathData(context).loadPath() == "" && addImageButton.text == "Add Image" && dataItem["image"] != "" && !File(dataItem["image"]!!).exists()){
                                 val chooseImageDialog =
                                     MaterialAlertDialogBuilder(
                                         context,
@@ -323,9 +343,17 @@ class GradesAdapter(
                                     pickerIntent.type = "image/*"
 
                                     val saveState = Runnable {
-                                        context.showImagePicker.launch(
-                                            pickerIntent
-                                        )
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                            context.showImagePickerAndroid13.launch(
+                                                PickVisualMediaRequest(
+                                                    ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            )
+                                        }
+                                        else {
+                                            context.showImagePicker.launch(
+                                                pickerIntent
+                                            )
+                                        }
 
                                     }
                                     MainActivity().runOnUiThread(saveState)
@@ -349,7 +377,66 @@ class GradesAdapter(
                                 }
 
                                 chooseImageDialog.show()
-                            } else {
+                            } else if (addImageButton.text == "Add Image") {
+                                val chooseImageDialog =
+                                    MaterialAlertDialogBuilder(
+                                        context,
+                                        R.style.AlertDialogStyle
+                                    ).create()
+                                val layout =
+                                    LayoutInflater.from(context)
+                                        .inflate(R.layout.choose_image_dialog, null)
+                                chooseImageDialog.setView(layout)
+
+                                val chooseImageButton =
+                                    layout.findViewById<Button>(R.id.chooseImage)
+                                val takePhotoButton =
+                                    layout.findViewById<Button>(R.id.takePhoto)
+                                val cancelButtonImageDialog =
+                                    layout.findViewById<Button>(R.id.cancelImageDialog)
+
+                                chooseImageButton.setOnClickListener {
+
+                                    val pickerIntent = Intent(Intent.ACTION_PICK)
+                                    pickerIntent.type = "image/*"
+
+                                    val saveState = Runnable {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                            context.showImagePickerAndroid13.launch(
+                                                PickVisualMediaRequest(
+                                                    ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            )
+                                        }
+                                        else {
+                                            context.showImagePicker.launch(
+                                                pickerIntent
+                                            )
+                                        }
+
+                                    }
+                                    MainActivity().runOnUiThread(saveState)
+
+                                    chooseImageDialog.dismiss()
+                                }
+
+                                takePhotoButton.setOnClickListener {
+
+                                    val saveState = Runnable {
+                                        context.camera()
+
+                                    }
+                                    MainActivity().runOnUiThread(saveState)
+
+                                    chooseImageDialog.dismiss()
+                                }
+
+                                cancelButtonImageDialog.setOnClickListener {
+                                    chooseImageDialog.dismiss()
+                                }
+
+                                chooseImageDialog.show()
+                            }
+                            else {
                                 val viewImageDialog =
                                     MaterialAlertDialogBuilder(context, R.style.AlertDialogStyle).create()
                                 val layout = LayoutInflater.from(context)
@@ -378,16 +465,15 @@ class GradesAdapter(
 
                     addGradeButton.setOnClickListener {
                         val gradesDBHelper = GradesDBHelper(context, null)
-                        var image = ""
 
-                        if (dataItem["image"] != null && addImageButton.text == "View Image" && ImagePathData(
+                        val image: String = if (dataItem["image"] != null && addImageButton.text == "View Image" && ImagePathData(
                                 context
                             ).loadPath() == ""
                         ) {
 
-                            image = dataItem["image"]!!
+                            dataItem["image"]!!
                         } else {
-                            image = ImagePathData(context).loadPath()
+                            ImagePathData(context).loadPath()
                         }
 
                         gradesDBHelper.update(

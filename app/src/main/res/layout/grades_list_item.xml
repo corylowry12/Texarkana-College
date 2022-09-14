@@ -119,7 +119,7 @@
             android:id="@+id/cardViewGradeItem"
             style="@style/Widget.Material3.CardView.Filled"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="100dp"
             app:cardBackgroundColor="@color/cardViewLightBlue"
             app:cardCornerRadius="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +129,7 @@
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="100dp"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
                 android:scaleType="fitXY"
                 android:transitionName="transition_image" />
         </com.google.android.material.card.MaterialCardView>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.CampusNewsInfoFragment"
-    android:background="@color/blue"
+    android:background="?attr/backgroundColor"
     android:animateLayoutChanges="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -61,17 +61,14 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             app:endIconMode="clear_text"
             android:textColorHint="#939090"
             app:boxCornerRadiusBottomEnd="28dp"
             app:boxCornerRadiusBottomStart="28dp"
             app:boxCornerRadiusTopEnd="28dp"
             app:boxCornerRadiusTopStart="28dp"
-            app:boxStrokeColor="@color/cardViewLightBlue"
-            app:hintTextColor="@color/cardViewLightBlue"
-            app:startIconTint="?attr/backArrowColor"
-            app:startIconDrawable="@drawable/ic_baseline_search_24"
-            app:layout_constraintTop_toBottomOf="@id/headingTextView">
+            app:startIconDrawable="@drawable/ic_baseline_search_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search"
@@ -79,8 +76,6 @@
                 android:layout_height="wrap_content"
                 android:hint="Search..."
                 android:maxLines="1"
-                android:textStyle="bold"
-                android:theme="@style/BlueBGTextView"
                 android:inputType="text|textCapWords" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +93,7 @@
             app:cardCornerRadius="28dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            style="?attr/materialCardViewElevatedStyle"
+            style="?attr/materialCardViewOutlinedStyle"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
             tools:ignore="WebViewLayout">

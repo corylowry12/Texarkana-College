@@ -41,6 +41,7 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -52,15 +53,12 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.suke.widget.SwitchButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.*
 import org.json.JSONObject
 import java.io.*
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -363,13 +361,13 @@ class CommunityBoardFragment : Fragment() {
                         val cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
                         val titleEditText = dialog.findViewById<TextInputEditText>(R.id.grade)
                         val postEditText = dialog.findViewById<TextInputEditText>(R.id.weight)
-                        val pinnedSwitch = dialog.findViewById<SwitchButton>(R.id.pinnedSwitch)
+                        val pinnedSwitch = dialog.findViewById<MaterialSwitch>(R.id.pinnedSwitch)
                         val pinnedSwitchConstraint = dialog.findViewById<ConstraintLayout>(R.id.pinnedSwitchConstraintLayout)
-                        val urgentSwitch = dialog.findViewById<SwitchButton>(R.id.urgenSwitch)
+                        val urgentSwitch = dialog.findViewById<MaterialSwitch>(R.id.urgentSwitch)
                         val addImageButton = dialog.findViewById<Button>(R.id.addImage)
                         val urgentSwitchConstraintLayout = dialog.findViewById<ConstraintLayout>(R.id.urgentSwitchConstraintLayout)
                         val hiddenSwitchConstraintLayout = dialog.findViewById<ConstraintLayout>(R.id.hiddenConstraintLayout)
-                        val hiddenSwitch = dialog.findViewById<SwitchButton>(R.id.hiddenSwitch)
+                        val hiddenSwitch = dialog.findViewById<MaterialSwitch>(R.id.hiddenSwitch)
 
                         if (Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID) != "f56c8dfc9389a084") {
                             hiddenSwitchConstraintLayout?.visibility = View.GONE
@@ -442,12 +440,15 @@ class CommunityBoardFragment : Fragment() {
                                         layout.findViewById<ProgressBar>(R.id.uploadingImageProgressBar)
                                     val uploadProgressTextView =
                                         layout.findViewById<TextView>(R.id.currentProgress)
+                                    val uploadImageCancelButton = layout.findViewById<Button>(R.id.cancelUploadButton)
                                     progressBar.max = 100
                                     uploadingImageDialog.setView(layout)
-                                    uploadingImageDialog.setNegativeButton(getString(R.string.cancel)) { d, _ ->
+
+                                    uploadImageCancelButton.setOnClickListener {
                                         uploadTask.cancel()
-                                        d.dismiss()
+                                        dialog.dismiss()
                                     }
+
                                     val uploadingD = uploadingImageDialog.create()
                                     uploadingD.show()
 

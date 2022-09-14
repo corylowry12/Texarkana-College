@@ -471,9 +471,35 @@ class ViewCommunityBoardPostFragment : Fragment() {
                     }
                     true
                 }
+                R.id.signOutViewCommunityBoardPost -> {
+                    if (firebaseAuth.currentUser != null) {
+                        firebaseAuth.signOut()
+                        Toast.makeText(requireContext(), getString(R.string.you_are_now_signed_out), Toast.LENGTH_SHORT).show()
+                        materialToolbar.menu.findItem(R.id.signOut).title = getString(R.string.sign_in)
+                    }
+                    else {
+                        mGoogleSignInOptions =
+                            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(getString(R.string.app_client_id))
+                                .requestEmail()
+                                .build()
+                        mGoogleSignInClient =
+                            GoogleSignIn.getClient(requireContext(), mGoogleSignInOptions)
+                        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+                        getSignInData.launch(signInIntent)
+                    }
+                    true
+                }
                 else -> false
             }
 
+        }
+
+        if (firebaseAuth.currentUser != null) {
+            materialToolbar?.menu?.findItem(R.id.signOutViewCommunityBoardPost)?.title = "Sign Out"
+        }
+        else {
+            materialToolbar?.menu?.findItem(R.id.signOutViewCommunityBoardPost)?.title = "Sign In"
         }
     }
 

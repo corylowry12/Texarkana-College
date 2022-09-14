@@ -22,7 +22,6 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginBottom="28dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -34,6 +33,7 @@
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:title="Campus Map"
+                app:buttonGravity="center_vertical"
                 app:navigationIconTint="?attr/backArrowColor"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>

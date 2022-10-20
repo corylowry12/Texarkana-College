@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
@@ -21,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -166,6 +168,35 @@ class CommunityBoardFragment : Fragment() {
         } catch (e: ApiException) {
             e.printStackTrace()
             Toast.makeText(requireContext(), "Error: " + e.statusCode.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val showImagePickerAndroid13 = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
+        try {
+            val selectedImage =
+                Objects.requireNonNull(uri)
+            var imageStream: InputStream? = null
+            try {
+                imageStream =
+                    activity?.contentResolver?.openInputStream(
+                        selectedImage!!
+                    )
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            }
+            image = selectedImage!!
+            val imageBitmap = BitmapFactory.decodeStream(imageStream)
+            val stream = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            val byteArray = stream.toByteArray()
+            val selectedFile = File(getRealPathFromURI(selectedImage))
+            this.imagePath = Date().toString()
+            Toast.makeText(requireContext(), "Image Added", Toast.LENGTH_SHORT).show()
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Image Not Added", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -369,7 +400,8 @@ class CommunityBoardFragment : Fragment() {
                         val hiddenSwitchConstraintLayout = dialog.findViewById<ConstraintLayout>(R.id.hiddenConstraintLayout)
                         val hiddenSwitch = dialog.findViewById<MaterialSwitch>(R.id.hiddenSwitch)
 
-                        if (Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID) != "f56c8dfc9389a084") {
+                        //Toast.makeText(requireContext(), Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID).toString(), Toast.LENGTH_SHORT).show()
+                        if (Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID) != "76d4ebb3922b2b6f") {
                             hiddenSwitchConstraintLayout?.visibility = View.GONE
                         }
                         else {
@@ -408,7 +440,15 @@ class CommunityBoardFragment : Fragment() {
                             val pickerIntent = Intent(Intent.ACTION_PICK)
                             pickerIntent.type = "image/*"
 
-                            showImagePicker.launch(pickerIntent)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                showImagePickerAndroid13.launch(
+                                    PickVisualMediaRequest(
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                            else {
+                                showImagePicker.launch(pickerIntent)
+                            }
                         }
 
                         addGradeButton?.setOnClickListener {
@@ -635,10 +675,7 @@ class CommunityBoardFragment : Fragment() {
 
                             for (i in snapshot1.children) {
                                 if (snapshot1.child(i.key.toString())
-                                        .child("hidden").value.toString() != "true" || Settings.Secure.getString(
-                                        activity?.contentResolver,
-                                        Settings.Secure.ANDROID_ID
-                                    ) == "f56c8dfc9389a084"
+                                        .child("hidden").value.toString() != "true" || Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID) == "76d4ebb3922b2b6f"
                                 ) {
                                     println("children " + i.toString())
                                     var likedCount = 0

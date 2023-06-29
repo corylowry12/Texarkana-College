@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -320,6 +321,15 @@ class CommunityBoardFragment : Fragment() {
                         addGradeView.findViewById<ImageButton>(R.id.closeImageButton)
                     dialog.setCancelable(true)
                     dialog.setContentView(addGradeView)
+                    if (resources.getBoolean(R.bool.isTablet)) {
+                        val bottomSheet =
+                            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+                        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        bottomSheetBehavior.skipCollapsed = true
+                        bottomSheetBehavior.isHideable = false
+                        bottomSheetBehavior.isDraggable = false
+                    }
                     val textView = addGradeView.findViewById<TextView>(R.id.tos)
                     val progressBar = addGradeView.findViewById<ProgressBar>(R.id.tosProgressBar)
 
@@ -336,7 +346,7 @@ class CommunityBoardFragment : Fragment() {
                                 alert.setTitle("Error")
                                 alert.setMessage("There was an error. Check your data connection.")
                                 alert.setPositiveButton("OK") { _, _ ->
-                                    activity?.supportFragmentManager?.popBackStack()
+                                    loadIntoList()
                                 }
                                 alert.show()
                             }

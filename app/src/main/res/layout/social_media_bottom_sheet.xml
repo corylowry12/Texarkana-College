@@ -38,9 +38,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/instagramButton"
@@ -53,9 +51,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Instagram"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/twitterButton"
@@ -68,9 +64,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Twitter"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/linkedInButton"
@@ -83,9 +77,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="LinkedIn"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/cancelButton"
@@ -98,7 +90,6 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Cancel"
-        android:textColor="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

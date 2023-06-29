@@ -17,11 +17,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.webkit.WebSettingsCompat
-import androidx.webkit.WebViewFeature
 import com.cory.texarkanacollege.R
 import com.cory.texarkanacollege.classes.DarkThemeData
-import com.cory.texarkanacollege.classes.DarkWebViewData
 import com.cory.texarkanacollege.classes.ManagePermissions
 import com.google.android.material.snackbar.Snackbar
 
@@ -36,6 +33,33 @@ class HomeFragment : Fragment() {
     private var isLoaded: Boolean = false
     private val permissionRequestCode = 191
     private lateinit var managePermissions: ManagePermissions
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+            val darkThemeData = DarkThemeData(requireContext())
+            when {
+                darkThemeData.loadState() == 1 -> {
+                    activity?.setTheme(R.style.Dark)
+                }
+                darkThemeData.loadState() == 0 -> {
+                    activity?.setTheme(R.style.Theme_MyApplication)
+                }
+                darkThemeData.loadState() == 2 -> {
+                    when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                        Configuration.UI_MODE_NIGHT_NO -> {
+                            activity?.setTheme(R.style.Theme_MyApplication)
+                        }
+                        Configuration.UI_MODE_NIGHT_YES -> {
+                            activity?.setTheme(R.style.Dark)
+                        }
+                        Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                            activity?.setTheme(R.style.Dark)
+                        }
+                    }
+                }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +98,7 @@ class HomeFragment : Fragment() {
         progressBar = requireView().findViewById(R.id.progressBar)
         val constraintLayout = requireView().findViewById<ConstraintLayout>(R.id.constraintLayout)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && DarkWebViewData(requireContext()).loadDarkWebView()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && DarkThemeData(requireContext()).loadState() == 1) {
             constraintLayout.setBackgroundColor(Color.BLACK)
         }
         else {
@@ -173,20 +197,11 @@ class HomeFragment : Fragment() {
         settings.domStorageEnabled = true
         settings.javaScriptEnabled = true
         settings.javaScriptCanOpenWindowsAutomatically = true
-        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
-            if (Build.VERSION.SDK_INT >= 29 && DarkWebViewData(requireContext()).loadDarkWebView()) {
-                WebSettingsCompat.setAlgorithmicDarkeningAllowed(webView.settings, true)
-            }
-        } else {
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && DarkWebViewData(requireContext()).loadDarkWebView()) {
-                @Suppress("DEPRECATION")
-                WebSettingsCompat.setForceDark(webView.settings, WebSettingsCompat.FORCE_DARK_ON)
-            }
+        refreshLayout.setOnRefreshListener {
+            webView.reload()
         }
-
-        refreshLayout.setOnRefreshListener { webView.reload() }
 
         var doubleBackToExitPressedOnce = false
 
@@ -228,6 +243,28 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val darkThemeData = DarkThemeData(requireContext())
+        when {
+            darkThemeData.loadState() == 1 -> {
+                activity?.setTheme(R.style.Dark)
+            }
+            darkThemeData.loadState() == 0 -> {
+                activity?.setTheme(R.style.Theme_MyApplication)
+            }
+            darkThemeData.loadState() == 2 -> {
+                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        activity?.setTheme(R.style.Theme_MyApplication)
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        activity?.setTheme(R.style.Dark)
+                    }
+                }
+            }
+        }
         if (!webViewState.isEmpty) {
             webView.restoreState(webViewState)
         }

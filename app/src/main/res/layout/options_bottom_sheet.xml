@@ -43,15 +43,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit"
-        app:tint="?attr/cancelButtonTextColor"
         app:layout_constraintTop_toBottomOf="@id/headingTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/deleteButton"
@@ -64,9 +62,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Delete"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/deleteAllButton"
@@ -79,9 +75,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Delete All"
-        app:tint="?attr/cancelButtonTextColor"
-        style="@style/Widget.Material3.Button"
-        android:backgroundTint="@color/blue"/>
+        style="@style/Widget.Material3.Button" />
 
     <Button
         android:id="@+id/cancelButton"
@@ -94,7 +88,6 @@
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:text="Cancel"
-        android:textColor="?attr/cancelButtonTextColor"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
         </LinearLayout>
     </ScrollView>

@@ -44,7 +44,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 
 @OptIn(DelicateCoroutinesApi::class)
 class CampusNewsInfoFragment : Fragment() {

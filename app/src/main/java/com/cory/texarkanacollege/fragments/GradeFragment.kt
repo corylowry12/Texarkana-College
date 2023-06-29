@@ -262,15 +262,15 @@ class GradeFragment : Fragment() {
                                         val pickerIntent = Intent(Intent.ACTION_PICK)
                                         pickerIntent.type = "image/*"
 
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                             showImagePickerAndroid13.launch(
                                                 PickVisualMediaRequest(
                                                 ActivityResultContracts.PickVisualMedia.ImageOnly)
                                             )
-                                        }
-                                        else {
-                                            showImagePicker.launch(pickerIntent)
-                                        }
+                                        //}
+                                        //else {
+                                            //showImagePicker.launch(pickerIntent)
+                                        //}
 
                                         chooseImageDialog.dismiss()
                                     }

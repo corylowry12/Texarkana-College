@@ -46,38 +46,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/darkWebViewCardView"
-                style="?attr/materialCardViewElevatedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="5dp"
-                app:cardCornerRadius="28dp"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@color/cardViewLightBlue" >
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/darkWebViewConstraint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp">
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/pinnedSwitch"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:text="Force WebView to be Dark"
-                        android:textSize="18sp"
-                        android:textColor="?attr/alwaysDarkTextColor"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

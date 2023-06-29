@@ -122,10 +122,6 @@ class BackupRestoreFragment : Fragment() {
                             "${DarkThemeData(requireContext()).loadState()}"
                         )
                         backup.put(
-                            "DarkWebViewData",
-                            "${DarkWebViewData(requireContext()).loadDarkWebView()}"
-                        )
-                        backup.put(
                             "DefaultCategoryData",
                             "${DefaultCategoryData(requireContext()).loadDefaultCategory()}"
                         )
@@ -404,9 +400,6 @@ class BackupRestoreFragment : Fragment() {
             )
             DarkThemeData(requireContext()).setState(
                 jsonArrayBackup.get("DarkThemeData").toString().toInt()
-            )
-            DarkWebViewData(requireContext()).setDarkWebView(
-                jsonArrayBackup.get("DarkWebViewData").toString().toBoolean()
             )
             DefaultCategoryData(requireContext()).setDefaultCategory(
                 jsonArrayBackup.get("DefaultCategoryData").toString().toInt()

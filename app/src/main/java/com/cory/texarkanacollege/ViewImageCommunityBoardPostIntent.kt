@@ -64,7 +64,7 @@ class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
             finishAfterTransition()
         }
 
-        val image = BitmapFactory.decodeByteArray(intent.getByteArrayExtra("image"), 0, intent.getByteArrayExtra("image")!!.size)
+        val image = BitmapFactory.decodeByteArray(intent.getByteArrayExtra("image"), 0, (intent.getByteArrayExtra("image")!!.size * .2).toInt())
         val imageView = findViewById<TouchImageView>(R.id.communityBoardPostImageView)
 
         imageView.setOnClickListener {

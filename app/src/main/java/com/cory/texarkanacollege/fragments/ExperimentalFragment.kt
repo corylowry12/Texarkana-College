@@ -52,22 +52,5 @@ class ExperimentalFragment : Fragment() {
         experimentalTopAppBar?.setNavigationOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
         }
-
-        val darkWebViewSwitch = activity?.findViewById<MaterialSwitch>(R.id.darkWebViewSwitch)
-        val darkWebViewCardView = activity?.findViewById<CardView>(R.id.darkWebViewCardView)
-        val darkWebViewData = DarkWebViewData(requireContext())
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            darkWebViewCardView?.visibility = View.GONE
-        }
-
-        darkWebViewSwitch?.isChecked = darkWebViewData.loadDarkWebView()
-
-        darkWebViewCardView?.setOnClickListener {
-            darkWebViewSwitch!!.isChecked = !darkWebViewSwitch.isChecked
-        }
-        darkWebViewSwitch?.setOnCheckedChangeListener { view, isChecked ->
-            darkWebViewData.setDarkWebView(isChecked)
-        }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -136,7 +137,7 @@ class ViewCommunityBoardPostFragment : Fragment() {
 
                     })
             } else if (it.exception is FirebaseAuthInvalidUserException) {
-                Toast.makeText(requireContext(), "Sorry, you have been banned", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), getString(R.string.banned_warning), Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -599,6 +600,18 @@ class ViewCommunityBoardPostFragment : Fragment() {
         }
 
         imageView.setOnClickListener {
+            /*try {
+                val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
+                val bs = ByteArrayOutputStream()
+                val b: Bitmap = imageView.drawable.toBitmap()
+                b.compress(Bitmap.CompressFormat.PNG, 100, bs)
+                intent.putExtra("image", bs.toByteArray())
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation((context as AppCompatActivity), imageView, "transition_image")
+                startActivity(intent, options.toBundle())
+            }
+            catch (e: Exception) {
+                Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
+            }*/
             try {
                 val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
                 val bs = ByteArrayOutputStream()

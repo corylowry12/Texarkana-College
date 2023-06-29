@@ -155,6 +155,8 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
 
+        setNavBarBackgroundColor()
+
         val dbHandler = AssignmentsDBHelper(this, null)
         val cursor = dbHandler.getAllRow()
         cursor!!.moveToFirst()
@@ -414,7 +416,9 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+
+
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -757,29 +761,58 @@ class MainActivity : AppCompatActivity() {
             val bottomNav = findViewById<NavigationRailView>(R.id.bottomNav)
             when {
                 darkThemeData.loadState() == 1 -> {
-                    bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                    bottomNav.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.bottomNavBarBackgroundDark
+                        )
+                    )
                     bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
                     mainConstraint.setBackgroundColor(Color.BLACK)
                 }
+
                 darkThemeData.loadState() == 0 -> {
-                    bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                    bottomNav.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.bottomNavBarBackground
+                        )
+                    )
                     bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
                     mainConstraint.setBackgroundColor(Color.WHITE)
                 }
+
                 darkThemeData.loadState() == 2 -> {
                     when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
                         Configuration.UI_MODE_NIGHT_NO -> {
-                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackground))
+                            bottomNav.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    this,
+                                    R.color.bottomNavBarBackground
+                                )
+                            )
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.BLACK)
                             mainConstraint.setBackgroundColor(Color.WHITE)
                         }
+
                         Configuration.UI_MODE_NIGHT_YES -> {
-                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                            bottomNav.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    this,
+                                    R.color.bottomNavBarBackgroundDark
+                                )
+                            )
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
                             mainConstraint.setBackgroundColor(Color.BLACK)
                         }
+
                         Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            bottomNav.setBackgroundColor(ContextCompat.getColor(this, R.color.bottomNavBarBackgroundDark))
+                            bottomNav.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    this,
+                                    R.color.bottomNavBarBackgroundDark
+                                )
+                            )
                             bottomNav.itemIconTintList = ColorStateList.valueOf(Color.WHITE)
                             mainConstraint.setBackgroundColor(Color.BLACK)
                         }

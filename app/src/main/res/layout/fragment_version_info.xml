@@ -91,7 +91,7 @@
                         android:paddingStart="20dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="8dp"
-                        android:text="3.0.8"
+                        android:text="@string/versionNumber"
                          android:textColor="?attr/alwaysDarkTextColor"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"

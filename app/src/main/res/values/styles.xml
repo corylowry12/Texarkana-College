@@ -25,7 +25,6 @@
 
     <style name="Dark" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="colorPrimary">@color/blue_for_dark_theme</item>
-
         <item name="colorControlActivated">@color/blue_for_dark_theme</item>
         <item name="backgroundColor">#000000</item>
         <item name="textColor">@android:color/white</item>

@@ -127,11 +127,7 @@ class CampusNewsFragment : Fragment() {
 
         val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.campusNewsRecyclerView)
 
-        gridLayoutManager = if (resources.getBoolean(R.bool.isTablet)) {
-            GridLayoutManager(requireContext(), 2)
-        } else {
-            GridLayoutManager(requireContext(), 1)
-        }
+        gridLayoutManager = GridLayoutManager(requireContext(), 1)
 
         campusNewsAdapter = CampusNewsAdapter(requireContext(), dataList)
 

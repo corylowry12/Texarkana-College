@@ -38,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 class SettingsFragment : Fragment() {
 
+    private lateinit var dialog: BottomSheetDialog
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,8 +70,18 @@ class SettingsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
+    fun dismissBottomSheet() {
+        try {
+            dialog.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        dialog = BottomSheetDialog(requireContext())
 
         val appearanceConstraint = view.findViewById<ConstraintLayout>(R.id.constraintAppearance)
         appearanceConstraint?.setOnClickListener {
@@ -160,7 +172,6 @@ class SettingsFragment : Fragment() {
 
         val socialMediaConstraint = view.findViewById<ConstraintLayout>(R.id.constraintSocialMedia)
         socialMediaConstraint.setOnClickListener {
-            val dialog = BottomSheetDialog(requireContext())
             val viewSocialMediaLayout = layoutInflater.inflate(R.layout.social_media_bottom_sheet, null)
             dialog.setContentView(viewSocialMediaLayout)
             if (resources.getBoolean(R.bool.isTablet)) {

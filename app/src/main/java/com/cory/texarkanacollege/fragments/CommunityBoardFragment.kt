@@ -67,6 +67,8 @@ import java.util.*
 
 class CommunityBoardFragment : Fragment() {
 
+    private lateinit var dialog: BottomSheetDialog
+
     private val client = OkHttpClient()
 
     private lateinit var communityBoardAdapter: CommunityBoardAdapter
@@ -243,9 +245,19 @@ class CommunityBoardFragment : Fragment() {
         return result
     }
 
+    fun dismissBottomSheet() {
+        try {
+            dialog.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     @SuppressLint("InflateParams", "UnsafeOptInUsageError")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        dialog = BottomSheetDialog(requireContext())
 
         firebaseAuth = FirebaseAuth.getInstance()
 
@@ -314,7 +326,6 @@ class CommunityBoardFragment : Fragment() {
         toolBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.termsOfService -> {
-                    val dialog = BottomSheetDialog(requireContext())
                     val addGradeView =
                         layoutInflater.inflate(R.layout.about_community_board_bottom_sheet, null)
                     val closeImageButton =

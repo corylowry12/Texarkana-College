@@ -422,6 +422,10 @@ class CampusNewsFragment : Fragment() {
         }
     }
 
+    fun dismissBottomSheet() {
+        campusNewsAdapter.dismissBottomSheet()
+    }
+
     private fun loadMore() {
 
         GlobalScope.launch(Dispatchers.Main) {

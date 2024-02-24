@@ -53,6 +53,8 @@ class AssignmentFragment : Fragment() {
     private lateinit var pastDueGridLayoutManager: GridLayoutManager
     private lateinit var doneGridLayoutManager: GridLayoutManager
 
+    private lateinit var dialog: BottomSheetDialog
+
     var classesArray = ArrayList<String>()
 
     override fun onCreateView(
@@ -84,6 +86,14 @@ class AssignmentFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_assignment, container, false)
     }
 
+    fun dismissBottomSheet() {
+        try {
+            dialog.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,6 +112,8 @@ class AssignmentFragment : Fragment() {
 
             }
         }
+
+        dialog = BottomSheetDialog(requireContext())
 
         if (resources.getBoolean(R.bool.isTablet)) {
             upcomingGridLayoutManager = GridLayoutManager(requireContext(), 2)
@@ -125,7 +137,6 @@ class AssignmentFragment : Fragment() {
             when (menuItem.itemId) {
                 R.id.addClass -> {
                     if (classesArray.isNotEmpty()) {
-                        val dialog = BottomSheetDialog(requireContext())
                         val addAssignmentView =
                             layoutInflater.inflate(R.layout.add_assignment_bottom_sheet, null)
                         dialog.setCancelable(false)

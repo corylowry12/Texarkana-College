@@ -22,11 +22,11 @@ import com.google.android.material.chip.Chip
 
 class PatchNotesFragment : Fragment() {
 
-    private var bugFixesArray = arrayOf("Fixed an issue with bottom navigation bar not being themed properly under certain conditions", "Fixed some issues with auto rotate")
+    private var bugFixesArray = arrayOf("Fixed issue with app crashing when viewing image in community")
 
     private var newFeaturesArray = arrayOf("No new features")
 
-    private var enhancementsArray = arrayOf("Minor changes")
+    private var enhancementsArray = arrayOf("Reworked image loading when viewing posts in the community board")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

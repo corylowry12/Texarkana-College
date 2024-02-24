@@ -49,6 +49,8 @@ class ClassesFragment: Fragment() {
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
+    private lateinit var dialog: BottomSheetDialog
+
     var days = ""
 
     override fun onCreateView(
@@ -80,6 +82,14 @@ class ClassesFragment: Fragment() {
         return inflater.inflate(R.layout.fragment_classes, container, false)
     }
 
+    fun dismissBottomSheet() {
+        try {
+            dialog.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         gridLayoutManager = if (resources.getBoolean(R.bool.isTablet)) {
@@ -87,6 +97,8 @@ class ClassesFragment: Fragment() {
         } else {
             GridLayoutManager(requireContext(), 1)
         }
+
+        dialog = BottomSheetDialog(requireContext())
 
         classesAdapter = ClassesAdapter(requireContext(), dataList)
 
@@ -221,7 +233,6 @@ class ClassesFragment: Fragment() {
 
                     val daysArray :MutableList<Int> = ArrayList()
 
-                    val dialog = BottomSheetDialog(requireContext())
                     val addGradeView = layoutInflater.inflate(R.layout.add_class_bottom_sheet, null)
                     dialog.setCancelable(false)
                     dialog.setContentView(addGradeView)

@@ -613,13 +613,15 @@ class ViewCommunityBoardPostFragment : Fragment() {
                 Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()
             }*/
             try {
-                val intent = Intent(requireContext(), ViewImageCommunityBoardPostIntent::class.java)
-                val bs = ByteArrayOutputStream()
-                val b: Bitmap = imageView.drawable.toBitmap()
-                b.compress(Bitmap.CompressFormat.PNG, 100, bs)
-                intent.putExtra("image", bs.toByteArray())
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation((context as AppCompatActivity), imageView, "transition_image")
-                startActivity(intent, options.toBundle())
+                val activity = ViewImageCommunityBoardPostIntent()
+                val intent = Intent(requireContext(), activity::class.java)
+               // val bs = ByteArrayOutputStream()
+                //val b: Bitmap = imageView.drawable.toBitmap()
+               // b.compress(Bitmap.CompressFormat.PNG, 100, bs)
+                //intent.putExtra("image", bs.toByteArray())
+                intent.putExtra("image", imageURL)
+                //val options = ActivityOptionsCompat.makeSceneTransitionAnimation((context as AppCompatActivity), imageView, "transition_image")
+                startActivity(intent)
             }
             catch (e: Exception) {
                 Toast.makeText(requireContext(), "There was an error", Toast.LENGTH_SHORT).show()

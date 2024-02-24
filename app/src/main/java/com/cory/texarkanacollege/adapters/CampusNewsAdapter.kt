@@ -28,6 +28,8 @@ class CampusNewsAdapter(val context: Context,
                         private val dataList:  ArrayList<HashMap<String, String>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private lateinit var dialog: BottomSheetDialog
+
     private inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var name = itemView.findViewById<TextView>(R.id.row_campus_news_name)!!
@@ -58,6 +60,14 @@ class CampusNewsAdapter(val context: Context,
         }
     }
 
+    fun dismissBottomSheet() {
+        try {
+            dialog.dismiss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.campus_news_list_item, parent, false))
     }
@@ -68,7 +78,7 @@ class CampusNewsAdapter(val context: Context,
 
         holder.itemView.findViewById<CardView>(R.id.cardViewCampusNews).setOnLongClickListener {
 
-            val dialog = BottomSheetDialog(context)
+            dialog = BottomSheetDialog(context)
             val campusNewsOptionLayout =
                 LayoutInflater.from(context).inflate(R.layout.campus_news_bottom_sheet, null)
             dialog.setContentView(campusNewsOptionLayout)
@@ -98,6 +108,7 @@ class CampusNewsAdapter(val context: Context,
                     "Link Copied to Clipboard",
                     Toast.LENGTH_SHORT
                 ).show()
+                dialog.dismiss()
             }
 
             shareButton.setOnClickListener {
@@ -106,12 +117,15 @@ class CampusNewsAdapter(val context: Context,
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, dataItem["name"])
                 shareIntent.putExtra(Intent.EXTRA_TEXT, dataItem["link"])
                 context.startActivity(Intent.createChooser(shareIntent, "Share Link"))
+                dialog.dismiss()
             }
 
             openButton.setOnClickListener {
-                val openIntent = Intent(Intent.ACTION_VIEW)
-                openIntent.data = Uri.parse(dataItem["link"])
+                val openIntent = Intent(Intent.ACTION_VIEW, Uri.parse(dataItem["link"]))
+                //Toast.makeText(context, dataItem["link"].toString(), Toast.LENGTH_SHORT).show()
+                //openIntent.data = Uri.parse(dataItem["link"])
                 context.startActivity(openIntent)
+                dialog.dismiss()
             }
 
             cancelButton.setOnClickListener {

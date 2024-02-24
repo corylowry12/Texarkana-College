@@ -9,9 +9,11 @@ import android.graphics.drawable.Drawable
 import android.media.ExifInterface
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.green
@@ -32,6 +34,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
+
+    lateinit var bitmap : Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,39 +68,84 @@ class ViewImageCommunityBoardPostIntent : AppCompatActivity() {
             finishAfterTransition()
         }
 
-        val image = BitmapFactory.decodeByteArray(intent.getByteArrayExtra("image"), 0, (intent.getByteArrayExtra("image")!!.size * .2).toInt())
+        //val image = BitmapFactory.decodeByteArray(intent.getByteArrayExtra("image"), 0, (intent.getByteArrayExtra("image")!!.size).toInt())
         val imageView = findViewById<TouchImageView>(R.id.communityBoardPostImageView)
+
+        val imageURL = intent.getStringExtra("image")
 
         imageView.setOnClickListener {
             this.finishAfterTransition()
         }
 
-            val bitmap = Bitmap.createBitmap(image, 0, 0, image.width, image.height, Matrix(), true)
+       // imageView.setImageBitmap(bitmap)
 
-            imageView.setImageBitmap(bitmap)
+            //val bitmap = Bitmap.createBitmap(image, 0, 0, image.width, image.height, Matrix(), true)
 
-            Palette.Builder(bitmap).generate { palette ->
-                val vSwatch = palette?.dominantSwatch?.rgb
-                val color =
-                    Color.rgb(
-                        vSwatch!!.red,
-                        vSwatch.green,
-                        vSwatch.blue
-                    )
+            //imageView.setImageBitmap(bitmap)
+        val circularProgressDrawableImage = CircularProgressDrawable(this)
+        circularProgressDrawableImage.strokeWidth = 5f
+        circularProgressDrawableImage.centerRadius = 30f
+        circularProgressDrawableImage.setColorSchemeColors(ContextCompat.getColor(this, R.color.blue))
+        circularProgressDrawableImage.start()
 
-                val invertedColor = Color.rgb(255 - vSwatch.red, 255 - vSwatch.green,
-                    255 - vSwatch.blue)
-                try {
-                    val imageViewConstraint = findViewById<ConstraintLayout>(R.id.imageViewConstraintViewPost)
-                    imageViewConstraint.setBackgroundColor(color)
-                    viewImageMaterialToolbar.setNavigationIconTint(invertedColor)
 
-                    this@ViewImageCommunityBoardPostIntent.window.navigationBarColor = color
-
-                } catch (e: NullPointerException) {
-                    e.printStackTrace()
+        Glide.with(this)
+            .load(imageURL)
+            .error(R.drawable.ic_baseline_broken_image_24)
+            .fitCenter()
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .placeholder(circularProgressDrawableImage)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    //imageView?.visibility = View.GONE
+                    Toast.makeText(this@ViewImageCommunityBoardPostIntent, "Failed loading image", Toast.LENGTH_SHORT).show()
+                    finishAfterTransition()
+                    return false
                 }
-            }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    //imageView?.visibility = View.VISIBLE
+
+                    Palette.Builder(resource!!.toBitmap(100,100)).generate { palette ->
+                        val vSwatch = palette?.dominantSwatch?.rgb
+                        val color =
+                            Color.rgb(
+                                vSwatch!!.red,
+                                vSwatch.green,
+                                vSwatch.blue
+                            )
+
+                        val invertedColor = Color.rgb(255 - vSwatch.red, 255 - vSwatch.green,
+                            255 - vSwatch.blue)
+                        try {
+                            val imageViewConstraint = findViewById<ConstraintLayout>(R.id.imageViewConstraintViewPost)
+                            imageViewConstraint.setBackgroundColor(color)
+                            viewImageMaterialToolbar.setNavigationIconTint(invertedColor)
+
+                            this@ViewImageCommunityBoardPostIntent.window.navigationBarColor = color
+
+                        } catch (e: NullPointerException) {
+                            e.printStackTrace()
+                        }
+                    }
+                    return false
+                }
+            })
+            .into(imageView!!)
+
+            /**/
     }
 
     override fun onBackPressed() {

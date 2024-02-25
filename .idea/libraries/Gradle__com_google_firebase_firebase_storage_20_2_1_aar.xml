@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.google.firebase:firebase-storage:20.2.1@aar">
+  <library name="Gradle: com.google.firebase:firebase-storage:20.2.1@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9aa123181c2f34cb4ba6a6fa58b278f1/transformed/jetified-firebase-storage-20.2.1/annotations.zip!/" />
     </ANNOTATIONS>

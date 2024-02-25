@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.github.MikeOrtiz:TouchImageView:1.4.1@aar">
+  <library name="Gradle: com.github.MikeOrtiz:TouchImageView:1.4.1@aar" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/486bbc8dc3fb3a04be6f4585878c24fe/transformed/jetified-TouchImageView-1.4.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/486bbc8dc3fb3a04be6f4585878c24fe/transformed/jetified-TouchImageView-1.4.1/res" />

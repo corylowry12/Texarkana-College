@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.google.android.recaptcha:recaptcha:18.1.2@aar">
+  <library name="Gradle: com.google.android.recaptcha:recaptcha:18.1.2@aar" external-system-id="GRADLE">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/870e3abc7d73db33cadf7cd1f6bf6056/transformed/jetified-recaptcha-18.1.2/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/870e3abc7d73db33cadf7cd1f6bf6056/transformed/jetified-recaptcha-18.1.2/jars/classes.jar!/" />

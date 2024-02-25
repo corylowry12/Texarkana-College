@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.google.firebase:firebase-crashlytics:18.4.0@aar">
+  <library name="Gradle: com.google.firebase:firebase-crashlytics:18.4.0@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4260b384180336b728217bbe2b08ed7a/transformed/jetified-firebase-crashlytics-18.4.0/annotations.zip!/" />
     </ANNOTATIONS>

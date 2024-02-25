@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: it.xabaras.android:recyclerview-swipedecorator:1.4@aar">
+  <library name="Gradle: it.xabaras.android:recyclerview-swipedecorator:1.4@aar" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/748df676bd860fe6a93e5d0c068a0eb3/transformed/jetified-recyclerview-swipedecorator-1.4/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/748df676bd860fe6a93e5d0c068a0eb3/transformed/jetified-recyclerview-swipedecorator-1.4/AndroidManifest.xml" />

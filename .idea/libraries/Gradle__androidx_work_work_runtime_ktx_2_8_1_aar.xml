@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.work:work-runtime-ktx:2.8.1@aar">
+  <library name="Gradle: androidx.work:work-runtime-ktx:2.8.1@aar" external-system-id="GRADLE">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/eb9cd1fb021e50a8ea444f44f3cda807/transformed/work-runtime-ktx-2.8.1/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/eb9cd1fb021e50a8ea444f44f3cda807/transformed/work-runtime-ktx-2.8.1/AndroidManifest.xml" />

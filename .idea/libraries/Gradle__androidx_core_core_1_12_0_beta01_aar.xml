@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.core:core:1.12.0-beta01@aar">
+  <library name="Gradle: androidx.core:core:1.12.0-beta01@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/81f301fc84692d71211e8d180fef3207/transformed/core-1.12.0-beta01/annotations.zip!/" />
     </ANNOTATIONS>

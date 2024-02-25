@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.fragment:fragment:1.5.4@aar">
+  <library name="Gradle: androidx.fragment:fragment:1.5.4@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b9ee46ca018b1ed87fe7d477a340df3a/transformed/fragment-1.5.4/annotations.zip!/" />
     </ANNOTATIONS>

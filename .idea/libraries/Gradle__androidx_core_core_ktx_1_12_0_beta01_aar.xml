@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.core:core-ktx:1.12.0-beta01@aar">
+  <library name="Gradle: androidx.core:core-ktx:1.12.0-beta01@aar" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bb576e32b0e1a4555b1261b11bd8407d/transformed/jetified-core-ktx-1.12.0-beta01/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bb576e32b0e1a4555b1261b11bd8407d/transformed/jetified-core-ktx-1.12.0-beta01/res" />

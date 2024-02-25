@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.webkit:webkit:1.7.0@aar">
+  <library name="Gradle: androidx.webkit:webkit:1.7.0@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f47e53b205af09e8d2cd9ec3e5255093/transformed/webkit-1.7.0/annotations.zip!/" />
     </ANNOTATIONS>

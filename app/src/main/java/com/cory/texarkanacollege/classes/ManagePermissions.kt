@@ -50,8 +50,8 @@ class ManagePermissions(private val activity: Activity, private val list: List<S
         val okButton = layout.findViewById<Button>(R.id.needPermissionsDialogOKButton)
         val cancelButton = layout.findViewById<Button>(R.id.cancelNeedPermissionsDialog)
         okButton.setOnClickListener {
-            builder.dismiss()
             requestPermissions(context)
+            builder.dismiss()
         }
         cancelButton.setOnClickListener {
             builder.dismiss()

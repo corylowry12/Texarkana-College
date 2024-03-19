@@ -79,7 +79,7 @@ class BackupRestoreFragment : Fragment() {
                     )
 
 
-                if (managePermissions.checkPermissions(requireContext())) {
+                if (Build.VERSION.SDK_INT >= 33) {
                         var outputStream : OutputStream
                         val backupObjects = JSONObject()
                         val classesJSONArray = JSONArray()
